@@ -59,7 +59,8 @@
             android:hint="@string/login_email_example"
             android:layout_marginBottom="16sp"
             android:importantForAutofill="no"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress"
+            style="@style/EdTxtGenericStyle"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -73,7 +74,8 @@
             android:layout_marginBottom="24sp"
             tools:ignore="HardcodedText"
             android:importantForAutofill="no"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            style="@style/EdTxtGenericStyle"/>
 
         <Button
             android:layout_width="match_parent"
