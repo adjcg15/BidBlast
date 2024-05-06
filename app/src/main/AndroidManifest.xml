@@ -16,9 +16,6 @@
             android:name=".searchauction.SearchAuctionActivity"
             android:exported="false" />
         <activity
-            android:name="searchauction.SearchAuctionActivity"
-            android:exported="false" />
-        <activity
             android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>

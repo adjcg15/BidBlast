@@ -14,4 +14,5 @@
     <string name="searchauction_searchbar_hint">Buscar subasta</string>
     <string name="searchauction_search_button_action">Buscar</string>
     <string name="searchauction_make_offer_action">Hacer oferta</string>
+    <string name="searchauction_filters_action">Filtros</string>
 </resources>
