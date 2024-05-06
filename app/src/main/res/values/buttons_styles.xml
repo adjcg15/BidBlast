@@ -7,4 +7,12 @@
         <item name="android:paddingHorizontal">16dp</item>
         <item name="android:paddingVertical">12dp</item>
     </style>
+
+    <style name="BtnTernaryStyle" parent="Widget.Material3.Button">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:backgroundTint">@color/transparent</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">12dp</item>
+    </style>
 </resources>

@@ -15,4 +15,15 @@
     <string name="searchauction_search_button_action">Buscar</string>
     <string name="searchauction_make_offer_action">Hacer oferta</string>
     <string name="searchauction_filters_action">Filtros</string>
+
+    <string name="modifycategory_tittle">Modificar categoría</string>
+    <string name="modifycategory_cancel_action">Cancelar</string>
+    <string name="modifycategory_fields_description">Los campos marcados con un <font color="#FF5C00">*</font> son obligatorios</string>
+    <string name="modifycategory_category_title">Título de la categoría <font color="#FF5C00">*</font></string>
+    <string name="modifycategory_category_example">Ej. Coleccionables</string>
+    <string name="modifycategory_category_description">Descripción de la categoría <font color="#FF5C00">*</font></string>
+    <string name="modifycategory_category_description_example">Descripción breve de los artículos que se encuentran en esta categoría</string>
+    <string name="modifycategory_keywords">Palabras clave <font color="#FF5C00">*</font></string>
+    <string name="modifycategory_keywords_example">Ej. Comics, monedas, historia</string>
+    <string name="modifycategory_modify_action">Modificar categoría</string>
 </resources>

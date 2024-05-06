@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".modifycategory.ModifyCategoryActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_primary"
+            android:padding="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/go_back_icon"
+                android:importantForAccessibility="no" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/modifycategory_tittle"
+                android:layout_marginStart="15dp"
+                style="@style/TvHeaderTitleStyle"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                style="@style/BtnTernaryStyle"
+                android:text="@string/modifycategory_cancel_action"
+                android:textColor="@color/secondary"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:text="@string/modifycategory_fields_description"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/modifycategory_category_title"
+                style="@style/TvBlackTagDecoratorStyle"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="flagNoEnterAction"
+                android:importantForAutofill="no"
+                android:hint="@string/modifycategory_category_example"
+                style="@style/EdTxtGenericStyle"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                style="@style/TvErrorField"
+                android:text="Ingrese un título para la categoría"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/modifycategory_category_description"
+                style="@style/TvBlackTagDecoratorStyle"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical"
+                android:maxLength="1000"
+                android:imeOptions="flagNoEnterAction"
+                android:importantForAutofill="no"
+                android:scrollHorizontally="false"
+                android:hint="@string/modifycategory_category_description_example"
+                style="@style/EdTxtGenericStyle"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                style="@style/TvErrorField"
+                android:text="Ingrese una descripción para la categoría de no más de 1000 caracteres"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/modifycategory_keywords"
+                style="@style/TvBlackTagDecoratorStyle"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical"
+                android:maxLength="1000"
+                android:imeOptions="flagNoEnterAction"
+                android:importantForAutofill="no"
+                android:scrollHorizontally="false"
+                android:hint="@string/modifycategory_keywords_example"
+                style="@style/EdTxtGenericStyle"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                style="@style/TvErrorField"
+                android:text="Ingrese al menos tres palabras clave"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/BtnPrimaryStyle"
+                android:text="@string/modifycategory_modify_action"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
