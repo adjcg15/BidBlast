@@ -10,4 +10,7 @@
     <string name="login_main_action">Iniciar sesión</string>
     <string name="login_account_question">¿No tienes una cuenta?</string>
     <string name="login_register_action">Regístrate</string>
+
+    <string name="searchauction_searchbar_hint">Buscar subasta</string>
+    <string name="searchauction_search_button_action">Buscar</string>
 </resources>
