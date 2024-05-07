@@ -13,6 +13,9 @@
         android:theme="@style/Theme.BidBlast"
         tools:targetApi="31">
         <activity
+            android:name=".consultcompletedauctions.ConsultCompletedAuctionsActivity"
+            android:exported="false" />
+        <activity
             android:name=".modifycategory.ModifyCategoryActivity"
             android:exported="false" />
         <activity
