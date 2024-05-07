@@ -26,4 +26,8 @@
     <string name="modifycategory_keywords">Palabras clave <font color="#FF5C00">*</font></string>
     <string name="modifycategory_keywords_example">Ej. Comics, monedas, historia</string>
     <string name="modifycategory_modify_action">Modificar categoría</string>
+
+    <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
+    <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>
+
 </resources>
