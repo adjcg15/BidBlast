@@ -3,6 +3,7 @@
 
     <string name="global_email">Correo</string>
     <string name="global_password">Contraseña</string>
+    <string name="global_full_name">Nombre completo <font color="#FF5C00">*</font></string>
 
     <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
     <string name="login_welcome_description">Sigue participando en las subastas más interesantes del momento.</string>
@@ -26,4 +27,12 @@
     <string name="modifycategory_keywords">Palabras clave <font color="#FF5C00">*</font></string>
     <string name="modifycategory_keywords_example">Ej. Comics, monedas, historia</string>
     <string name="modifycategory_modify_action">Modificar categoría</string>
+
+    <string name="sign_up_create_account">¡Crea una cuenta!</string>
+    <string name="sign_up_mandatory_email">Correo <font color="#FF5C00">*</font></string>
+    <string name="sign_up_phone_number">Número telefónico</string>
+    <string name="sign_up_mandatory_password">Contraseña <font color="#FF5C00">*</font></string>
+    <string name="sign_up_confirm_password">Confirmar contraseña <font color="#FF5C00">*</font></string>
+    <string name="sign_up_select_photo">Seleccionar foto</string>
+
 </resources>
