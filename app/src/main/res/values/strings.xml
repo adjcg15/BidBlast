@@ -35,4 +35,9 @@
     <string name="sign_up_confirm_password">Confirmar contraseña <font color="#FF5C00">*</font></string>
     <string name="sign_up_select_photo">Seleccionar foto</string>
 
+    <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
+    <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>
+    <string name="consultcreatedauctions_searchbar_hint">Buscar en ventas</string>
+    <string name="consultcreatedauctions_sales_statistics_action">Estadísticas de ventas</string>
+
 </resources>
