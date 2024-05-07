@@ -28,6 +28,9 @@
             android:name=".signup.SignUpActivity"
             android:exported="false"/>
         <activity
+            android:name=".consultcategories.ConsultCategoriesActivity"
+            android:exported="false"/>
+        <activity
             android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>
