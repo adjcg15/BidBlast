@@ -43,4 +43,8 @@
     <string name="consultcategories_searchbar_hint">Buscar categoría</string>
     <string name="consultcategories_edit_action">Editar</string>
 
+    <string name="mainmenu_auctions">Subastas</string>
+    <string name="mainmenu_purchases">Compras</string>
+    <string name="mainmenu_sales">Ventas</string>
+    <string name="mainmenu_new_auction">Subastar</string>
 </resources>
