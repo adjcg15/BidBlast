@@ -5,6 +5,7 @@
     <string name="global_password">Contraseña</string>
     <string name="global_full_name">Nombre completo <font color="#FF5C00">*</font></string>
     <string name="global_field_restrictions">Los campos marcados con un <font color="#FF5C00">*</font> son obligatorios</string>
+    <string name="global_cancel">Cancelar</string>
 
     <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
     <string name="login_welcome_description">Sigue participando en las subastas más interesantes del momento.</string>
@@ -52,4 +53,13 @@
 
     <string name="consultcategories_searchbar_hint">Buscar categoría</string>
     <string name="consultcategories_edit_action">Editar</string>
+
+    <string name="postitem_view_header">Crea tu subasta</string>
+    <string name="postitem_title">Título <font color="#FF5C00">*</font></string>
+    <string name="postitem_item_state">Estado del artículo <font color="#FF5C00">*</font></string>
+    <string name="postitem_description">Descripción <font color="#FF5C00">*</font></string>
+    <string name="postitem_opening_days">Días de apertura de subasta <font color="#FF5C00">*</font></string>
+    <string name="postitem_next">Siguiente</string>
+    <string name="postitem_base_price">Precio base <font color="#FF5C00">*</font></string>
+    <string name="postitem_media">Fotos y videos <font color="#FF5C00">*</font></string>
 </resources>

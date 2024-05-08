@@ -47,68 +47,63 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="@string/global_field_restrictions"/>
+                android:layout_marginBottom="8dp"
+                android:text="@string/postitem_base_price"
+                style="@style/TvBlackTagDecoratorStyle"/>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="8dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:background="@drawable/secondary_button_background"
+                        android:layout_marginRight="24dp"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="200"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="8dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:background="@drawable/secondary_button_background"
+                        android:layout_marginRight="24dp"/>
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="300"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="8dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:background="@drawable/secondary_button_background"
+                        android:layout_marginRight="24dp"
+                        android:layout_marginBottom="15dp"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="@string/postitem_title"
+                android:text="@string/postitem_media"
                 style="@style/TvBlackTagDecoratorStyle"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:layout_marginBottom="15dp"
-                style="@style/EdTxtGenericStyle"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/postitem_item_state"
-                style="@style/TvBlackTagDecoratorStyle"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="15dp"
-                style="@style/EdTxtGenericStyle"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/postitem_description"
-                style="@style/TvBlackTagDecoratorStyle"/>
-
-            <EditText
-                style="@style/EdTxtGenericStyle"
-                android:layout_width="match_parent"
-                android:layout_height="169dp"
-                android:importantForAutofill="no"
-                android:layout_marginBottom="15dp"
-                android:inputType="textEmailAddress" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/postitem_opening_days"
-                style="@style/TvBlackTagDecoratorStyle"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="15dp"
-                style="@style/EdTxtGenericStyle"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/BtnPrimaryStyle"
-                android:text="@string/postitem_next"
+                android:text="Publicar"
                 android:layout_marginBottom="50dp"/>
 
         </LinearLayout>
