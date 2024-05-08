@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".consultcompletedauctions.ConsultCompletedAuctionsActivity"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_primary"
+            android:padding="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/go_back_icon"
+                android:importantForAccessibility="no" />
+            <EditText
+                android:layout_height="wrap_content"
+                android:hint="@string/consultcompletedauctions_searchbar_hint"
+                android:layout_marginHorizontal="12dp"
+                style="@style/EdTxtSearchbarStyle"
+                android:inputType="text"
+                android:importantForAutofill="no"
+                android:layout_weight="1"
+                android:layout_width="0dp" />
+            <ImageButton
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/search_icon"
+                android:background="@drawable/orange_icon_button_background"
+                android:contentDescription="@string/searchauction_search_button_action">
+            </ImageButton>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/eq_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="6"
+            tools:listitem="@layout/auction_details_with_state_template"
+            android:layout_margin="12dp"/>
+    </LinearLayout>
+</layout>

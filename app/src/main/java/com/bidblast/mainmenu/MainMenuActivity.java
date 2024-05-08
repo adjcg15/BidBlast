@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.bidblast.R;
+import com.bidblast.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.databinding.ActivityMainMenuBinding;
 import com.bidblast.searchauction.SearchAuctionFragment;
 
@@ -30,18 +31,20 @@ public class MainMenuActivity extends AppCompatActivity {
         int salesMenuItemId = R.id.salesMenuItem;
         int newAuctionMenuItemId = R.id.newAuctionMenuItem;
 
-        binding.mainMenuBottomNavigationView.setOnItemReselectedListener(item -> {
+        binding.mainMenuBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == searchMenuItemId) {
                 showFragment(new SearchAuctionFragment());
             } else if (itemId == purchasesMenuItemId) {
-                //TODO: show purchases fragment
+                showFragment(new ConsultCompletedAuctionsFragment());
             } else if (itemId == salesMenuItemId) {
                 //TODO: show sales fragmet
             } else if (itemId == newAuctionMenuItemId) {
                 //TODO: show create auction fragment
             }
+
+            return true;
         });
     }
 

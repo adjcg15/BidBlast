@@ -19,22 +19,16 @@
             android:name=".consultcreatedauctions.ConsultCreatedAuctionsActivity"
             android:exported="false" />
         <activity
-            android:name=".consultcompletedauctions.ConsultCompletedAuctionsActivity"
-            android:exported="false" />
-        <activity
             android:name=".modifycategory.ModifyCategoryActivity"
             android:exported="false" />
-        <activity
-            android:name=".searchauction.SearchAuctionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".login.LoginActivity"
-            android:exported="false"/>
         <activity
             android:name=".consultcategories.ConsultCategoriesActivity"
             android:exported="false"/>
         <activity
             android:name=".signup.SignUpActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
