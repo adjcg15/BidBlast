@@ -18,6 +18,13 @@
     <string name="searchauction_make_offer_action">Hacer oferta</string>
     <string name="searchauction_filters_action">Filtros</string>
 
+    <string name="signup_create_account">¡Crea una cuenta!</string>
+    <string name="signup_mandatory_email">Correo <font color="#FF5C00">*</font></string>
+    <string name="signup_phone_number">Número telefónico</string>
+    <string name="signup_mandatory_password">Contraseña <font color="#FF5C00">*</font></string>
+    <string name="signup_confirm_password">Confirmar contraseña <font color="#FF5C00">*</font></string>
+    <string name="signup_select_photo">Seleccionar foto</string>
+
     <string name="modifycategory_tittle">Modificar categoría</string>
     <string name="modifycategory_cancel_action">Cancelar</string>
     <string name="modifycategory_category_title">Título de la categoría <font color="#FF5C00">*</font></string>
