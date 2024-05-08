@@ -4,6 +4,7 @@
     <string name="global_email">Correo</string>
     <string name="global_password">Contraseña</string>
     <string name="global_full_name">Nombre completo <font color="#FF5C00">*</font></string>
+    <string name="global_field_restrictions">Los campos marcados con un <font color="#FF5C00">*</font> son obligatorios</string>
 
     <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
     <string name="login_welcome_description">Sigue participando en las subastas más interesantes del momento.</string>
@@ -17,9 +18,15 @@
     <string name="searchauction_make_offer_action">Hacer oferta</string>
     <string name="searchauction_filters_action">Filtros</string>
 
+    <string name="signup_create_account">¡Crea una cuenta!</string>
+    <string name="signup_mandatory_email">Correo <font color="#FF5C00">*</font></string>
+    <string name="signup_phone_number">Número telefónico</string>
+    <string name="signup_mandatory_password">Contraseña <font color="#FF5C00">*</font></string>
+    <string name="signup_confirm_password">Confirmar contraseña <font color="#FF5C00">*</font></string>
+    <string name="signup_select_photo">Seleccionar foto</string>
+
     <string name="modifycategory_tittle">Modificar categoría</string>
     <string name="modifycategory_cancel_action">Cancelar</string>
-    <string name="modifycategory_fields_description">Los campos marcados con un <font color="#FF5C00">*</font> son obligatorios</string>
     <string name="modifycategory_category_title">Título de la categoría <font color="#FF5C00">*</font></string>
     <string name="modifycategory_category_example">Ej. Coleccionables</string>
     <string name="modifycategory_category_description">Descripción de la categoría <font color="#FF5C00">*</font></string>
@@ -28,17 +35,20 @@
     <string name="modifycategory_keywords_example">Ej. Comics, monedas, historia</string>
     <string name="modifycategory_modify_action">Modificar categoría</string>
 
-    <string name="signup_create_account">¡Crea una cuenta!</string>
-    <string name="signup_mandatory_email">Correo <font color="#FF5C00">*</font></string>
-    <string name="signup_phone_number">Número telefónico</string>
-    <string name="signup_mandatory_password">Contraseña <font color="#FF5C00">*</font></string>
-    <string name="signup_confirm_password">Confirmar contraseña <font color="#FF5C00">*</font></string>
-    <string name="signup_select_photo">Seleccionar foto</string>
-
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
     <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>
+
     <string name="consultcreatedauctions_searchbar_hint">Buscar en ventas</string>
     <string name="consultcreatedauctions_sales_statistics_action">Estadísticas de ventas</string>
+
+    <string name="consultsalesstatistics_title">Estadísticas de ventas</string>
+    <string name="consultsalesstatistics_date_range">Seleccione un rango de fechas</string>
+    <string name="consultsalesstatistics_featured_sales_day">Día de ventas destacado</string>
+    <string name="consultsalesstatistics_message_bidblast">¡Sigue subastando en <font color="#FF5C00"><b>Bid</b></font><font color="#454545"><b>Blast</b></font>!</string>
+    <string name="consultsalesstatistics_first_date_action">Fecha inicio</string>
+    <string name="consultsalesstatistics_second_date_action">Fecha fin</string>
+    <string name="consultsalesstatistics_profits_earned">Total de ganacias obtenidas</string>
+    <string name="consultsalesstatistics_sales_categories">Categirías de ventas</string>
 
     <string name="consultcategories_searchbar_hint">Buscar categoría</string>
     <string name="consultcategories_edit_action">Editar</string>
