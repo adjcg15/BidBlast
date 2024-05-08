@@ -30,28 +30,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupLoginButtonClick() {
         binding.loginButton.setOnClickListener(v -> {
-            startMainMenuActivity();
-        });
-    }
-
-    private void setupFieldsValidations() {
-        viewModel.isValidEmail().observe(this, isValidEmail -> {
-            if (isValidEmail) {
-                binding.emailErrorTextView.setVisibility(View.GONE);
-                binding.emailErrorTextView.setBackgroundResource(R.drawable.basic_input_background);
-            } else {
-                binding.emailErrorTextView.setVisibility(View.VISIBLE);
-                binding.emailErrorTextView.setBackgroundResource(R.drawable.basic_input_error_background);
-            }
-        });
-
-        viewModel.isValidPassword().observe(this, isValidPassword -> {
-            if (isValidPassword) {
-                binding.passwordErrorTextView.setVisibility(View.GONE);
-                binding.passwordErrorTextView.setBackgroundResource(R.drawable.basic_input_background);
-            } else {
-                binding.passwordErrorTextView.setVisibility(View.VISIBLE);
-                binding.passwordErrorTextView.setBackgroundResource(R.drawable.basic_input_error_background);
+            if (validateFields()) {
+                startMainMenuActivity();
             }
         });
     }
@@ -59,5 +39,38 @@ public class LoginActivity extends AppCompatActivity {
     private void startMainMenuActivity() {
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
+    }
+
+    private boolean validateFields() {
+        String email = binding.emailEditText.getText().toString();
+        String password = binding.passwordEditText.getText().toString();
+
+        viewModel.validateEmail(email);
+        viewModel.validatePassword(password);
+
+        return Boolean.TRUE.equals(viewModel.isValidEmail().getValue())
+                && Boolean.TRUE.equals(viewModel.isValidPassword().getValue());
+    }
+
+    private void setupFieldsValidations() {
+        viewModel.isValidEmail().observe(this, isValidEmail -> {
+            if (isValidEmail) {
+                binding.emailErrorTextView.setVisibility(View.GONE);
+                binding.emailEditText.setBackgroundResource(R.drawable.basic_input_background);
+            } else {
+                binding.emailErrorTextView.setVisibility(View.VISIBLE);
+                binding.emailEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+            }
+        });
+
+        viewModel.isValidPassword().observe(this, isValidPassword -> {
+            if (isValidPassword) {
+                binding.passwordErrorTextView.setVisibility(View.GONE);
+                binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_background);
+            } else {
+                binding.passwordErrorTextView.setVisibility(View.VISIBLE);
+                binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+            }
+        });
     }
 }
