@@ -66,7 +66,8 @@
             android:text="@string/login_email_error"
             style="@style/TvSmallStyle"
             android:layout_marginTop="4dp"
-            android:textColor="@color/red_error"/>
+            android:textColor="@color/red_error"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -90,7 +91,8 @@
             android:text="@string/login_password_error"
             style="@style/TvSmallStyle"
             android:layout_marginTop="4dp"
-            android:textColor="@color/red_error"/>
+            android:textColor="@color/red_error"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/loginButton"
