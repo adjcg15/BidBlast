@@ -3,6 +3,7 @@
 
     <string name="global_email">Correo</string>
     <string name="global_password">Contraseña</string>
+    <string name="global_full_name">Nombre completo <font color="#FF5C00">*</font></string>
     <string name="global_field_restrictions">Los campos marcados con un <font color="#FF5C00">*</font> son obligatorios</string>
 
     <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
