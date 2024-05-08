@@ -9,8 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginHorizontal="12dp"
         android:layout_marginTop="30dp"
         android:orientation="vertical"
         tools:context=".login.LoginActivity">
@@ -79,6 +78,7 @@
             style="@style/EdTxtGenericStyle"/>
 
         <Button
+            android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/BtnPrimaryStyle"
