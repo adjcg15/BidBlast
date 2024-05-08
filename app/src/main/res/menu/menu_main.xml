@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/searchMenuItem"
+        android:title="@string/mainmenu_auctions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/search_menu_icon"
+        android:textSize="12sp"/>
+    <item
+        android:id="@+id/purchasesMenuItem"
+        android:title="@string/mainmenu_purchases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/purchases_menu_icon"
+        android:textSize="12sp"/>
+    <item
+        android:id="@+id/salesMenuItem"
+        android:title="@string/mainmenu_sales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/sales_menu_icon"
+        android:textSize="12sp"/>
+
+    <item
+        android:id="@+id/newAuctionMenuItem"
+        android:title="@string/mainmenu_new_auction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/plus_menu_icon"
+        android:textSize="12sp"/>
+</menu>
