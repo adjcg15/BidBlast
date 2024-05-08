@@ -15,4 +15,5 @@
         <item name="android:paddingHorizontal">16dp</item>
         <item name="android:paddingVertical">12dp</item>
     </style>
+
 </resources>
