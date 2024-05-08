@@ -56,32 +56,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login_email_example"
-            android:layout_marginBottom="16dp"
             android:importantForAutofill="no"
             android:inputType="textEmailAddress"
             style="@style/EdTxtGenericStyle"/>
+        <TextView
+            android:id="@+id/emailErrorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_email_error"
+            style="@style/TvSmallStyle"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/red_error"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/global_password"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="************"
-            android:layout_marginBottom="24dp"
             tools:ignore="HardcodedText"
             android:importantForAutofill="no"
             android:inputType="textPassword"
             style="@style/EdTxtGenericStyle"/>
+        <TextView
+            android:id="@+id/passwordErrorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_password_error"
+            style="@style/TvSmallStyle"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/red_error"/>
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/BtnPrimaryStyle"
+            android:layout_marginTop="24dp"
             android:text="@string/login_main_action"/>
 
         <LinearLayout
