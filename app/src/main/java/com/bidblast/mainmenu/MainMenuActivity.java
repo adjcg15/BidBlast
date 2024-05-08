@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.bidblast.R;
 import com.bidblast.databinding.ActivityMainMenuBinding;
+import com.bidblast.searchauction.SearchAuctionFragment;
 
 public class MainMenuActivity extends AppCompatActivity {
     ActivityMainMenuBinding binding;
@@ -19,6 +20,7 @@ public class MainMenuActivity extends AppCompatActivity {
         binding = ActivityMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        showFragment(new SearchAuctionFragment());
         setupMenuNavigation();
     }
 
@@ -32,7 +34,7 @@ public class MainMenuActivity extends AppCompatActivity {
             int itemId = item.getItemId();
 
             if (itemId == searchMenuItemId) {
-                //TODO: show seach auction fragment
+                showFragment(new SearchAuctionFragment());
             } else if (itemId == purchasesMenuItemId) {
                 //TODO: show purchases fragment
             } else if (itemId == salesMenuItemId) {
