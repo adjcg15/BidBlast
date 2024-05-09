@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.bidblast.R;
+import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.ActivityLoginBinding;
 import com.bidblast.databinding.ActivityMainMenuBinding;
 import com.bidblast.mainmenu.MainMenuActivity;
@@ -26,12 +27,18 @@ public class LoginActivity extends AppCompatActivity {
 
         setupLoginButtonClick();
         setupFieldsValidations();
+        setupLoginStatusListener();
     }
 
     private void setupLoginButtonClick() {
         binding.loginButton.setOnClickListener(v -> {
             if (validateFields()) {
-                startMainMenuActivity();
+                if(viewModel.getLoginRequestStatus().getValue() != RequestStatus.LOADING) {
+                    String email = binding.emailEditText.getText().toString().trim();
+                    String password = binding.passwordEditText.getText().toString().trim();
+
+                    viewModel.login(email, password);
+                }
             }
         });
     }
@@ -42,8 +49,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean validateFields() {
-        String email = binding.emailEditText.getText().toString();
-        String password = binding.passwordEditText.getText().toString();
+        String email = binding.emailEditText.getText().toString().trim();
+        String password = binding.passwordEditText.getText().toString().trim();
 
         viewModel.validateEmail(email);
         viewModel.validatePassword(password);
@@ -72,5 +79,18 @@ public class LoginActivity extends AppCompatActivity {
                 binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_error_background);
             }
         });
+    }
+
+    private void setupLoginStatusListener() {
+        viewModel.getLoginRequestStatus().observe(this, requestStatus -> {
+            if (requestStatus == RequestStatus.DONE) {
+                startMainMenuActivity();
+            }
+
+            if (requestStatus == RequestStatus.ERROR) {
+                //TODO: show error
+            }
+        });
+
     }
 }

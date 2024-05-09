@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bidblast.api.RequestStatus;
+import com.bidblast.api.requests.authentication.UserCredentialsBody;
 import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.model.models.User;
 import com.bidblast.model.repositories.AuthenticationRepository;
@@ -45,11 +46,11 @@ public class LoginViewModel extends ViewModel {
         loginRequestStatus.setValue(RequestStatus.LOADING);
 
         new AuthenticationRepository().login(
-                email, password,
+                new UserCredentialsBody(email, password),
                 new IProcessStatusListener<User>() {
                     @Override
                     public void onSuccess(User data) {
-                        //TODO: save data in pojo
+                        //TODO: save data in singleton
                         loginRequestStatus.setValue(RequestStatus.DONE);
                     }
 
