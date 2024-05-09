@@ -1,14 +1,12 @@
 package com.bidblast.api;
 
-import android.app.Service;
-
 public class ApiClient {
     private static final ApiClient apiClient = new ApiClient();
     public static final String API_HOST = "http://10.0.2.2:3000";
 
-    private Service authenticationService;
-    private Service auctionsService;
-    private Service auctionCategoriesService;
+    private IAuthenticationService authenticationService;
+    private IAuctionsService auctionsService;
+    private IAuctionCategoriesService auctionCategoriesService;
 
     public static ApiClient getInstance() {
         return apiClient;
@@ -17,25 +15,25 @@ public class ApiClient {
 
     }
 
-    public Service getAuthenticationService() {
+    public IAuthenticationService getAuthenticationService() {
         if (authenticationService == null) {
-            authenticationService = IAuthenticationService.retrofit.create(Service.class);
+            authenticationService = IAuthenticationService.retrofit.create(IAuthenticationService.class);
         }
 
         return authenticationService;
     }
 
-    public Service getAuctionsService() {
+    public IAuctionsService getAuctionsService() {
         if (auctionsService == null) {
-            auctionsService = IAuctionsService.retrofit.create(Service.class);
+            auctionsService = IAuctionsService.retrofit.create(IAuctionsService.class);
         }
 
         return auctionsService;
     }
 
-    public Service getAuctionCategoriesService() {
+    public IAuctionCategoriesService getAuctionCategoriesService() {
         if (auctionCategoriesService == null) {
-            auctionCategoriesService = IAuctionCategoriesService.retrofit.create(Service.class);
+            auctionCategoriesService = IAuctionCategoriesService.retrofit.create(IAuctionCategoriesService.class);
         }
 
         return auctionCategoriesService;
