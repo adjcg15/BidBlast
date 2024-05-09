@@ -7,6 +7,7 @@ public class ApiClient {
     public static final String API_HOST = "http://10.0.2.2:3000";
 
     private Service authenticationService;
+    private Service auctionsService;
 
     public static ApiClient getInstance() {
         return apiClient;
@@ -16,10 +17,18 @@ public class ApiClient {
     }
 
     public Service getAuthenticationService() {
-        if(authenticationService == null) {
+        if (authenticationService == null) {
             authenticationService = IAuthenticationService.retrofit.create(Service.class);
         }
 
         return authenticationService;
+    }
+
+    public Service getAuctionsService() {
+        if (auctionsService == null) {
+            auctionsService = IAuctionsService.retrofit.create(Service.class);
+        }
+
+        return auctionsService;
     }
 }
