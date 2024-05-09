@@ -8,6 +8,7 @@ public class ApiClient {
 
     private Service authenticationService;
     private Service auctionsService;
+    private Service auctionCategoriesService;
 
     public static ApiClient getInstance() {
         return apiClient;
@@ -30,5 +31,13 @@ public class ApiClient {
         }
 
         return auctionsService;
+    }
+
+    public Service getAuctionCategoriesService() {
+        if (auctionCategoriesService == null) {
+            auctionCategoriesService = IAuctionCategoriesService.retrofit.create(Service.class);
+        }
+
+        return auctionCategoriesService;
     }
 }
