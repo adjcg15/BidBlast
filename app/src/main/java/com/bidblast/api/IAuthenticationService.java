@@ -14,6 +14,6 @@ public interface IAuthenticationService {
           .addConverterFactory(MoshiConverterFactory.create())
           .build();
 
-     @POST
+     @POST("/")
      Call<UserLoginJSONResponse> login(@Body String email, @Body String password);
 }
