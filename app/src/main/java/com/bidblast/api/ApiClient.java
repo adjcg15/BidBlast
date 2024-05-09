@@ -1,4 +1,4 @@
-package com.bidblast.API;
+package com.bidblast.api;
 
 import android.app.Service;
 
