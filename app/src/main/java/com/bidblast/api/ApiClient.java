@@ -1,8 +1,12 @@
 package com.bidblast.api;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.moshi.MoshiConverterFactory;
+
 public class ApiClient {
     private static final ApiClient apiClient = new ApiClient();
-    public static final String API_HOST = "http://10.0.2.2:3000";
+    public static final String API_BASE_URL = "http://10.0.2.2:3000/api/";
+    private final Retrofit retrofit;
 
     private IAuthenticationService authenticationService;
     private IAuctionsService auctionsService;
@@ -12,12 +16,15 @@ public class ApiClient {
         return apiClient;
     }
     private ApiClient() {
-
+        retrofit = new Retrofit.Builder()
+            .baseUrl(ApiClient.API_BASE_URL)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build();
     }
 
     public IAuthenticationService getAuthenticationService() {
         if (authenticationService == null) {
-            authenticationService = IAuthenticationService.retrofit.create(IAuthenticationService.class);
+            authenticationService = retrofit.create(IAuthenticationService.class);
         }
 
         return authenticationService;
@@ -25,7 +32,7 @@ public class ApiClient {
 
     public IAuctionsService getAuctionsService() {
         if (auctionsService == null) {
-            auctionsService = IAuctionsService.retrofit.create(IAuctionsService.class);
+            auctionsService = retrofit.create(IAuctionsService.class);
         }
 
         return auctionsService;
@@ -33,7 +40,7 @@ public class ApiClient {
 
     public IAuctionCategoriesService getAuctionCategoriesService() {
         if (auctionCategoriesService == null) {
-            auctionCategoriesService = IAuctionCategoriesService.retrofit.create(IAuctionCategoriesService.class);
+            auctionCategoriesService = retrofit.create(IAuctionCategoriesService.class);
         }
 
         return auctionCategoriesService;
