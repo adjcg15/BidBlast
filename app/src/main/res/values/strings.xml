@@ -22,6 +22,9 @@
     <string name="searchauction_search_button_action">Buscar</string>
     <string name="searchauction_make_offer_action">Hacer oferta</string>
     <string name="searchauction_filters_action">Filtros</string>
+    <string name="searchauction_filters_categories">Categorías</string>
+    <string name="searchauction_filters_prices">Precios</string>
+    <string name="searchauction_filters_show_results">Mostrar resultados</string>
 
     <string name="signup_create_account">¡Crea una cuenta!</string>
     <string name="signup_mandatory_email">Correo <font color="#FF5C00">*</font></string>
