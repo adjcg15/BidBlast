@@ -10,11 +10,14 @@ import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.model.User;
 import com.bidblast.repositories.AuthenticationRepository;
 import com.bidblast.repositories.IProcessStatusListener;
+import com.bidblast.repositories.ProcessErrorCodes;
 
 public class LoginViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidEmail = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isValidPassword = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> loginRequestStatus = new MutableLiveData<>();
+
+    private final MutableLiveData<ProcessErrorCodes> loginErrorCode = new MutableLiveData<>();
 
     public LoginViewModel() {
 
@@ -29,6 +32,8 @@ public class LoginViewModel extends ViewModel {
     }
 
     public LiveData<RequestStatus> getLoginRequestStatus() { return loginRequestStatus; }
+
+    public LiveData<ProcessErrorCodes> getLoginErrorCode() { return  loginErrorCode; }
 
     public void validatePassword(String password) {
         boolean validationResult = ValidationToolkit.isValidUserPassword(password);
@@ -46,19 +51,20 @@ public class LoginViewModel extends ViewModel {
         loginRequestStatus.setValue(RequestStatus.LOADING);
 
         new AuthenticationRepository().login(
-                new UserCredentialsBody(email, password),
-                new IProcessStatusListener<User>() {
-                    @Override
-                    public void onSuccess(User data) {
-                        //TODO: save data in singleton
-                        loginRequestStatus.setValue(RequestStatus.DONE);
-                    }
-
-                    @Override
-                    public void onError() {
-                        loginRequestStatus.setValue(RequestStatus.ERROR);
-                    }
+            new UserCredentialsBody(email, password),
+            new IProcessStatusListener<User>() {
+                @Override
+                public void onSuccess(User data) {
+                    //TODO: save data in singleton
+                    loginRequestStatus.setValue(RequestStatus.DONE);
                 }
+
+                @Override
+                public void onError(ProcessErrorCodes errorStatus) {
+                    loginErrorCode.setValue(errorStatus);
+                    loginRequestStatus.setValue(RequestStatus.ERROR);
+                }
+            }
         );
     }
 }

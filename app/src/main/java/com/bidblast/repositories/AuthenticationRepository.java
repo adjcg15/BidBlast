@@ -1,5 +1,8 @@
 package com.bidblast.repositories;
 
+import android.content.Context;
+
+import com.bidblast.R;
 import com.bidblast.api.ApiClient;
 import com.bidblast.api.IAuthenticationService;
 import com.bidblast.api.requests.authentication.UserCredentialsBody;
@@ -23,25 +26,24 @@ public class AuthenticationRepository {
                     if(body != null) {
                         //TODO handle token saving
                         statusListener.onSuccess(new User(
-                                body.getId(),
-                                body.getFullName(),
-                                body.getPhoneNumber(),
-                                body.getAvatar(),
-                                body.getEmail(),
-                                body.getRoles()
+                            body.getId(),
+                            body.getFullName(),
+                            body.getPhoneNumber(),
+                            body.getAvatar(),
+                            body.getEmail(),
+                            body.getRoles()
                         ));
                     } else {
-                        statusListener.onError();
+                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
                     }
                 } else {
-                    //TODO: handle status different to 200
-                    statusListener.onError();
+                    statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
                 }
             }
 
             @Override
             public void onFailure(Call<UserLoginJSONResponse> call, Throwable t) {
-                statusListener.onError();
+                statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });
     }

@@ -11,6 +11,8 @@ import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.ActivityLoginBinding;
 import com.bidblast.menus.mainmenu.MainMenuActivity;
+import com.bidblast.repositories.ProcessErrorCodes;
+import com.google.android.material.snackbar.Snackbar;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -87,9 +89,29 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             if (requestStatus == RequestStatus.ERROR) {
-                //TODO: show error
+                ProcessErrorCodes errorCode = viewModel.getLoginErrorCode().getValue();
+
+                if(errorCode != null) {
+                    showLoginError(errorCode);
+                }
             }
         });
+    }
 
+    private void showLoginError(ProcessErrorCodes errorCode) {
+        String errorMessage = "";
+
+        switch (errorCode) {
+            case REQUEST_FORMAT_ERROR:
+                errorMessage = getString(R.string.login_invalid_credentials_toast_message);
+                break;
+            case FATAL_ERROR:
+                errorMessage = getString(R.string.login_error_toast_message);
+                break;
+            default:
+                errorMessage = getString(R.string.login_error_toast_message);
+        }
+
+        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 }
