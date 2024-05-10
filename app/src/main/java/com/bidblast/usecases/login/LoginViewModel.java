@@ -9,6 +9,7 @@ import com.bidblast.api.requests.authentication.UserCredentialsBody;
 import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.model.User;
 import com.bidblast.repositories.AuthenticationRepository;
+import com.bidblast.repositories.IEmptyProcessStatusListener;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
 
@@ -52,10 +53,9 @@ public class LoginViewModel extends ViewModel {
 
         new AuthenticationRepository().login(
             new UserCredentialsBody(email, password),
-            new IProcessStatusListener<User>() {
+            new IEmptyProcessStatusListener() {
                 @Override
-                public void onSuccess(User data) {
-                    //TODO: save data in singleton
+                public void onSuccess() {
                     loginRequestStatus.setValue(RequestStatus.DONE);
                 }
 

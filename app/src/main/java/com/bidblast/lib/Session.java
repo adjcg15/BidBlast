@@ -10,7 +10,7 @@ public class Session {
 
     private Session() { }
 
-    public Session getInstance() {
+    public static Session getInstance() {
         if(instance == null) {
             instance = new Session();
         }
