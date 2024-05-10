@@ -1,4 +1,4 @@
-package com.bidblast.model.models;
+package com.bidblast.model;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.bidblast.consultsalesstatistics;
+package com.bidblast.usecases.consultsalesstatistics;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 

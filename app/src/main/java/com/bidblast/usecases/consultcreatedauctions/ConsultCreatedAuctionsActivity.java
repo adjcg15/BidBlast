@@ -1,4 +1,4 @@
-package com.bidblast.consultcreatedauctions;
+package com.bidblast.usecases.consultcreatedauctions;
 
 import androidx.appcompat.app.AppCompatActivity;
 

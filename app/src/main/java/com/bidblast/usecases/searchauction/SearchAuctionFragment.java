@@ -1,4 +1,4 @@
-package com.bidblast.consultcompletedauctions;
+package com.bidblast.usecases.searchauction;
 
 import android.os.Bundle;
 
@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 
 import com.bidblast.R;
 
-public class ConsultCompletedAuctionsFragment extends Fragment {
-    public ConsultCompletedAuctionsFragment() {
+public class SearchAuctionFragment extends Fragment {
+    public SearchAuctionFragment() {
 
     }
 
-    public static ConsultCompletedAuctionsFragment newInstance(String param1, String param2) {
-        return new ConsultCompletedAuctionsFragment();
+    public static SearchAuctionFragment newInstance() {
+        return new SearchAuctionFragment();
     }
 
     @Override
@@ -27,6 +27,6 @@ public class ConsultCompletedAuctionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_consult_completed_auctions, container, false);
+        return inflater.inflate(R.layout.fragment_search_auction, container, false);
     }
 }

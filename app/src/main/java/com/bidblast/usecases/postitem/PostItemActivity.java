@@ -1,4 +1,4 @@
-package com.bidblast.postitem;
+package com.bidblast.usecases.postitem;
 
 import android.os.Bundle;
 

@@ -1,4 +1,4 @@
-package com.bidblast.modifycategory;
+package com.bidblast.usecases.modifycategory;
 
 import androidx.appcompat.app.AppCompatActivity;
 
