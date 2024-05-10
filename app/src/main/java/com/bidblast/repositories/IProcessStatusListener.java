@@ -1,4 +1,4 @@
-package com.bidblast.model.repositories;
+package com.bidblast.repositories;
 
 public interface IProcessStatusListener<T> {
     void onSuccess(T data);

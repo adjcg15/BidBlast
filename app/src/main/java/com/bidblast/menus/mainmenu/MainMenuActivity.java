@@ -1,4 +1,4 @@
-package com.bidblast.mainmenu;
+package com.bidblast.menus.mainmenu;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -8,9 +8,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.bidblast.R;
-import com.bidblast.consultcompletedauctions.ConsultCompletedAuctionsFragment;
+import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.databinding.ActivityMainMenuBinding;
-import com.bidblast.searchauction.SearchAuctionFragment;
+import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 public class MainMenuActivity extends AppCompatActivity {
     ActivityMainMenuBinding binding;

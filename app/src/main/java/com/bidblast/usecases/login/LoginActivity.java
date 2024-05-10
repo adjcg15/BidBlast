@@ -1,4 +1,4 @@
-package com.bidblast.login;
+package com.bidblast.usecases.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -10,8 +10,7 @@ import android.view.View;
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.ActivityLoginBinding;
-import com.bidblast.databinding.ActivityMainMenuBinding;
-import com.bidblast.mainmenu.MainMenuActivity;
+import com.bidblast.menus.mainmenu.MainMenuActivity;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;

@@ -1,4 +1,4 @@
-package com.bidblast.login;
+package com.bidblast.usecases.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel;
 import com.bidblast.api.RequestStatus;
 import com.bidblast.api.requests.authentication.UserCredentialsBody;
 import com.bidblast.lib.ValidationToolkit;
-import com.bidblast.model.models.User;
-import com.bidblast.model.repositories.AuthenticationRepository;
-import com.bidblast.model.repositories.IProcessStatusListener;
+import com.bidblast.model.User;
+import com.bidblast.repositories.AuthenticationRepository;
+import com.bidblast.repositories.IProcessStatusListener;
 
 public class LoginViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidEmail = new MutableLiveData<>();

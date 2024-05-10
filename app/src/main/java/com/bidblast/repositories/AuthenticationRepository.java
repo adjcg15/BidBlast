@@ -1,10 +1,10 @@
-package com.bidblast.model.repositories;
+package com.bidblast.repositories;
 
 import com.bidblast.api.ApiClient;
 import com.bidblast.api.IAuthenticationService;
 import com.bidblast.api.requests.authentication.UserCredentialsBody;
 import com.bidblast.api.responses.authentication.UserLoginJSONResponse;
-import com.bidblast.model.models.User;
+import com.bidblast.model.User;
 
 import retrofit2.Call;
 import retrofit2.Callback;
