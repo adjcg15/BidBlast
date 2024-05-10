@@ -186,7 +186,8 @@
                 android:layout_gravity="end"
                 style="@style/BtnTernaryStyle"
                 android:text="@string/searchauction_filters_show_results"
-                android:textColor="@color/secondary"/>
+                android:textColor="@color/secondary"
+                android:layout_marginTop="16dp"/>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
