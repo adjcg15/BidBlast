@@ -1,7 +1,10 @@
 package com.bidblast.model;
 
+import androidx.annotation.Nullable;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Auction {
     private int id;
@@ -118,5 +121,18 @@ public class Auction {
 
     public void setLastOffer(Offer lastOffer) {
         this.lastOffer = lastOffer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Auction auction = (Auction) o;
+        return id == auction.id && Float.compare(auction.basePrice, basePrice) == 0 && Float.compare(auction.minimumBid, minimumBid) == 0 && daysAvailable == auction.daysAvailable && Objects.equals(title, auction.title) && Objects.equals(description, auction.description) && Objects.equals(approvalDate, auction.approvalDate) && Objects.equals(closesAt, auction.closesAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, basePrice, minimumBid, approvalDate, closesAt, daysAvailable);
     }
 }
