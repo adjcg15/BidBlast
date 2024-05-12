@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bidblast.R;
+import com.bidblast.databinding.FragmentSearchAuctionBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class SearchAuctionFragment extends Fragment {
+    private FragmentSearchAuctionBinding binding;
+
     public SearchAuctionFragment() {
 
     }
@@ -27,6 +31,21 @@ public class SearchAuctionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search_auction, container, false);
+        binding = FragmentSearchAuctionBinding.inflate(inflater, container, false);
+        View rootView = binding.getRoot();
+
+        setupFiltersButton();
+
+        return rootView;
+    }
+
+    private void setupFiltersButton() {
+        binding.filtersButton.setOnClickListener(v -> {
+            View filtersView = getLayoutInflater().inflate(R.layout.dialog_search_auction_filters, null);
+
+            BottomSheetDialog filtersDialog = new BottomSheetDialog(requireContext());
+            filtersDialog.setContentView(filtersView);
+            filtersDialog.show();
+        });
     }
 }
