@@ -5,11 +5,11 @@ import java.util.Date;
 public class AuctionLastOfferJSONResponse {
     private int id;
     private float amount;
-    private Date creationDate;
+    private String creationDate;
 
     public AuctionLastOfferJSONResponse() { }
 
-    public AuctionLastOfferJSONResponse(int id, float amount, Date creationDate) {
+    public AuctionLastOfferJSONResponse(int id, float amount, String creationDate) {
         this.id = id;
         this.amount = amount;
         this.creationDate = creationDate;
@@ -31,11 +31,11 @@ public class AuctionLastOfferJSONResponse {
         this.amount = amount;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 }

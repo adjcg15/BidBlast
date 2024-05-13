@@ -6,7 +6,7 @@ import java.util.List;
 public class AuctionJSONResponse {
     private int id;
     private String title;
-    private Date closesAt;
+    private String closesAt;
 
     private List<AuctionMediaFileJSONResponse> mediaFiles;
 
@@ -16,7 +16,7 @@ public class AuctionJSONResponse {
 
     public AuctionJSONResponse() { }
 
-    public AuctionJSONResponse(int id, String title, Date closesAt, List<AuctionMediaFileJSONResponse> mediaFiles, AuctionAuctioneerJSONResponse auctioneer, AuctionLastOfferJSONResponse lastOffer) {
+    public AuctionJSONResponse(int id, String title, String closesAt, List<AuctionMediaFileJSONResponse> mediaFiles, AuctionAuctioneerJSONResponse auctioneer, AuctionLastOfferJSONResponse lastOffer) {
         this.id = id;
         this.title = title;
         this.closesAt = closesAt;
@@ -41,11 +41,11 @@ public class AuctionJSONResponse {
         this.title = title;
     }
 
-    public Date getClosesAt() {
+    public String getClosesAt() {
         return closesAt;
     }
 
-    public void setClosesAt(Date closesAt) {
+    public void setClosesAt(String closesAt) {
         this.closesAt = closesAt;
     }
 
