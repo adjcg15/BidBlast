@@ -107,11 +107,11 @@
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/eq_recycler"
+                android:id="@+id/auctionsListRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:itemCount="5"
-                tools:listitem="@layout/auction_details_template"
+                tools:listitem="@layout/template_auction_details"
                 android:layout_margin="12dp"/>
         </LinearLayout>
     </FrameLayout>
