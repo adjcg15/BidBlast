@@ -51,6 +51,7 @@ public class SearchAuctionFragment extends Fragment {
         setupAuctionsListStatusListener();
         setupAuctionsListListener();
         loadAuctions("", 10, 0);
+        loadAuctionCategories();
 
         return rootView;
     }
@@ -79,5 +80,9 @@ public class SearchAuctionFragment extends Fragment {
 
     private void loadAuctions(String searchQuery, int limit, int offset) {
         viewModel.recoverAuctions(searchQuery, limit, offset);
+    }
+
+    private void loadAuctionCategories() {
+        viewModel.recoverAuctionCategories();
     }
 }
