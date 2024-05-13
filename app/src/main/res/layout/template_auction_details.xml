@@ -12,13 +12,15 @@
         android:orientation="horizontal"
         android:background="@drawable/gray_rounded_border"
         android:layout_marginBottom="12dp"
-        android:padding="1dp">
+        android:padding="1dp"
+        android:layout_marginTop="16dp">
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.4"
             android:background="#F9F9F9">
             <ImageView
+                android:id="@+id/auctionMainImageImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_launcher_background"
@@ -43,12 +45,14 @@
                     android:layout_height="24dp"
                     app:cardCornerRadius="50dp">
                     <ImageView
+                        android:id="@+id/auctioneerAvatarImageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_launcher_background"
+                        android:src="@drawable/avatar_icon"
                         android:importantForAccessibility="no" />
                 </androidx.cardview.widget.CardView>
                 <TextView
+                    android:id="@+id/auctioneerNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Jacob Montiel Salas"
@@ -58,12 +62,14 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/auctionTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Libro primavera silenciosa"
                 style="@style/TvParagraphStyle"
                 android:textColor="@color/black"/>
             <TextView
+                android:id="@+id/auctionClosingDateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Disponible hasta el 24 de abril de 2024 a las 14:00."
@@ -79,6 +85,7 @@
                 android:textColor="@color/dark_gray"/>
 
             <TextView
+                android:id="@+id/auctionLastofferTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$378.50MXN"

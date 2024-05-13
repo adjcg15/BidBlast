@@ -3,6 +3,7 @@ package com.bidblast.usecases.searchauction;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class SearchAuctionFragment extends Fragment {
     private FragmentSearchAuctionBinding binding;
+    private SearchAuctionViewModel viewModel;
+    private AuctionDetailsAdapter auctionsListAdapter;
 
     public SearchAuctionFragment() {
 
@@ -29,12 +32,25 @@ public class SearchAuctionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+        LayoutInflater inflater,
+        ViewGroup container,
+        Bundle savedInstanceState
+    ) {
         binding = FragmentSearchAuctionBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
 
+        this.viewModel = new SearchAuctionViewModel();
+
+        auctionsListAdapter = new AuctionDetailsAdapter();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        binding.auctionsListRecyclerView.setAdapter(auctionsListAdapter);
+        binding.auctionsListRecyclerView.setLayoutManager(layoutManager);
+
         setupFiltersButton();
+        setupAuctionsListStatusListener();
+        setupAuctionsListListener();
+        loadAuctions("", 10, 0);
 
         return rootView;
     }
@@ -47,5 +63,21 @@ public class SearchAuctionFragment extends Fragment {
             filtersDialog.setContentView(filtersView);
             filtersDialog.show();
         });
+    }
+
+    private void setupAuctionsListStatusListener() {
+        viewModel.getAuctionsListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
+            //TODO: handle errors
+        });
+    }
+
+    private void setupAuctionsListListener() {
+        viewModel.getAuctionsList().observe(getViewLifecycleOwner(), auctionsList -> {
+            auctionsListAdapter.submitList(auctionsList);
+        });
+    }
+
+    private void loadAuctions(String searchQuery, int limit, int offset) {
+        viewModel.recoverAuctions(searchQuery, limit, offset);
     }
 }
