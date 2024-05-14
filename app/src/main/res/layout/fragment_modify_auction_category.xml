@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="auctionCategory"
+            type="com.bidblast.model.AuctionCategory" />
     </data>
 
     <LinearLayout
@@ -64,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="flagNoEnterAction"
                 android:importantForAutofill="no"
+                android:text="@{auctionCategory.title}"
                 android:hint="@string/modifycategory_category_example"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
@@ -93,6 +96,7 @@
                 android:imeOptions="flagNoEnterAction"
                 android:importantForAutofill="no"
                 android:scrollHorizontally="false"
+                android:text="@{auctionCategory.description}"
                 android:hint="@string/modifycategory_category_description_example"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
@@ -122,6 +126,7 @@
                 android:imeOptions="flagNoEnterAction"
                 android:importantForAutofill="no"
                 android:scrollHorizontally="false"
+                android:text="@{auctionCategory.keywords}"
                 android:hint="@string/modifycategory_keywords_example"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
