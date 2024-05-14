@@ -23,9 +23,6 @@
             android:name=".usecases.consultcreatedauctions.ConsultCreatedAuctionsActivity"
             android:exported="false" />
         <activity
-            android:name=".usecases.modifycategory.ModifyCategoryActivity"
-            android:exported="false" />
-        <activity
             android:name=".usecases.consultcategories.ConsultCategoriesActivity"
             android:exported="false"/>
         <activity
