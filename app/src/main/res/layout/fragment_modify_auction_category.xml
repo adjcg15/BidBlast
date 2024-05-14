@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="auctionCategory"
+            type="com.bidblast.model.AuctionCategory" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".usecases.modifycategory.ModifyCategoryActivity">
+        tools:context=".usecases.modifycategory.ModifyAuctionCategoryFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,26 +61,32 @@
                 android:text="@string/modifycategory_category_title"
                 style="@style/TvBlackTagDecoratorStyle"/>
             <EditText
+                android:id="@+id/categoryTitleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:imeOptions="flagNoEnterAction"
                 android:importantForAutofill="no"
+                android:text="@{auctionCategory.title}"
                 android:hint="@string/modifycategory_category_example"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
+                android:id="@+id/categoryTitleErrorTextView"
+                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 style="@style/TvErrorField"
-                android:text="Ingrese un título para la categoría"/>
+                android:text="@string/modifycategory_category_title_error"
+                android:visibility="gone"/>
 
             <TextView
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="@string/modifycategory_category_description"
                 style="@style/TvBlackTagDecoratorStyle"/>
             <EditText
+                android:id="@+id/categoryDescriptionEditText"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:gravity="top|start"
@@ -89,22 +96,27 @@
                 android:imeOptions="flagNoEnterAction"
                 android:importantForAutofill="no"
                 android:scrollHorizontally="false"
+                android:text="@{auctionCategory.description}"
                 android:hint="@string/modifycategory_category_description_example"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
+                android:id="@+id/categoryDescriptionErrorTextView"
+                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 style="@style/TvErrorField"
-                android:text="Ingrese una descripción para la categoría de no más de 1000 caracteres"/>
+                android:text="@string/modifycategory_category_description_error"
+                android:visibility="gone"/>
 
             <TextView
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="@string/modifycategory_keywords"
                 style="@style/TvBlackTagDecoratorStyle"/>
             <EditText
+                android:id="@+id/categoryKeyWordsEditText"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:gravity="top|start"
@@ -114,16 +126,21 @@
                 android:imeOptions="flagNoEnterAction"
                 android:importantForAutofill="no"
                 android:scrollHorizontally="false"
+                android:text="@{auctionCategory.keywords}"
                 android:hint="@string/modifycategory_keywords_example"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
+                android:id="@+id/categoryKeywordsErrorTextView"
+                android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
                 style="@style/TvErrorField"
-                android:text="Ingrese al menos tres palabras clave"/>
+                android:text="@string/modifycategory_category_keywords_error"
+                android:visibility="gone"/>
 
             <Button
+                android:id="@+id/modifyCategoryButton"
+                android:layout_marginTop="24dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/BtnPrimaryStyle"

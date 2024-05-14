@@ -1,14 +1,21 @@
 package com.bidblast.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
-public class AuctionCategory {
+public class AuctionCategory implements Parcelable {
     private int id;
+
     private String title;
+
     private String description;
     private String keywords;
 
-    public AuctionCategory() { }
+    public AuctionCategory() {}
 
     public AuctionCategory(int id, String title, String description, String keywords) {
         this.id = id;
@@ -16,6 +23,25 @@ public class AuctionCategory {
         this.description = description;
         this.keywords = keywords;
     }
+
+    protected AuctionCategory(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        description = in.readString();
+        keywords = in.readString();
+    }
+
+    public static final Creator<AuctionCategory> CREATOR = new Creator<AuctionCategory>() {
+        @Override
+        public AuctionCategory createFromParcel(Parcel in) {
+            return new AuctionCategory(in);
+        }
+
+        @Override
+        public AuctionCategory[] newArray(int size) {
+            return new AuctionCategory[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -60,5 +86,18 @@ public class AuctionCategory {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, description, keywords);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(description);
+        dest.writeString(keywords);
     }
 }
