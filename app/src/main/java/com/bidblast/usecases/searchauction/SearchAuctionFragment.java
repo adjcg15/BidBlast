@@ -17,6 +17,7 @@ public class SearchAuctionFragment extends Fragment {
     private FragmentSearchAuctionBinding binding;
     private SearchAuctionViewModel viewModel;
     private AuctionDetailsAdapter auctionsListAdapter;
+    private CategoryFastFilterAdapter fastCategoryFiltersListAdapter;
 
     public SearchAuctionFragment() {
 
@@ -43,13 +44,15 @@ public class SearchAuctionFragment extends Fragment {
         this.viewModel = new SearchAuctionViewModel();
 
         auctionsListAdapter = new AuctionDetailsAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.auctionsListRecyclerView.setAdapter(auctionsListAdapter);
-        binding.auctionsListRecyclerView.setLayoutManager(layoutManager);
+
+        fastCategoryFiltersListAdapter = new CategoryFastFilterAdapter();
+        binding.fastCategoryFiltersListRecyclerView.setAdapter(fastCategoryFiltersListAdapter);
 
         setupFiltersButton();
         setupAuctionsListStatusListener();
         setupAuctionsListListener();
+        setupAuctionCategoriesListListener();
         loadAuctions("", 10, 0);
         loadAuctionCategories();
 
@@ -75,6 +78,12 @@ public class SearchAuctionFragment extends Fragment {
     private void setupAuctionsListListener() {
         viewModel.getAuctionsList().observe(getViewLifecycleOwner(), auctionsList -> {
             auctionsListAdapter.submitList(auctionsList);
+        });
+    }
+
+    private void setupAuctionCategoriesListListener() {
+        viewModel.getAuctionCategoriesList().observe(getViewLifecycleOwner(), categoriesList -> {
+            fastCategoryFiltersListAdapter.submitList(categoriesList);
         });
     }
 
