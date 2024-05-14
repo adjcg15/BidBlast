@@ -9,10 +9,14 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bidblast.R;
 import com.bidblast.databinding.TemplateCategoryFastFilterBinding;
 import com.bidblast.model.AuctionCategory;
 
 public class CategoryFastFilterAdapter extends ListAdapter<AuctionCategory, CategoryFastFilterAdapter.CategoryViewHolder> {
+    private SearchAuctionViewModel viewModel;
+    private OnFilterClickListener onFilterClickListener;
+
     public static final DiffUtil.ItemCallback<AuctionCategory> DIFF_CALLBACK = new DiffUtil.ItemCallback<AuctionCategory>() {
         @Override
         public boolean areItemsTheSame(@NonNull AuctionCategory oldItem, @NonNull AuctionCategory newItem) {
@@ -25,8 +29,9 @@ public class CategoryFastFilterAdapter extends ListAdapter<AuctionCategory, Cate
         }
     };
 
-    protected CategoryFastFilterAdapter() {
+    protected CategoryFastFilterAdapter(SearchAuctionViewModel viewModel) {
         super(DIFF_CALLBACK);
+        this.viewModel = viewModel;
     }
 
     @NonNull
@@ -44,7 +49,11 @@ public class CategoryFastFilterAdapter extends ListAdapter<AuctionCategory, Cate
         holder.bind(category);
     }
 
-    public static class CategoryViewHolder extends RecyclerView.ViewHolder {
+    public void setOnFilterClickListener(OnFilterClickListener onFilterClickListener) {
+        this.onFilterClickListener = onFilterClickListener;
+    }
+
+    public class CategoryViewHolder extends RecyclerView.ViewHolder {
         private final TemplateCategoryFastFilterBinding binding;
 
         public CategoryViewHolder(@NonNull TemplateCategoryFastFilterBinding binding) {
@@ -54,7 +63,29 @@ public class CategoryFastFilterAdapter extends ListAdapter<AuctionCategory, Cate
 
         public void bind(AuctionCategory category) {
             binding.categoryTitleTextView.setText(category.getTitle());
+
+            binding.getRoot().setOnClickListener(v -> {
+                onFilterClickListener.onFilterClick(category);
+            });
+            setupCategoryFiltersListListener(category);
+
             binding.executePendingBindings();
         }
+
+        private void setupCategoryFiltersListListener(AuctionCategory category) {
+            viewModel.getCategoryFiltersSelected().observeForever(categoryFilters -> {
+                if(categoryFilters.contains(category.getId())) {
+                    binding.categoryTitleTextView.setBackgroundResource(R.drawable.filled_black_rounded_border);
+                    binding.categoryTitleTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.white));
+                } else {
+                    binding.categoryTitleTextView.setBackgroundResource(R.drawable.black_rounded_border);
+                    binding.categoryTitleTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
+                }
+            });
+        }
+    }
+
+    interface OnFilterClickListener {
+        void onFilterClick(AuctionCategory category);
     }
 }

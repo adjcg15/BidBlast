@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentSearchAuctionBinding;
+import com.bidblast.model.AuctionCategory;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class SearchAuctionFragment extends Fragment {
@@ -46,8 +47,9 @@ public class SearchAuctionFragment extends Fragment {
         auctionsListAdapter = new AuctionDetailsAdapter();
         binding.auctionsListRecyclerView.setAdapter(auctionsListAdapter);
 
-        fastCategoryFiltersListAdapter = new CategoryFastFilterAdapter();
+        fastCategoryFiltersListAdapter = new CategoryFastFilterAdapter(viewModel);
         binding.fastCategoryFiltersListRecyclerView.setAdapter(fastCategoryFiltersListAdapter);
+        fastCategoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFilter);
 
         setupFiltersButton();
         setupAuctionsListStatusListener();
@@ -93,5 +95,10 @@ public class SearchAuctionFragment extends Fragment {
 
     private void loadAuctionCategories() {
         viewModel.recoverAuctionCategories();
+    }
+
+    private void toggleCategoryFilter(AuctionCategory category) {
+        viewModel.toggleCategoryFilter(category);
+        //TODO: clean the showed auctions list and show a new one with the filters coincidence
     }
 }

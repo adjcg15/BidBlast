@@ -11,13 +11,18 @@ import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SearchAuctionViewModel {
     private final MutableLiveData<List<Auction>> auctionsList = new MutableLiveData<>();
-    private final MutableLiveData<List<AuctionCategory>> auctionCategoriesList = new MutableLiveData<>();
+    private final MutableLiveData<List<AuctionCategory>> auctionCategoriesList =
+        new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<RequestStatus> auctionsListRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> auctionCategoriesListRequestStatus = new MutableLiveData<>();
+    private final MutableLiveData<List<Integer>> categoryFiltersSelected =
+        new MutableLiveData<>(new ArrayList<>());
 
     public LiveData<List<Auction>> getAuctionsList() { return auctionsList; }
 
@@ -31,6 +36,10 @@ public class SearchAuctionViewModel {
 
     public LiveData<RequestStatus> getAuctionCategoriesListRequestStatus() {
         return auctionCategoriesListRequestStatus;
+    }
+
+    public LiveData<List<Integer>> getCategoryFiltersSelected() {
+        return categoryFiltersSelected;
     }
 
     public void recoverAuctions(String searchQuery, int limit, int offset) {
@@ -60,7 +69,6 @@ public class SearchAuctionViewModel {
             new IProcessStatusListener<List<AuctionCategory>>() {
                 @Override
                 public void onSuccess(List<AuctionCategory> categories) {
-                    System.out.println("TOTAL DE CATEGORIAS RECUPERADAS: " + categories.size());
                     auctionCategoriesListRequestStatus.setValue(RequestStatus.DONE);
                     auctionCategoriesList.setValue(categories);
                 }
@@ -71,5 +79,18 @@ public class SearchAuctionViewModel {
                 }
             }
         );
+    }
+
+    public void toggleCategoryFilter(AuctionCategory category) {
+        Integer categoryId = category.getId();
+
+        List<Integer> currentFilters = new ArrayList<>(Objects.requireNonNull(categoryFiltersSelected.getValue()));
+        if(Objects.requireNonNull(categoryFiltersSelected.getValue()).contains(categoryId)) {
+            currentFilters.remove(categoryId);
+        } else {
+            currentFilters.add(categoryId);
+        }
+
+        categoryFiltersSelected.setValue(currentFilters);
     }
 }
