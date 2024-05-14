@@ -47,6 +47,8 @@
     <string name="modifycategory_category_title_error">Ingrese un título para la categoría</string>
     <string name="modifycategory_category_description_error">Ingrese un título para la categoría</string>
     <string name="modifycategory_category_keywords_error">Ingrese al menos tres palabras clave"</string>
+    <string name="modifycategory_error_toast_message">No fue posible modificar la categoría, intente más tarde</string>
+    <string name="modifycategory_success_toast_message">Categoría modificada con éxito</string>
 
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
     <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>

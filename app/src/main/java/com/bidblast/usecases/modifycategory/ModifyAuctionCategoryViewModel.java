@@ -32,6 +32,14 @@ public class ModifyAuctionCategoryViewModel extends ViewModel {
         return areValidKeywords;
     }
 
+    public LiveData<RequestStatus> getModifyAuctionCategoryRequestStatus() {
+        return modifyAuctionCategoryRequestStatus;
+    }
+
+    public LiveData<ProcessErrorCodes> getModifyAuctionCategoryErrorCode() {
+        return  modifyAuctionCategoryErrorCode;
+    }
+
     public void validateTitle(String title){
         boolean validationResult = title.trim().length() != 0;
 
@@ -50,8 +58,7 @@ public class ModifyAuctionCategoryViewModel extends ViewModel {
         areValidKeywords.setValue(validationResult);
     }
 
-    public AuctionCategory updateAuctionCategory(AuctionCategory auctionCategory){
+    public void updateAuctionCategory(String title, String description, String keywords){
 
-        return auctionCategory;
     }
 }

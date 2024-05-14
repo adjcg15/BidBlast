@@ -10,33 +10,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bidblast.R;
+import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentModifyAuctionCategoryBinding;
-import com.bidblast.usecases.login.LoginViewModel;
+import com.bidblast.model.AuctionCategory;
+import com.bidblast.repositories.ProcessErrorCodes;
+import com.google.android.material.snackbar.Snackbar;
 
 public class ModifyAuctionCategoryFragment extends Fragment {
 
     private FragmentModifyAuctionCategoryBinding binding;
     private ModifyAuctionCategoryViewModel viewModel;
 
-    private static final String ID_KEY = "id";
-    private static final String TITLE_KEY = "title";
-    private static final String DESCRIPTION_KEY = "description";
-    private static final String KEYWORDS_KEY = "keywords";
+    private static final String AUCTIONCATEGORY_KEY = "auction_category";
 
-    private int id;
-    private String title;
-    private String description;
-    private String keywords;
+    private AuctionCategory auctionCategory;
 
     public ModifyAuctionCategoryFragment() {}
 
-    public static ModifyAuctionCategoryFragment newInstance(int id, String title, String description, String keywords) {
+    public static ModifyAuctionCategoryFragment newInstance(AuctionCategory auctionCategory) {
         ModifyAuctionCategoryFragment fragment = new ModifyAuctionCategoryFragment();
         Bundle args = new Bundle();
-        args.putInt(ID_KEY, id);
-        args.putString(TITLE_KEY, title);
-        args.putString(DESCRIPTION_KEY, description);
-        args.putString(KEYWORDS_KEY, keywords);
+        args.putParcelable(AUCTIONCATEGORY_KEY, auctionCategory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,14 +39,10 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            id = getArguments().getInt(ID_KEY);
-            title = getArguments().getString(TITLE_KEY);
-            description = getArguments().getString(DESCRIPTION_KEY);
-            keywords = getArguments().getString(KEYWORDS_KEY);
-            // Aquí podrías hacer cualquier cosa que necesites con los datos, como pasárselos al ViewModel
-            // viewModel.setData(id, title, description, keywords);
+            auctionCategory = getArguments().getParcelable(AUCTIONCATEGORY_KEY);
         }
         setupFieldsValidations();
+        setupModifyAuctionCategoryStatusListener();
         viewModel = new ViewModelProvider(this).get(ModifyAuctionCategoryViewModel.class);
     }
 
@@ -60,7 +50,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentModifyAuctionCategoryBinding.inflate(inflater, container, false);
-
+        binding.setAuctionCategory(auctionCategory);
         setupModifyAuctionCategoryButton();
         return binding.getRoot();
     }
@@ -100,7 +90,13 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     private void setupModifyAuctionCategoryButton() {
         binding.modifyCategoryButton.setOnClickListener(v -> {
             if (validateFields()) {
+                if(viewModel.getModifyAuctionCategoryRequestStatus().getValue() != RequestStatus.LOADING) {
+                    String title = binding.categoryTitleEditText.getText().toString().trim();
+                    String description = binding.categoryDescriptionEditText.getText().toString().trim();
+                    String keywords = binding.categoryDescriptionEditText.getText().toString().trim();
 
+                    viewModel.updateAuctionCategory(title, description, keywords);
+                }
             }
         });
     }
@@ -117,6 +113,40 @@ public class ModifyAuctionCategoryFragment extends Fragment {
         return Boolean.TRUE.equals(viewModel.isValidTitle().getValue()) &&
                 Boolean.TRUE.equals(viewModel.isValidDescription().getValue()) &&
                 Boolean.TRUE.equals(viewModel.areValidKeywords().getValue());
+    }
+
+    private void setupModifyAuctionCategoryStatusListener() {
+        viewModel.getModifyAuctionCategoryRequestStatus().observe(this, requestStatus -> {
+            if (requestStatus == RequestStatus.DONE) {
+                String successMessage = getString(R.string.modifycategory_success_toast_message);
+                Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
+            }
+
+            if (requestStatus == RequestStatus.ERROR) {
+                ProcessErrorCodes errorCode = viewModel.getModifyAuctionCategoryErrorCode().getValue();
+
+                if(errorCode != null) {
+                    showModifyAuctionCategoryError(errorCode);
+                }
+            }
+        });
+    }
+
+    private void showModifyAuctionCategoryError(ProcessErrorCodes errorCode) {
+        String errorMessage = "";
+
+        switch (errorCode) {
+            case REQUEST_FORMAT_ERROR:
+                errorMessage = getString(R.string.modifycategory_error_toast_message);
+                break;
+            case FATAL_ERROR:
+                errorMessage = getString(R.string.modifycategory_error_toast_message);
+                break;
+            default:
+                errorMessage = getString(R.string.modifycategory_error_toast_message);
+        }
+
+        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 }
 
