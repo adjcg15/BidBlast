@@ -71,8 +71,8 @@ public class AuctionCategory implements Parcelable {
         return keywords;
     }
 
-    public void setKeywords(String keyWords) {
-        this.keywords = keyWords;
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     @Override

@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentSearchAuctionBinding;
+import com.bidblast.model.AuctionCategory;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class SearchAuctionFragment extends Fragment {
     private FragmentSearchAuctionBinding binding;
     private SearchAuctionViewModel viewModel;
     private AuctionDetailsAdapter auctionsListAdapter;
+    private CategoryFastFilterAdapter fastCategoryFiltersListAdapter;
 
     public SearchAuctionFragment() {
 
@@ -43,14 +45,18 @@ public class SearchAuctionFragment extends Fragment {
         this.viewModel = new SearchAuctionViewModel();
 
         auctionsListAdapter = new AuctionDetailsAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.auctionsListRecyclerView.setAdapter(auctionsListAdapter);
-        binding.auctionsListRecyclerView.setLayoutManager(layoutManager);
+
+        fastCategoryFiltersListAdapter = new CategoryFastFilterAdapter(viewModel);
+        binding.fastCategoryFiltersListRecyclerView.setAdapter(fastCategoryFiltersListAdapter);
+        fastCategoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFilter);
 
         setupFiltersButton();
         setupAuctionsListStatusListener();
         setupAuctionsListListener();
+        setupAuctionCategoriesListListener();
         loadAuctions("", 10, 0);
+        loadAuctionCategories();
 
         return rootView;
     }
@@ -77,7 +83,22 @@ public class SearchAuctionFragment extends Fragment {
         });
     }
 
+    private void setupAuctionCategoriesListListener() {
+        viewModel.getAuctionCategoriesList().observe(getViewLifecycleOwner(), categoriesList -> {
+            fastCategoryFiltersListAdapter.submitList(categoriesList);
+        });
+    }
+
     private void loadAuctions(String searchQuery, int limit, int offset) {
         viewModel.recoverAuctions(searchQuery, limit, offset);
+    }
+
+    private void loadAuctionCategories() {
+        viewModel.recoverAuctionCategories();
+    }
+
+    private void toggleCategoryFilter(AuctionCategory category) {
+        viewModel.toggleCategoryFilter(category);
+        //TODO: clean the showed auctions list and show a new one with the filters coincidence
     }
 }

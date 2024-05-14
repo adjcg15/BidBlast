@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <data>
 
     </data>
@@ -9,95 +8,99 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/gray_rounded_border"
-        android:layout_marginBottom="12dp"
-        android:padding="1dp"
-        android:layout_marginTop="16dp">
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:background="#F9F9F9">
-            <ImageView
-                android:id="@+id/auctionMainImageImageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_launcher_background"
-                android:importantForAccessibility="no" />
-        </RelativeLayout>
+        android:paddingBottom="16dp">
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:paddingEnd="8dp"
-            android:paddingStart="16dp"
-            android:paddingVertical="12dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:background="@drawable/gray_rounded_border"
+            android:padding="1dp"
+            android:baselineAligned="false">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4"
+                android:background="#F9F9F9">
+                <ImageView
+                    android:id="@+id/auctionMainImageImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_launcher_background"
+                    android:importantForAccessibility="no" />
+            </RelativeLayout>
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
-                <androidx.cardview.widget.CardView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:cardCornerRadius="50dp">
-                    <ImageView
-                        android:id="@+id/auctioneerAvatarImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/avatar_icon"
-                        android:importantForAccessibility="no" />
-                </androidx.cardview.widget.CardView>
+                android:layout_weight="0.6"
+                android:paddingEnd="8dp"
+                android:paddingStart="16dp"
+                android:paddingVertical="12dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:cardCornerRadius="50dp">
+                        <ImageView
+                            android:id="@+id/auctioneerAvatarImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/avatar_icon"
+                            android:importantForAccessibility="no" />
+                    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/auctioneerNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jacob Montiel Salas"
+                        android:layout_marginStart="8dp"
+                        style="@style/TvSmallStyle"
+                        android:textColor="@color/dark_gray"/>
+                </LinearLayout>
+
                 <TextView
-                    android:id="@+id/auctioneerNameTextView"
+                    android:id="@+id/auctionTitleTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Jacob Montiel Salas"
-                    android:layout_marginStart="8dp"
+                    android:text="Libro primavera silenciosa"
+                    style="@style/TvParagraphStyle"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/auctionClosingDateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Disponible hasta el 24 de abril de 2024 a las 14:00."
+                    style="@style/TvSmallStyle"
+                    android:textColor="@color/dark_gray"
+                    android:layout_marginBottom="12dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Última oferta"
                     style="@style/TvSmallStyle"
                     android:textColor="@color/dark_gray"/>
+
+                <TextView
+                    android:id="@+id/auctionLastofferTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$378.50MXN"
+                    style="@style/TvTitleStyle"
+                    android:textColor="@color/dark_primary"
+                    android:layout_marginBottom="12dp"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/BtnPrimaryStyle"
+                    android:text="@string/searchauction_make_offer_action"/>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/auctionTitleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Libro primavera silenciosa"
-                style="@style/TvParagraphStyle"
-                android:textColor="@color/black"/>
-            <TextView
-                android:id="@+id/auctionClosingDateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Disponible hasta el 24 de abril de 2024 a las 14:00."
-                style="@style/TvSmallStyle"
-                android:textColor="@color/dark_gray"
-                android:layout_marginBottom="12dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Última oferta"
-                style="@style/TvSmallStyle"
-                android:textColor="@color/dark_gray"/>
-
-            <TextView
-                android:id="@+id/auctionLastofferTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$378.50MXN"
-                style="@style/TvTitleStyle"
-                android:textColor="@color/dark_primary"
-                android:layout_marginBottom="12dp"/>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/BtnPrimaryStyle"
-                android:text="@string/searchauction_make_offer_action"/>
         </LinearLayout>
     </LinearLayout>
 </layout>
