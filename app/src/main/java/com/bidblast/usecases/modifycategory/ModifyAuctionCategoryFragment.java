@@ -52,7 +52,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
             // Aquí podrías hacer cualquier cosa que necesites con los datos, como pasárselos al ViewModel
             // viewModel.setData(id, title, description, keywords);
         }
-
+        setupFieldsValidations();
         viewModel = new ViewModelProvider(this).get(ModifyAuctionCategoryViewModel.class);
     }
 
@@ -60,7 +60,63 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentModifyAuctionCategoryBinding.inflate(inflater, container, false);
+
+        setupModifyAuctionCategoryButton();
         return binding.getRoot();
+    }
+
+    private void setupFieldsValidations() {
+        viewModel.isValidTitle().observe(this, isValidTitle -> {
+            if (isValidTitle) {
+                binding.categoryTitleErrorTextView.setVisibility(View.GONE);
+                binding.categoryTitleEditText.setBackgroundResource(R.drawable.basic_input_background);
+            } else {
+                binding.categoryTitleErrorTextView.setVisibility(View.VISIBLE);
+                binding.categoryTitleEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+            }
+        });
+
+        viewModel.isValidDescription().observe(this, isValidDescription -> {
+            if (isValidDescription) {
+                binding.categoryDescriptionErrorTextView.setVisibility(View.GONE);
+                binding.categoryDescriptionEditText.setBackgroundResource(R.drawable.basic_input_background);
+            } else {
+                binding.categoryDescriptionErrorTextView.setVisibility(View.VISIBLE);
+                binding.categoryDescriptionEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+            }
+        });
+
+        viewModel.areValidKeywords().observe(this, areValidKeywords -> {
+            if (areValidKeywords) {
+                binding.categoryKeywordsErrorTextView.setVisibility(View.GONE);
+                binding.categoryKeyWordsEditText.setBackgroundResource(R.drawable.basic_input_background);
+            } else {
+                binding.categoryKeywordsErrorTextView.setVisibility(View.VISIBLE);
+                binding.categoryKeyWordsEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+            }
+        });
+    }
+
+    private void setupModifyAuctionCategoryButton() {
+        binding.modifyCategoryButton.setOnClickListener(v -> {
+            if (validateFields()) {
+
+            }
+        });
+    }
+
+    private boolean validateFields(){
+        String title = binding.categoryTitleEditText.getText().toString().trim();
+        String description = binding.categoryDescriptionEditText.getText().toString().trim();
+        String keywords = binding.categoryKeyWordsEditText.getText().toString().trim();
+
+        viewModel.validateTitle(title);
+        viewModel.validateDescription(description);
+        viewModel.validateKeywords(keywords);
+
+        return Boolean.TRUE.equals(viewModel.isValidTitle().getValue()) &&
+                Boolean.TRUE.equals(viewModel.isValidDescription().getValue()) &&
+                Boolean.TRUE.equals(viewModel.areValidKeywords().getValue());
     }
 }
 
