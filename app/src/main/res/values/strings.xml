@@ -44,6 +44,9 @@
     <string name="modifycategory_keywords">Palabras clave <font color="#FF5C00">*</font></string>
     <string name="modifycategory_keywords_example">Ej. Comics, monedas, historia</string>
     <string name="modifycategory_modify_action">Modificar categoría</string>
+    <string name="modifycategory_category_title_error">Ingrese un título para la categoría</string>
+    <string name="modifycategory_category_description_error">Ingrese un título para la categoría</string>
+    <string name="modifycategory_category_keywords_error">Ingrese al menos tres palabras clave"</string>
 
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
     <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>
@@ -76,4 +79,6 @@
     <string name="mainmenu_purchases">Compras</string>
     <string name="mainmenu_sales">Ventas</string>
     <string name="mainmenu_new_auction">Subastar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
