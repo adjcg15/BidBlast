@@ -1,5 +1,7 @@
 package com.bidblast.model;
 
+import java.util.Objects;
+
 public class AuctionCategory {
     private int id;
     private String title;
@@ -45,5 +47,18 @@ public class AuctionCategory {
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuctionCategory that = (AuctionCategory) o;
+        return id == that.id && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(keywords, that.keywords);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, keywords);
     }
 }
