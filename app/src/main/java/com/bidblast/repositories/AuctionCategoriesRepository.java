@@ -53,4 +53,8 @@ public class AuctionCategoriesRepository {
             }
         });
     }
+
+    public void updateAuctionCategory() {
+
+    }
 }
