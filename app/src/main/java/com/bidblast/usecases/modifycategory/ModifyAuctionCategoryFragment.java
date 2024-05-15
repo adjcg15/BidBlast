@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +55,8 @@ public class ModifyAuctionCategoryFragment extends Fragment {
         auctionCategory = new AuctionCategory(1, "Pedro", "Pedro", "hola, hola, hola");
         binding.setAuctionCategory(auctionCategory);
         setupModifyAuctionCategoryButton();
+        setupCancelModifyCategoryButton();
+        setupDiscardModifyCategoryButton();
         return binding.getRoot();
     }
 
@@ -104,6 +108,20 @@ public class ModifyAuctionCategoryFragment extends Fragment {
         });
     }
 
+    private void setupCancelModifyCategoryButton() {
+        binding.cancelModifyCategoryButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            requireActivity().finish();
+        });
+    }
+
+    private void setupDiscardModifyCategoryButton() {
+        binding.discardModifyAuctionCategoryButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            requireActivity().finish();
+        });
+    }
+
     private boolean validateFields(){
         String title = binding.categoryTitleEditText.getText().toString().trim();
         String description = binding.categoryDescriptionEditText.getText().toString().trim();
@@ -123,7 +141,13 @@ public class ModifyAuctionCategoryFragment extends Fragment {
             if (requestStatus == RequestStatus.DONE) {
                 String successMessage = getString(R.string.modifycategory_success_toast_message);
                 Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
-                //requireActivity().getSupportFragmentManager().popBackStack();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        requireActivity().getSupportFragmentManager().popBackStack();
+                        requireActivity().finish();
+                    }
+                }, 4000);
             }
 
             if (requestStatus == RequestStatus.ERROR) {
