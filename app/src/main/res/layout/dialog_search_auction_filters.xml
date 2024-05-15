@@ -33,88 +33,11 @@
                 style="@style/TvParagraphStyle"
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
-            <com.google.android.flexbox.FlexboxLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:flexWrap="wrap"
-                android:layout_marginTop="8dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Todo"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/blue_rounded_border"
-                    android:layout_marginBottom="12dp"
-                    android:textColor="@color/primary"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Colección y arte"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"
-                    android:layout_marginBottom="12dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Electrónica"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Moda"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hogar y jardín"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Repuestos y accesorios"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"
-                    android:layout_marginBottom="12dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Equipo musical"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Deportes"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Juguetes"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-            </com.google.android.flexbox.FlexboxLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categoryFiltersListRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -123,63 +46,20 @@
                 style="@style/TvParagraphStyle"
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
-            <com.google.android.flexbox.FlexboxLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/priceFiltersListRecyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:flexWrap="wrap"
-                android:layout_marginTop="8dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Todos los precios"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/blue_rounded_border"
-                    android:layout_marginBottom="12dp"
-                    android:textColor="@color/primary"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Menos de $200"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$200 a $299"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$300 a $499"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$500 a $999"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$1000 y más"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
-            </com.google.android.flexbox.FlexboxLayout>
+                android:text="@string/searchauction_price_filters_note"
+                style="@style/TvSmallStyle"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/gray"/>
+
             <Button
+                android:id="@+id/showResultsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"

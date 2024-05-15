@@ -27,6 +27,7 @@
     <string name="searchauction_filters_show_results">Mostrar resultados</string>
     <string name="searchauction_cta_empty_offers">¡Sé el primero!</string>
     <string name="searchauction_available_until">Disponible hasta el %s</string>
+    <string name="searchauction_price_filters_note">Nota: los filtros de precio aplican sobre el precio base de las subastas</string>
 
     <string name="signup_create_account">¡Crea una cuenta!</string>
     <string name="signup_mandatory_email">Correo <font color="#FF5C00">*</font></string>
