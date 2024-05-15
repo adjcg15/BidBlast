@@ -3,7 +3,7 @@ package com.bidblast.usecases.searchauction;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +12,15 @@ import android.view.ViewGroup;
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentSearchAuctionBinding;
 import com.bidblast.model.AuctionCategory;
+import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class SearchAuctionFragment extends Fragment {
     private FragmentSearchAuctionBinding binding;
     private SearchAuctionViewModel viewModel;
     private AuctionDetailsAdapter auctionsListAdapter;
-    private CategoryFastFilterAdapter fastCategoryFiltersListAdapter;
+    private CategoryFilterAdapter fastCategoryFiltersListAdapter;
+    private CategoryFilterAdapter categoryFiltersListAdapter;
 
     public SearchAuctionFragment() {
 
@@ -47,9 +49,12 @@ public class SearchAuctionFragment extends Fragment {
         auctionsListAdapter = new AuctionDetailsAdapter();
         binding.auctionsListRecyclerView.setAdapter(auctionsListAdapter);
 
-        fastCategoryFiltersListAdapter = new CategoryFastFilterAdapter(viewModel);
+        fastCategoryFiltersListAdapter = new CategoryFilterAdapter(viewModel);
         binding.fastCategoryFiltersListRecyclerView.setAdapter(fastCategoryFiltersListAdapter);
-        fastCategoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFilter);
+        fastCategoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFastFilter);
+
+        categoryFiltersListAdapter = new CategoryFilterAdapter(viewModel);
+        categoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFilter);
 
         setupFiltersButton();
         setupAuctionsListStatusListener();
@@ -64,6 +69,11 @@ public class SearchAuctionFragment extends Fragment {
     private void setupFiltersButton() {
         binding.filtersButton.setOnClickListener(v -> {
             View filtersView = getLayoutInflater().inflate(R.layout.dialog_search_auction_filters, null);
+
+            RecyclerView categoryFiltersListRecyclerView = filtersView.findViewById(R.id.categoryFiltersListRecyclerView);
+            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
+            categoryFiltersListRecyclerView.setLayoutManager(layoutManager);
+            categoryFiltersListRecyclerView.setAdapter(categoryFiltersListAdapter);
 
             BottomSheetDialog filtersDialog = new BottomSheetDialog(requireContext());
             filtersDialog.setContentView(filtersView);
@@ -86,6 +96,7 @@ public class SearchAuctionFragment extends Fragment {
     private void setupAuctionCategoriesListListener() {
         viewModel.getAuctionCategoriesList().observe(getViewLifecycleOwner(), categoriesList -> {
             fastCategoryFiltersListAdapter.submitList(categoriesList);
+            categoryFiltersListAdapter.submitList(categoriesList);
         });
     }
 
@@ -97,8 +108,12 @@ public class SearchAuctionFragment extends Fragment {
         viewModel.recoverAuctionCategories();
     }
 
-    private void toggleCategoryFilter(AuctionCategory category) {
+    private void toggleCategoryFastFilter(AuctionCategory category) {
         viewModel.toggleCategoryFilter(category);
         //TODO: clean the showed auctions list and show a new one with the filters coincidence
+    }
+
+    private void toggleCategoryFilter(AuctionCategory category) {
+        viewModel.toggleCategoryFilter(category);
     }
 }
