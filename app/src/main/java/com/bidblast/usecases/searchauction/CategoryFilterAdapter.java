@@ -1,7 +1,6 @@
 package com.bidblast.usecases.searchauction;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,11 +9,11 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bidblast.R;
-import com.bidblast.databinding.TemplateCategoryFastFilterBinding;
+import com.bidblast.databinding.TemplateCategoryFilterBinding;
 import com.bidblast.model.AuctionCategory;
 
-public class CategoryFastFilterAdapter extends ListAdapter<AuctionCategory, CategoryFastFilterAdapter.CategoryViewHolder> {
-    private SearchAuctionViewModel viewModel;
+public class CategoryFilterAdapter extends ListAdapter<AuctionCategory, CategoryFilterAdapter.CategoryViewHolder> {
+    private final SearchAuctionViewModel viewModel;
     private OnFilterClickListener onFilterClickListener;
 
     public static final DiffUtil.ItemCallback<AuctionCategory> DIFF_CALLBACK = new DiffUtil.ItemCallback<AuctionCategory>() {
@@ -29,22 +28,22 @@ public class CategoryFastFilterAdapter extends ListAdapter<AuctionCategory, Cate
         }
     };
 
-    protected CategoryFastFilterAdapter(SearchAuctionViewModel viewModel) {
+    protected CategoryFilterAdapter(SearchAuctionViewModel viewModel) {
         super(DIFF_CALLBACK);
         this.viewModel = viewModel;
     }
 
     @NonNull
     @Override
-    public CategoryFastFilterAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        TemplateCategoryFastFilterBinding binding =
-            TemplateCategoryFastFilterBinding.inflate(LayoutInflater.from(parent.getContext()));
+    public CategoryFilterAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        TemplateCategoryFilterBinding binding =
+                TemplateCategoryFilterBinding.inflate(LayoutInflater.from(parent.getContext()));
 
         return new CategoryViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryFastFilterAdapter.CategoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CategoryFilterAdapter.CategoryViewHolder holder, int position) {
         AuctionCategory category = getItem(position);
         holder.bind(category);
     }
@@ -54,9 +53,9 @@ public class CategoryFastFilterAdapter extends ListAdapter<AuctionCategory, Cate
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
-        private final TemplateCategoryFastFilterBinding binding;
+        private final TemplateCategoryFilterBinding binding;
 
-        public CategoryViewHolder(@NonNull TemplateCategoryFastFilterBinding binding) {
+        public CategoryViewHolder(@NonNull TemplateCategoryFilterBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
