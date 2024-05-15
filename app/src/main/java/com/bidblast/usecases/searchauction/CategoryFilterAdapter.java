@@ -16,6 +16,8 @@ public class CategoryFilterAdapter extends ListAdapter<AuctionCategory, Category
     private final SearchAuctionViewModel viewModel;
     private OnFilterClickListener onFilterClickListener;
 
+    private final boolean appliesOverTemporaryFilters;
+
     public static final DiffUtil.ItemCallback<AuctionCategory> DIFF_CALLBACK = new DiffUtil.ItemCallback<AuctionCategory>() {
         @Override
         public boolean areItemsTheSame(@NonNull AuctionCategory oldItem, @NonNull AuctionCategory newItem) {
@@ -28,9 +30,10 @@ public class CategoryFilterAdapter extends ListAdapter<AuctionCategory, Category
         }
     };
 
-    protected CategoryFilterAdapter(SearchAuctionViewModel viewModel) {
+    protected CategoryFilterAdapter(SearchAuctionViewModel viewModel, boolean appliesOverTemporaryFilters) {
         super(DIFF_CALLBACK);
         this.viewModel = viewModel;
+        this.appliesOverTemporaryFilters = appliesOverTemporaryFilters;
     }
 
     @NonNull
@@ -66,13 +69,31 @@ public class CategoryFilterAdapter extends ListAdapter<AuctionCategory, Category
             binding.getRoot().setOnClickListener(v -> {
                 onFilterClickListener.onFilterClick(category);
             });
-            setupCategoryFiltersListListener(category);
+
+            if(appliesOverTemporaryFilters) {
+                setupTemporaryCategoryFiltersListListener(category);
+            } else {
+                setupCategoryFiltersListListener(category);
+            }
+
 
             binding.executePendingBindings();
         }
 
         private void setupCategoryFiltersListListener(AuctionCategory category) {
             viewModel.getCategoryFiltersSelected().observeForever(categoryFilters -> {
+                if(categoryFilters.contains(category.getId())) {
+                    binding.categoryTitleTextView.setBackgroundResource(R.drawable.filled_black_rounded_border);
+                    binding.categoryTitleTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.white));
+                } else {
+                    binding.categoryTitleTextView.setBackgroundResource(R.drawable.black_rounded_border);
+                    binding.categoryTitleTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
+                }
+            });
+        }
+
+        private void setupTemporaryCategoryFiltersListListener(AuctionCategory category) {
+            viewModel.getTemporaryCategoryFiltersSelected().observeForever(categoryFilters -> {
                 if(categoryFilters.contains(category.getId())) {
                     binding.categoryTitleTextView.setBackgroundResource(R.drawable.filled_black_rounded_border);
                     binding.categoryTitleTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.white));

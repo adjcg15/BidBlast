@@ -74,7 +74,7 @@ public class PriceFilterAdapter extends ListAdapter<PriceRange, PriceFilterAdapt
         }
 
         private void setupPriceFiltersListListener(PriceRange priceRange) {
-            viewModel.getPriceFilterSelected().observeForever(priceFilterSelected -> {
+            viewModel.getTemporaryPriceFilterSelected().observeForever(priceFilterSelected -> {
                 if(!priceRange.equals(priceFilterSelected)) {
                     binding.priceTextView.setBackgroundResource(R.drawable.black_rounded_border);
                     binding.priceTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));

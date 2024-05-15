@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentSearchAuctionBinding;
@@ -51,15 +52,15 @@ public class SearchAuctionFragment extends Fragment {
         auctionsListAdapter = new AuctionDetailsAdapter();
         binding.auctionsListRecyclerView.setAdapter(auctionsListAdapter);
 
-        fastCategoryFiltersListAdapter = new CategoryFilterAdapter(viewModel);
+        fastCategoryFiltersListAdapter = new CategoryFilterAdapter(viewModel, false);
         binding.fastCategoryFiltersListRecyclerView.setAdapter(fastCategoryFiltersListAdapter);
-        fastCategoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFastFilter);
+        fastCategoryFiltersListAdapter.setOnFilterClickListener(this::handleFastCategoryFilterClick);
 
-        categoryFiltersListAdapter = new CategoryFilterAdapter(viewModel);
-        categoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFilter);
+        categoryFiltersListAdapter = new CategoryFilterAdapter(viewModel, true);
+        categoryFiltersListAdapter.setOnFilterClickListener(this::handleCategoryFilterClick);
 
         priceFiltersListAdapter = new PriceFilterAdapter(viewModel);
-        priceFiltersListAdapter.setOnFilterClickListener(this::togglePriceFilter);
+        priceFiltersListAdapter.setOnFilterClickListener(this::handlePriceFilterClick);
         priceFiltersListAdapter.submitList(viewModel.getAllPriceRanges());
 
         setupFiltersButton();
@@ -88,6 +89,22 @@ public class SearchAuctionFragment extends Fragment {
 
             BottomSheetDialog filtersDialog = new BottomSheetDialog(requireContext());
             filtersDialog.setContentView(filtersView);
+
+            final boolean[] shouldSaveFilters = {false};
+            Button showResultsButton = filtersView.findViewById(R.id.showResultsButton);
+            showResultsButton.setOnClickListener(view -> {
+                shouldSaveFilters[0] = true;
+                filtersDialog.dismiss();
+            });
+
+            filtersDialog.setOnDismissListener(dialog -> {
+                if (shouldSaveFilters[0]) {
+                    viewModel.saveTemporaryFilters();
+                } else {
+                    viewModel.discardTemporaryFilters();
+                }
+            });
+
             filtersDialog.show();
         });
     }
@@ -119,16 +136,16 @@ public class SearchAuctionFragment extends Fragment {
         viewModel.recoverAuctionCategories();
     }
 
-    private void toggleCategoryFastFilter(AuctionCategory category) {
+    private void handleFastCategoryFilterClick(AuctionCategory category) {
         viewModel.toggleCategoryFilter(category);
         //TODO: clean the showed auctions list and show a new one with the filters coincidence
     }
 
-    private void toggleCategoryFilter(AuctionCategory category) {
-        viewModel.toggleCategoryFilter(category);
+    private void handleCategoryFilterClick(AuctionCategory category) {
+        viewModel.toggleTemporaryCategoryFilter(category);
     }
 
-    private void togglePriceFilter(PriceRange priceRange) {
-        viewModel.togglePriceFilter(priceRange);
+    private void handlePriceFilterClick(PriceRange priceRange) {
+        viewModel.toggleTemporaryPriceFilter(priceRange);
     }
 }

@@ -23,8 +23,12 @@ public class SearchAuctionViewModel {
         new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<RequestStatus> auctionsListRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> auctionCategoriesListRequestStatus = new MutableLiveData<>();
+    private final MutableLiveData<List<Integer>> temporaryCategoryFiltersSelected =
+            new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Integer>> categoryFiltersSelected =
         new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<PriceRange> temporaryPriceFilterSelected =
+            new MutableLiveData<>();
     private final MutableLiveData<PriceRange> priceFilterSelected =
         new MutableLiveData<>();
 
@@ -42,9 +46,15 @@ public class SearchAuctionViewModel {
         return auctionCategoriesListRequestStatus;
     }
 
+    public LiveData<List<Integer>> getTemporaryCategoryFiltersSelected() {
+        return temporaryCategoryFiltersSelected;
+    }
+
     public LiveData<List<Integer>> getCategoryFiltersSelected() {
         return categoryFiltersSelected;
     }
+
+    public LiveData<PriceRange> getTemporaryPriceFilterSelected() { return temporaryPriceFilterSelected; }
 
     public LiveData<PriceRange> getPriceFilterSelected() { return priceFilterSelected; }
 
@@ -110,13 +120,37 @@ public class SearchAuctionViewModel {
         }
 
         categoryFiltersSelected.setValue(currentFilters);
+        temporaryCategoryFiltersSelected.setValue(currentFilters);
     }
 
-    public void togglePriceFilter(PriceRange priceRange) {
-        if(priceRange.equals(priceFilterSelected.getValue())) {
-            priceFilterSelected.setValue(null);
+    public void toggleTemporaryCategoryFilter(AuctionCategory category) {
+        Integer categoryId = category.getId();
+
+        List<Integer> currentFilters = new ArrayList<>(Objects.requireNonNull(temporaryCategoryFiltersSelected.getValue()));
+        if(Objects.requireNonNull(temporaryCategoryFiltersSelected.getValue()).contains(categoryId)) {
+            currentFilters.remove(categoryId);
         } else {
-            priceFilterSelected.setValue(priceRange);
+            currentFilters.add(categoryId);
         }
+
+        temporaryCategoryFiltersSelected.setValue(currentFilters);
+    }
+
+    public void toggleTemporaryPriceFilter(PriceRange priceRange) {
+        if(priceRange.equals(temporaryPriceFilterSelected.getValue())) {
+            temporaryPriceFilterSelected.setValue(null);
+        } else {
+            temporaryPriceFilterSelected.setValue(priceRange);
+        }
+    }
+
+    public void discardTemporaryFilters() {
+        temporaryCategoryFiltersSelected.setValue(categoryFiltersSelected.getValue());
+        temporaryPriceFilterSelected.setValue(priceFilterSelected.getValue());
+    }
+
+    public void saveTemporaryFilters() {
+        categoryFiltersSelected.setValue(temporaryCategoryFiltersSelected.getValue());
+        priceFilterSelected.setValue(temporaryPriceFilterSelected.getValue());
     }
 }
