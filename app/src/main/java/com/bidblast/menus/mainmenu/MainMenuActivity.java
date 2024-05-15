@@ -22,7 +22,7 @@ public class MainMenuActivity extends AppCompatActivity {
         binding = ActivityMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        showFragment(new ModifyAuctionCategoryFragment());
+        showFragment(new SearchAuctionFragment());
         setupMenuNavigation();
     }
 
