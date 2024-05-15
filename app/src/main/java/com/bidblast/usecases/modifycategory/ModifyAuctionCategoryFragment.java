@@ -2,9 +2,13 @@ package com.bidblast.usecases.modifycategory;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,31 +31,34 @@ public class ModifyAuctionCategoryFragment extends Fragment {
 
     public ModifyAuctionCategoryFragment() {}
 
-    public static ModifyAuctionCategoryFragment newInstance(AuctionCategory auctionCategory) {
+    public static ModifyAuctionCategoryFragment newInstance(/*AuctionCategory auctionCategory*/) {
         ModifyAuctionCategoryFragment fragment = new ModifyAuctionCategoryFragment();
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putParcelable(AUCTIONCATEGORY_KEY, auctionCategory);
-        fragment.setArguments(args);
+        fragment.setArguments(args);*/
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        /*if (getArguments() != null) {
             auctionCategory = getArguments().getParcelable(AUCTIONCATEGORY_KEY);
-        }
+        }*/
+        viewModel = new ViewModelProvider(this).get(ModifyAuctionCategoryViewModel.class);
         setupFieldsValidations();
         setupModifyAuctionCategoryStatusListener();
-        viewModel = new ViewModelProvider(this).get(ModifyAuctionCategoryViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentModifyAuctionCategoryBinding.inflate(inflater, container, false);
+        auctionCategory = new AuctionCategory(1, "Pedro", "Pedro", "hola, hola, hola");
         binding.setAuctionCategory(auctionCategory);
         setupModifyAuctionCategoryButton();
+        setupCancelModifyCategoryButton();
+        setupDiscardModifyCategoryButton();
         return binding.getRoot();
     }
 
@@ -79,10 +86,10 @@ public class ModifyAuctionCategoryFragment extends Fragment {
         viewModel.areValidKeywords().observe(this, areValidKeywords -> {
             if (areValidKeywords) {
                 binding.categoryKeywordsErrorTextView.setVisibility(View.GONE);
-                binding.categoryKeyWordsEditText.setBackgroundResource(R.drawable.basic_input_background);
+                binding.categoryKeywordsEditText.setBackgroundResource(R.drawable.basic_input_background);
             } else {
                 binding.categoryKeywordsErrorTextView.setVisibility(View.VISIBLE);
-                binding.categoryKeyWordsEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+                binding.categoryKeywordsEditText.setBackgroundResource(R.drawable.basic_input_error_background);
             }
         });
     }
@@ -91,20 +98,36 @@ public class ModifyAuctionCategoryFragment extends Fragment {
         binding.modifyCategoryButton.setOnClickListener(v -> {
             if (validateFields()) {
                 if(viewModel.getModifyAuctionCategoryRequestStatus().getValue() != RequestStatus.LOADING) {
-                    String title = binding.categoryTitleEditText.getText().toString().trim();
-                    String description = binding.categoryDescriptionEditText.getText().toString().trim();
-                    String keywords = binding.categoryDescriptionEditText.getText().toString().trim();
+                    AuctionCategory auctionCategory = new AuctionCategory();
+                    auctionCategory.setId(this.auctionCategory.getId());
+                    auctionCategory.setTitle(binding.categoryTitleEditText.getText().toString().trim());
+                    auctionCategory.setDescription(binding.categoryDescriptionEditText.getText().toString().trim());
+                    auctionCategory.setKeywords(binding.categoryDescriptionEditText.getText().toString().trim());
 
-                    viewModel.updateAuctionCategory(title, description, keywords);
+                    viewModel.updateAuctionCategory(auctionCategory);
                 }
             }
+        });
+    }
+
+    private void setupCancelModifyCategoryButton() {
+        binding.cancelModifyCategoryButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            requireActivity().finish();
+        });
+    }
+
+    private void setupDiscardModifyCategoryButton() {
+        binding.discardModifyAuctionCategoryButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            requireActivity().finish();
         });
     }
 
     private boolean validateFields(){
         String title = binding.categoryTitleEditText.getText().toString().trim();
         String description = binding.categoryDescriptionEditText.getText().toString().trim();
-        String keywords = binding.categoryKeyWordsEditText.getText().toString().trim();
+        String keywords = binding.categoryKeywordsEditText.getText().toString().trim();
 
         viewModel.validateTitle(title);
         viewModel.validateDescription(description);
@@ -116,10 +139,17 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     }
 
     private void setupModifyAuctionCategoryStatusListener() {
-        viewModel.getModifyAuctionCategoryRequestStatus().observe(this, requestStatus -> {
+        viewModel.getModifyAuctionCategoryRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             if (requestStatus == RequestStatus.DONE) {
                 String successMessage = getString(R.string.modifycategory_success_toast_message);
                 Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        requireActivity().getSupportFragmentManager().popBackStack();
+                        requireActivity().finish();
+                    }
+                }, 4000);
             }
 
             if (requestStatus == RequestStatus.ERROR) {
@@ -137,7 +167,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
 
         switch (errorCode) {
             case REQUEST_FORMAT_ERROR:
-                errorMessage = getString(R.string.modifycategory_error_toast_message);
+                errorMessage = getString(R.string.modifycategory_badrequest_toast_message);
                 break;
             case FATAL_ERROR:
                 errorMessage = getString(R.string.modifycategory_error_toast_message);

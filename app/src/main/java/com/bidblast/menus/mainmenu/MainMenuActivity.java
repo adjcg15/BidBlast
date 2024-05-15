@@ -10,6 +10,7 @@ import android.os.Bundle;
 import com.bidblast.R;
 import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.databinding.ActivityMainMenuBinding;
+import com.bidblast.usecases.modifycategory.ModifyAuctionCategoryFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 public class MainMenuActivity extends AppCompatActivity {

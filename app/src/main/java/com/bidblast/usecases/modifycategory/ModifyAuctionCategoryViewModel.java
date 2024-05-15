@@ -5,8 +5,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bidblast.api.RequestStatus;
+import com.bidblast.api.requests.auctioncategory.AuctionCategoryBody;
 import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.model.AuctionCategory;
+import com.bidblast.repositories.AuctionCategoriesRepository;
+import com.bidblast.repositories.IEmptyProcessStatusListener;
+import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
 
 public class ModifyAuctionCategoryViewModel extends ViewModel {
@@ -58,7 +62,29 @@ public class ModifyAuctionCategoryViewModel extends ViewModel {
         areValidKeywords.setValue(validationResult);
     }
 
-    public void updateAuctionCategory(String title, String description, String keywords){
+    public void updateAuctionCategory(AuctionCategory auctionCategory){
+        modifyAuctionCategoryRequestStatus.setValue(RequestStatus.LOADING);
 
+        new AuctionCategoriesRepository().updateAuctionCategory(
+            auctionCategory.getId(),
+            new AuctionCategoryBody(
+                    auctionCategory.getTitle(),
+                    auctionCategory.getDescription(),
+                    auctionCategory.getKeywords()
+            ),
+            new IEmptyProcessStatusListener() {
+
+                @Override
+                public void onSuccess() {
+                    modifyAuctionCategoryRequestStatus.setValue(RequestStatus.DONE);
+                }
+
+                @Override
+                public void onError(ProcessErrorCodes errorCode) {
+                    modifyAuctionCategoryErrorCode.setValue(errorCode);
+                    modifyAuctionCategoryRequestStatus.setValue(RequestStatus.ERROR);
+                }
+            }
+        );
     }
 }
