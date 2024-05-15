@@ -2,6 +2,8 @@ package com.bidblast.usecases.modifycategory;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -84,10 +86,10 @@ public class ModifyAuctionCategoryFragment extends Fragment {
         viewModel.areValidKeywords().observe(this, areValidKeywords -> {
             if (areValidKeywords) {
                 binding.categoryKeywordsErrorTextView.setVisibility(View.GONE);
-                binding.categoryKeyWordsEditText.setBackgroundResource(R.drawable.basic_input_background);
+                binding.categoryKeywordsEditText.setBackgroundResource(R.drawable.basic_input_background);
             } else {
                 binding.categoryKeywordsErrorTextView.setVisibility(View.VISIBLE);
-                binding.categoryKeyWordsEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+                binding.categoryKeywordsEditText.setBackgroundResource(R.drawable.basic_input_error_background);
             }
         });
     }
@@ -125,7 +127,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     private boolean validateFields(){
         String title = binding.categoryTitleEditText.getText().toString().trim();
         String description = binding.categoryDescriptionEditText.getText().toString().trim();
-        String keywords = binding.categoryKeyWordsEditText.getText().toString().trim();
+        String keywords = binding.categoryKeywordsEditText.getText().toString().trim();
 
         viewModel.validateTitle(title);
         viewModel.validateDescription(description);
@@ -137,7 +139,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     }
 
     private void setupModifyAuctionCategoryStatusListener() {
-        viewModel.getModifyAuctionCategoryRequestStatus().observe(this, requestStatus -> {
+        viewModel.getModifyAuctionCategoryRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             if (requestStatus == RequestStatus.DONE) {
                 String successMessage = getString(R.string.modifycategory_success_toast_message);
                 Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();

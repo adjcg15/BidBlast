@@ -121,7 +121,7 @@
                     android:text="@string/modifycategory_keywords"
                     style="@style/TvBlackTagDecoratorStyle"/>
                 <EditText
-                    android:id="@+id/categoryKeyWordsEditText"
+                    android:id="@+id/categoryKeywordsEditText"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:gravity="top|start"
