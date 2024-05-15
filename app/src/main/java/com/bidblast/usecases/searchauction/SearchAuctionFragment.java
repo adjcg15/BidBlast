@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentSearchAuctionBinding;
 import com.bidblast.model.AuctionCategory;
+import com.bidblast.model.PriceRange;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -21,6 +22,7 @@ public class SearchAuctionFragment extends Fragment {
     private AuctionDetailsAdapter auctionsListAdapter;
     private CategoryFilterAdapter fastCategoryFiltersListAdapter;
     private CategoryFilterAdapter categoryFiltersListAdapter;
+    private PriceFilterAdapter priceFiltersListAdapter;
 
     public SearchAuctionFragment() {
 
@@ -56,6 +58,10 @@ public class SearchAuctionFragment extends Fragment {
         categoryFiltersListAdapter = new CategoryFilterAdapter(viewModel);
         categoryFiltersListAdapter.setOnFilterClickListener(this::toggleCategoryFilter);
 
+        priceFiltersListAdapter = new PriceFilterAdapter(viewModel);
+        priceFiltersListAdapter.setOnFilterClickListener(this::togglePriceFilter);
+        priceFiltersListAdapter.submitList(viewModel.getAllPriceRanges());
+
         setupFiltersButton();
         setupAuctionsListStatusListener();
         setupAuctionsListListener();
@@ -71,9 +77,14 @@ public class SearchAuctionFragment extends Fragment {
             View filtersView = getLayoutInflater().inflate(R.layout.dialog_search_auction_filters, null);
 
             RecyclerView categoryFiltersListRecyclerView = filtersView.findViewById(R.id.categoryFiltersListRecyclerView);
-            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
-            categoryFiltersListRecyclerView.setLayoutManager(layoutManager);
+            FlexboxLayoutManager categoriesLayoutManager = new FlexboxLayoutManager(requireContext());
+            categoryFiltersListRecyclerView.setLayoutManager(categoriesLayoutManager);
             categoryFiltersListRecyclerView.setAdapter(categoryFiltersListAdapter);
+
+            RecyclerView priceFiltersListRecyclerView = filtersView.findViewById(R.id.priceFiltersListRecyclerView);
+            FlexboxLayoutManager pricesLayoutManager = new FlexboxLayoutManager(requireContext());
+            priceFiltersListRecyclerView.setLayoutManager(pricesLayoutManager);
+            priceFiltersListRecyclerView.setAdapter(priceFiltersListAdapter);
 
             BottomSheetDialog filtersDialog = new BottomSheetDialog(requireContext());
             filtersDialog.setContentView(filtersView);
@@ -115,5 +126,9 @@ public class SearchAuctionFragment extends Fragment {
 
     private void toggleCategoryFilter(AuctionCategory category) {
         viewModel.toggleCategoryFilter(category);
+    }
+
+    private void togglePriceFilter(PriceRange priceRange) {
+        viewModel.togglePriceFilter(priceRange);
     }
 }
