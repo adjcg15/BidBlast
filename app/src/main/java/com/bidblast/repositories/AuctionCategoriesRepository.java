@@ -2,7 +2,9 @@ package com.bidblast.repositories;
 
 import com.bidblast.api.ApiClient;
 import com.bidblast.api.IAuctionCategoriesService;
+import com.bidblast.api.requests.auctioncategory.AuctionCategoryBody;
 import com.bidblast.api.responses.auctioncategories.AuctionCategoryJSONResponse;
+import com.bidblast.api.responses.auctioncategories.UpdatedAuctionCategoryJSONResponse;
 import com.bidblast.lib.Session;
 import com.bidblast.model.AuctionCategory;
 
@@ -54,7 +56,34 @@ public class AuctionCategoriesRepository {
         });
     }
 
-    public void updateAuctionCategory() {
+    public void updateAuctionCategory(
+            int idAuctionCategory,
+            AuctionCategoryBody auctionCategoryBody,
+            IEmptyProcessStatusListener statusListener
+    ) {
+        IAuctionCategoriesService categoriesService = ApiClient.getInstance().getAuctionCategoriesService();
+        String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
 
+        categoriesService.updateAuctionCategory(authHeader, idAuctionCategory, auctionCategoryBody).enqueue(new Callback<UpdatedAuctionCategoryJSONResponse>() {
+            @Override
+            public void onResponse(Call<UpdatedAuctionCategoryJSONResponse> call, Response<UpdatedAuctionCategoryJSONResponse> response) {
+                if(response.isSuccessful()){
+                    UpdatedAuctionCategoryJSONResponse body = response.body();
+
+                    if(body.getStatusCode() == 200){
+                        statusListener.onSuccess();
+                    } else {
+                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                    }
+                }else{
+                    statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UpdatedAuctionCategoryJSONResponse> call, Throwable t) {
+                statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+            }
+        });
     }
 }
