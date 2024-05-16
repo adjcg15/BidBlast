@@ -68,13 +68,21 @@ public class SearchAuctionFragment extends Fragment {
         priceFiltersListAdapter.submitList(viewModel.getAllPriceRanges());
 
         setupFiltersButton();
+        setupSearchAuctionsImageButton();
         setupAuctionsListStatusListener();
         setupAuctionsListListener();
         setupAuctionCategoriesListListener();
-        loadAuctions("", 10, 0);
+        loadAuctions();
         loadAuctionCategories();
 
         return rootView;
+    }
+
+    private void setupSearchAuctionsImageButton() {
+        binding.searchAuctionsImageButton.setOnClickListener(v -> {
+            viewModel.cleanAuctionsList();
+            loadAuctions();
+        });
     }
 
     private void setupFiltersButton() {
@@ -156,8 +164,11 @@ public class SearchAuctionFragment extends Fragment {
         });
     }
 
-    private void loadAuctions(String searchQuery, int limit, int offset) {
-        viewModel.recoverAuctions(searchQuery, limit);
+    private void loadAuctions() {
+        String searchQuery = binding.searchbarEditText.getText().toString();
+        int TOTAL_AUCTIONS_TO_LOAD = 10;
+
+        viewModel.recoverAuctions(searchQuery, TOTAL_AUCTIONS_TO_LOAD);
     }
 
     private void loadAuctionCategories() {
