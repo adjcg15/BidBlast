@@ -46,8 +46,6 @@ public class ModifyAuctionCategoryFragment extends Fragment {
             auctionCategory = getArguments().getParcelable(AUCTIONCATEGORY_KEY);
         }*/
         viewModel = new ViewModelProvider(this).get(ModifyAuctionCategoryViewModel.class);
-        setupFieldsValidations();
-        setupModifyAuctionCategoryStatusListener();
     }
 
     @Override
@@ -56,6 +54,8 @@ public class ModifyAuctionCategoryFragment extends Fragment {
         binding = FragmentModifyAuctionCategoryBinding.inflate(inflater, container, false);
         auctionCategory = new AuctionCategory(1, "Pedro", "Pedro", "hola, hola, hola");
         binding.setAuctionCategory(auctionCategory);
+        setupFieldsValidations();
+        setupModifyAuctionCategoryStatusListener();
         setupModifyAuctionCategoryButton();
         setupCancelModifyCategoryButton();
         setupDiscardModifyCategoryButton();
@@ -63,7 +63,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
     }
 
     private void setupFieldsValidations() {
-        viewModel.isValidTitle().observe(this, isValidTitle -> {
+        viewModel.isValidTitle().observe(getViewLifecycleOwner(), isValidTitle -> {
             if (isValidTitle) {
                 binding.categoryTitleErrorTextView.setVisibility(View.GONE);
                 binding.categoryTitleEditText.setBackgroundResource(R.drawable.basic_input_background);
@@ -73,7 +73,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
             }
         });
 
-        viewModel.isValidDescription().observe(this, isValidDescription -> {
+        viewModel.isValidDescription().observe(getViewLifecycleOwner(), isValidDescription -> {
             if (isValidDescription) {
                 binding.categoryDescriptionErrorTextView.setVisibility(View.GONE);
                 binding.categoryDescriptionEditText.setBackgroundResource(R.drawable.basic_input_background);
@@ -83,7 +83,7 @@ public class ModifyAuctionCategoryFragment extends Fragment {
             }
         });
 
-        viewModel.areValidKeywords().observe(this, areValidKeywords -> {
+        viewModel.areValidKeywords().observe(getViewLifecycleOwner(), areValidKeywords -> {
             if (areValidKeywords) {
                 binding.categoryKeywordsErrorTextView.setVisibility(View.GONE);
                 binding.categoryKeywordsEditText.setBackgroundResource(R.drawable.basic_input_background);
