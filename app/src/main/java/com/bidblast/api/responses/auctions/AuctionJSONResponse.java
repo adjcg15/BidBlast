@@ -7,6 +7,8 @@ public class AuctionJSONResponse {
     private int id;
     private String title;
     private String closesAt;
+    private Date updatedDate;
+    private String state;
 
     private List<AuctionMediaFileJSONResponse> mediaFiles;
 

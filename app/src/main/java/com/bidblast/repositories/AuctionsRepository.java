@@ -104,4 +104,14 @@ public class AuctionsRepository {
             }
         });
     }
+
+    public void getUserSalesAuctionsList(
+            int auctioneerId,
+            String startDate,
+            String endDate,
+            IProcessStatusListener<List<Auction>> statusListener){
+        IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
+        String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
+
+    }
 }
