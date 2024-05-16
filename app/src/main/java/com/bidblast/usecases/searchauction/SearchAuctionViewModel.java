@@ -18,19 +18,20 @@ import java.util.List;
 import java.util.Objects;
 
 public class SearchAuctionViewModel {
-    private final MutableLiveData<List<Auction>> auctionsList = new MutableLiveData<>();
+    private final MutableLiveData<List<Auction>> auctionsList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<AuctionCategory>> auctionCategoriesList =
         new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<RequestStatus> auctionsListRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> auctionCategoriesListRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<List<Integer>> temporaryCategoryFiltersSelected =
-            new MutableLiveData<>(new ArrayList<>());
+        new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Integer>> categoryFiltersSelected =
         new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<PriceRange> temporaryPriceFilterSelected =
-            new MutableLiveData<>();
+        new MutableLiveData<>();
     private final MutableLiveData<PriceRange> priceFilterSelected =
         new MutableLiveData<>();
+    private final MutableLiveData<Boolean> stillAuctionsLeftToLoad = new MutableLiveData<>(true);
 
     public LiveData<List<Auction>> getAuctionsList() { return auctionsList; }
 
@@ -58,15 +59,28 @@ public class SearchAuctionViewModel {
 
     public LiveData<PriceRange> getPriceFilterSelected() { return priceFilterSelected; }
 
-    public void recoverAuctions(String searchQuery, int limit, int offset) {
+    public LiveData<Boolean> getStillAuctionsLeftToLoad() { return stillAuctionsLeftToLoad; }
+
+    public void cleanAuctionsList() {
+        stillAuctionsLeftToLoad.setValue(true);
+        auctionsList.setValue(new ArrayList<>());
+    }
+
+    public void recoverAuctions(String searchQuery, int limit) {
         auctionsListRequestStatus.setValue(RequestStatus.LOADING);
 
+        int totalAuctionsLoaded = auctionsList.getValue() != null
+            ? auctionsList.getValue().size()
+            : 0;
         new AuctionsRepository().getAuctionsList(
-            searchQuery, limit, offset,
+            searchQuery, limit, totalAuctionsLoaded,
             new IProcessStatusListener<List<Auction>>() {
                 @Override
                 public void onSuccess(List<Auction> auctions) {
                     auctionsList.setValue(auctions);
+                    if(auctions.size() < limit) {
+                        stillAuctionsLeftToLoad.setValue(false);
+                    }
                     auctionsListRequestStatus.setValue(RequestStatus.DONE);
                 }
 

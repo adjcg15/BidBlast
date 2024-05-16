@@ -11,11 +11,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.bidblast.R;
+import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentSearchAuctionBinding;
+import com.bidblast.model.Auction;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.model.PriceRange;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.util.List;
 
 public class SearchAuctionFragment extends Fragment {
     private FragmentSearchAuctionBinding binding;
@@ -111,7 +115,31 @@ public class SearchAuctionFragment extends Fragment {
 
     private void setupAuctionsListStatusListener() {
         viewModel.getAuctionsListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
-            //TODO: handle errors
+            binding.emptyAuctionsMessageLinearLayout.setVisibility(View.GONE);
+
+            if(requestStatus == RequestStatus.LOADING) {
+                binding.loadingAuctionsTextView.setVisibility(View.VISIBLE);
+            } else {
+                binding.loadingAuctionsTextView.setVisibility(View.GONE);
+
+                if(requestStatus == RequestStatus.DONE) {
+                    binding.errorLoadingAuctionsLinearLayout.setVisibility(View.GONE);
+                    binding.filtersBarLinearLayout.setVisibility(View.VISIBLE);
+
+                    List<Auction> auctions = viewModel.getAuctionsList().getValue();
+                    if(auctions != null && auctions.size() != 0) {
+                        binding.auctionsListRecyclerView.setVisibility(View.VISIBLE);
+                        binding.emptyAuctionsMessageLinearLayout.setVisibility(View.GONE);
+                    } else {
+                        binding.auctionsListRecyclerView.setVisibility(View.GONE);
+                        binding.emptyAuctionsMessageLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                } else if (requestStatus == RequestStatus.ERROR) {
+                    binding.errorLoadingAuctionsLinearLayout.setVisibility(View.VISIBLE);
+                    binding.auctionsListRecyclerView.setVisibility(View.GONE);
+                    binding.filtersBarLinearLayout.setVisibility(View.GONE);
+                }
+            }
         });
     }
 
@@ -129,7 +157,7 @@ public class SearchAuctionFragment extends Fragment {
     }
 
     private void loadAuctions(String searchQuery, int limit, int offset) {
-        viewModel.recoverAuctions(searchQuery, limit, offset);
+        viewModel.recoverAuctions(searchQuery, limit);
     }
 
     private void loadAuctionCategories() {
