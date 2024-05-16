@@ -1,5 +1,7 @@
 package com.bidblast.api.responses.auctions;
 
+import com.bidblast.api.responses.auctioncategories.AuctionCategoryJSONResponse;
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,13 +10,14 @@ public class AuctionJSONResponse {
     private String title;
     private String closesAt;
     private Date updatedDate;
-    private String state;
 
     private List<AuctionMediaFileJSONResponse> mediaFiles;
 
     private AuctionAuctioneerJSONResponse auctioneer;
 
     private AuctionLastOfferJSONResponse lastOffer;
+
+    private AuctionCategoryJSONResponse category;
 
     public AuctionJSONResponse() { }
 
@@ -73,5 +76,21 @@ public class AuctionJSONResponse {
 
     public void setLastOffer(AuctionLastOfferJSONResponse lastOffer) {
         this.lastOffer = lastOffer;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public AuctionCategoryJSONResponse getCategory() {
+        return category;
+    }
+
+    public void setCategory(AuctionCategoryJSONResponse category) {
+        this.category = category;
     }
 }
