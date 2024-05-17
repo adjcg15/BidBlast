@@ -28,12 +28,12 @@
     <string name="searchauction_cta_empty_offers">¡Sé el primero!</string>
     <string name="searchauction_available_until">Disponible hasta el %s</string>
     <string name="searchauction_price_filters_note">Nota: los filtros de precio aplican sobre el precio base de las subastas</string>
-    <string name="searchauction_all_auctions_loaded">¡Has llegado al final! Estas son todas las subastas que tenemos para mostrarte</string>
+    <string name="searchauction_all_auctions_loaded">Todas las subastas cargadas</string>
     <string name="searchauction_empty_auctions_title">¡Sin coincidencias!</string>
     <string name="searchauction_empty_auctions_text">No hemos encontrado ningún artículo subastado que coincida con su búsqueda</string>
     <string name="searchauction_loading_auctions">Cargando subastas...</string>
     <string name="searchauction_error_loading_title">¡Estamos teniendo problemas!</string>
-    <string name="searchauction_error_loading_text">En este momento no pudemps cargar las subastas, por favor intente en otro momento</string>
+    <string name="searchauction_error_loading_text">En este momento no podemos cargar las subastas, por favor intente en otro momento</string>
 
     <string name="signup_create_account">¡Crea una cuenta!</string>
     <string name="signup_mandatory_email">Correo <font color="#FF5C00">*</font></string>

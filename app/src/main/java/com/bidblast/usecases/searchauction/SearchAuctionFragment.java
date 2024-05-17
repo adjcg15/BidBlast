@@ -2,7 +2,9 @@ package com.bidblast.usecases.searchauction;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -22,6 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.List;
 
 public class SearchAuctionFragment extends Fragment {
+    private static final int TOTAL_AUCTIONS_TO_LOAD = 5;
     private FragmentSearchAuctionBinding binding;
     private SearchAuctionViewModel viewModel;
     private AuctionDetailsAdapter auctionsListAdapter;
@@ -72,6 +75,8 @@ public class SearchAuctionFragment extends Fragment {
         setupAuctionsListStatusListener();
         setupAuctionsListListener();
         setupAuctionCategoriesListListener();
+        setupRecyclerViewScrollListener();
+        setupStillAuctionsLeftToLoadListener();
         loadAuctions();
         loadAuctionCategories();
 
@@ -143,11 +148,13 @@ public class SearchAuctionFragment extends Fragment {
                     } else {
                         binding.auctionsListRecyclerView.setVisibility(View.GONE);
                         binding.emptyAuctionsMessageLinearLayout.setVisibility(View.VISIBLE);
+                        binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
                     }
                 } else if (requestStatus == RequestStatus.ERROR) {
                     binding.errorLoadingAuctionsLinearLayout.setVisibility(View.VISIBLE);
                     binding.auctionsListRecyclerView.setVisibility(View.GONE);
                     binding.filtersBarLinearLayout.setVisibility(View.GONE);
+                    binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
                 }
             }
         });
@@ -166,9 +173,18 @@ public class SearchAuctionFragment extends Fragment {
         });
     }
 
+    private void setupStillAuctionsLeftToLoadListener() {
+        viewModel.getStillAuctionsLeftToLoad().observe(getViewLifecycleOwner(), stillAuctionsLeftToLoad -> {
+            if(stillAuctionsLeftToLoad) {
+                binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
+            } else {
+                binding.allAuctionsLoadedTextView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     private void loadAuctions() {
         String searchQuery = binding.searchbarEditText.getText().toString();
-        int TOTAL_AUCTIONS_TO_LOAD = 10;
 
         viewModel.recoverAuctions(searchQuery, TOTAL_AUCTIONS_TO_LOAD);
     }
@@ -189,5 +205,29 @@ public class SearchAuctionFragment extends Fragment {
 
     private void handlePriceFilterClick(PriceRange priceRange) {
         viewModel.toggleTemporaryPriceFilter(priceRange);
+    }
+
+    private void setupRecyclerViewScrollListener() {
+        binding.auctionsListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0
+                        && totalItemCount >= TOTAL_AUCTIONS_TO_LOAD
+                        && Boolean.TRUE.equals(viewModel.getStillAuctionsLeftToLoad().getValue())
+                        && viewModel.getAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
+                        loadAuctions();
+                    }
+                }
+            }
+        });
     }
 }

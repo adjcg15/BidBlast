@@ -93,10 +93,14 @@ public class SearchAuctionViewModel {
             new IProcessStatusListener<List<Auction>>() {
                 @Override
                 public void onSuccess(List<Auction> auctions) {
-                    auctionsList.setValue(auctions);
+                    List<Auction> currentAuctions = new ArrayList<>(auctionsList.getValue());
+                    currentAuctions.addAll(auctions);
+                    auctionsList.setValue(currentAuctions);
+
                     if(auctions.size() < limit) {
                         stillAuctionsLeftToLoad.setValue(false);
                     }
+
                     auctionsListRequestStatus.setValue(RequestStatus.DONE);
                 }
 
