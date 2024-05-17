@@ -1,5 +1,7 @@
 package com.bidblast.repositories;
 
+import android.util.Log;
+
 import com.bidblast.api.ApiClient;
 import com.bidblast.api.IAuctionsService;
 import com.bidblast.api.responses.auctioncategories.AuctionCategoryJSONResponse;
@@ -114,7 +116,7 @@ public class AuctionsRepository {
             IProcessStatusListener<List<Auction>> statusListener){
         IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
-
+        Log.d("VALORES", auctioneerId + startDate + endDate);
         auctionsService.getUserSalesAuctionsList(authHeader, auctioneerId, startDate, endDate).enqueue(new Callback<List<AuctionJSONResponse>>() {
             @Override
             public void onResponse(Call<List<AuctionJSONResponse>> call, Response<List<AuctionJSONResponse>> response) {
@@ -129,7 +131,7 @@ public class AuctionsRepository {
 
                             auction.setId(auctionRes.getId());
                             auction.setTitle(auctionRes.getTitle());
-                            auction.setUpdatedDate(auctionRes.getUpdatedDate());
+                            auction.setUpdatedDate(DateToolkit.parseDateFromIS8601(auctionRes.getUpdatedDate()));
 
                             AuctionCategoryJSONResponse categoryRes = auctionRes.getCategory();
                             if (categoryRes != null) {
@@ -153,6 +155,9 @@ public class AuctionsRepository {
                             }
                             auctionsList.add(auction);
                         }
+                        statusListener.onSuccess(auctionsList);
+                    } else {
+                        statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
                     }
                 } else {
                     statusListener.onError(ProcessErrorCodes.AUTH_ERROR);

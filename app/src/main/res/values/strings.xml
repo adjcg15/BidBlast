@@ -65,7 +65,7 @@
     <string name="consultsalesstatistics_first_date_action">Fecha inicio</string>
     <string name="consultsalesstatistics_second_date_action">Fecha fin</string>
     <string name="consultsalesstatistics_profits_earned">Total de ganacias obtenidas</string>
-    <string name="consultsalesstatistics_sales_categories">Categirías de ventas</string>
+    <string name="consultsalesstatistics_sales_categories">Categorías de ventas</string>
 
     <string name="consultcategories_searchbar_hint">Buscar categoría</string>
     <string name="consultcategories_edit_action">Editar</string>

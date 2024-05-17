@@ -9,7 +9,7 @@ public class AuctionJSONResponse {
     private int id;
     private String title;
     private String closesAt;
-    private Date updatedDate;
+    private String updatedDate;
 
     private List<AuctionMediaFileJSONResponse> mediaFiles;
 
@@ -78,11 +78,11 @@ public class AuctionJSONResponse {
         this.lastOffer = lastOffer;
     }
 
-    public Date getUpdatedDate() {
+    public String getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
+    public void setUpdatedDate(String updatedDate) {
         this.updatedDate = updatedDate;
     }
 

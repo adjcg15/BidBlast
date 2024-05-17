@@ -95,7 +95,8 @@
                     android:orientation="vertical"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/gray_rounded_border"
-                    android:padding="20dp">
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -104,6 +105,7 @@
                         style="@style/TvTitleStyle"
                         android:text="@string/consultsalesstatistics_profits_earned"/>
                     <TextView
+                        android:id="@+id/profitsEarnedTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"

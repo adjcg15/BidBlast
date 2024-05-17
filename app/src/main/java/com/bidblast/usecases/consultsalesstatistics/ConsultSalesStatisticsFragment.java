@@ -10,22 +10,38 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.bidblast.R;
+import com.bidblast.api.RequestStatus;
+import com.bidblast.lib.Session;
+import com.bidblast.model.Auction;
+import com.bidblast.model.AuctionCategory;
+import com.bidblast.repositories.ProcessErrorCodes;
 import com.bidblast.usecases.modifycategory.ModifyAuctionCategoryViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.ParseException;
@@ -37,11 +53,16 @@ import java.util.List;
 import java.util.Locale;
 
 import com.bidblast.databinding.FragmentConsultSalesStatisticsBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 public class ConsultSalesStatisticsFragment extends Fragment {
 
     private FragmentConsultSalesStatisticsBinding binding;
     private ConsultSalesStatisticsViewModel viewModel;
+    private List<Auction> salesAuctionsList;
+    private float profitsEarned = 0;
+    private final List<String> categories = new ArrayList<>();
+    private final List<Integer> categoriesCount = new ArrayList<>();
     public ConsultSalesStatisticsFragment() {
     }
     public static ConsultSalesStatisticsFragment newInstance() {
@@ -60,68 +81,10 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         binding = FragmentConsultSalesStatisticsBinding.inflate(inflater, container, false);
         setupFirstDateEditText();
         setupSecondDateEditText();
-        // Referencia al BarChart desde View Binding
-        BarChart barChart = binding.barChart;
-
-        // Crear un conjunto de datos de barras
-        List<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(1, 50)); // (X, Y)
-        entries.add(new BarEntry(2, 70));
-        entries.add(new BarEntry(3, 90));
-        entries.add(new BarEntry(4, 110));
-        entries.add(new BarEntry(5, 130));
-
-        // Crear un conjunto de datos a partir de las entradas
-        BarDataSet dataSet = new BarDataSet(entries, "Productos");
-
-        // Personalización del conjunto de datos
-        dataSet.setColor(Color.BLUE);
-
-        // Crear una instancia de BarData y establecer el conjunto de datos
-        BarData barData = new BarData(dataSet);
-
-        // Configurar el BarChart
-        // Calcular el ancho total necesario para mostrar todas las barras
-        float anchoBarra = 2f; // Ancho de una barra en píxeles
-        int totalBarras = 300; // Número total de barras
-        float anchoTotal = anchoBarra * totalBarras; // Ancho total necesario para mostrar todas las barras
-
-        ViewGroup.LayoutParams params = barChart.getLayoutParams();
-        params.height = (int) anchoTotal;
-        params.width =  MATCH_PARENT;// Convertir el ancho total a un entero
-
-        barChart.setLayoutParams(params);
-        barChart.setData(barData);
-        barChart.setFitBars(true);
-        barChart.getDescription().setText("Precio de productos");
-        barChart.getDescription().setTextSize(16f);
-        barChart.getDescription().setTextColor(Color.BLACK);
-        barChart.animateY(2000);
-
-
-        ArrayList<String> productos = new ArrayList<>();
-        productos.add("Producto A");
-        productos.add("Producto B");
-        productos.add("Producto C");
-
-        ArrayList<Float> precios = new ArrayList<>();
-        precios.add(100f); // Precio del Producto A
-        precios.add(50f); // Precio del Producto B
-        precios.add(200f); // Precio del Producto C
-        List<PieEntry> pieEntries = new ArrayList<>();
-
-        for (int i = 0; i < productos.size(); i++) {
-            pieEntries.add(new PieEntry(precios.get(i), productos.get(i)));
+        setupSalesAuctionsListStatusListener();
+        if(viewModel.getSalesAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
+            viewModel.recoverSalesAuctions(Session.getInstance().getUser().getId(), null, null);
         }
-        PieDataSet pieDtaSet = new PieDataSet(pieEntries, "Productos");
-        pieDtaSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-        pieDtaSet.setValueTextSize(12f);
-
-        PieData pieData = new PieData(pieDtaSet);
-        PieChart pieChart = binding.pieChart;
-        pieChart.setData(pieData);
-        pieChart.invalidate();
         return binding.getRoot();
     }
 
@@ -190,5 +153,138 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
         datePickerDialog.show();
+    }
+
+    private void setupSalesAuctionsListStatusListener() {
+        viewModel.getSalesAuctionsListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
+            if (requestStatus == RequestStatus.DONE) {
+                salesAuctionsList = viewModel.getSalesAuctionsList().getValue();
+                CalculateAndShowSalesStatistics();
+                CalculateAndShowCategoryStatistics();
+            }
+
+            if (requestStatus == RequestStatus.ERROR) {
+                ProcessErrorCodes errorCode = viewModel.getSalesAuctionsListErrorCode().getValue();
+
+                if(errorCode != null) {
+                    showSalesAuctionsListError(errorCode);
+                }
+            }
+        });
+    }
+
+    private void CalculateAndShowSalesStatistics() {
+        BarChart barChart = binding.barChart;
+        List<BarEntry> entries = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+        for (int i = 0; i < salesAuctionsList.size(); i++) {
+            Auction auction = salesAuctionsList.get(i);
+            profitsEarned += auction.getLastOffer().getAmount();
+            entries.add(new BarEntry(i, auction.getLastOffer().getAmount()));
+            labels.add(trimString(auction.getTitle(), 12));
+        }
+
+        binding.profitsEarnedTextView.setText(String.valueOf(profitsEarned));
+        BarDataSet dataSet = new BarDataSet(entries, "Subastas vendidas");
+        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        BarData barData = new BarData(dataSet);
+
+        float barWidth = 2f;
+        int bars = salesAuctionsList.size() * 80;
+        float barHeight = barWidth * bars;
+
+        ViewGroup.LayoutParams params = barChart.getLayoutParams();
+        params.height = (int) barHeight;
+        params.width =  MATCH_PARENT;
+
+        barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                int position = (int) e.getX();
+                Auction selectedAuction = salesAuctionsList.get(position);
+                Snackbar.make(binding.getRoot(), selectedAuction.getTitle(), Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {}
+        });
+
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        barChart.getXAxis().setGranularity(1f);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getXAxis().setGranularityEnabled(true);
+        barChart.setLayoutParams(params);
+        barChart.setData(barData);
+        barChart.setFitBars(true);
+        barChart.getDescription().setText("Precio de productos");
+        barChart.getDescription().setTextSize(16f);
+        barChart.getDescription().setTextColor(Color.BLACK);
+        barChart.animateY(2000);
+    }
+
+    private void CalculateAndShowCategoryStatistics() {
+        for (int i = 0; i < salesAuctionsList.size(); i++) {
+            Auction auction = salesAuctionsList.get(i);
+            if (!categories.contains(auction.getCategory().getTitle())) {
+                categories.add(auction.getCategory().getTitle());
+            }
+        }
+        for (int i = 0; i < categories.size(); i++) {
+            int count = 0;
+            String category = categories.get(i);
+            for (int j = 0; j < salesAuctionsList.size(); j++) {
+                Auction auction = salesAuctionsList.get(j);
+                if (category.equals(auction.getCategory().getTitle())) {
+                    count += 1;
+                }
+            }
+            categoriesCount.add(count);
+        }
+
+        List<PieEntry> pieEntries = new ArrayList<>();
+        for (int i = 0; i < categories.size(); i++) {
+            pieEntries.add(new PieEntry(categoriesCount.get(i), categories.get(i)));
+        }
+
+        PieDataSet pieDtaSet = new PieDataSet(pieEntries, "");
+        pieDtaSet.setColors(ColorTemplate.COLORFUL_COLORS);
+        pieDtaSet.setValueTextSize(12f);
+
+        PieData pieData = new PieData(pieDtaSet);
+
+        PieChart pieChart = binding.pieChart;
+
+        Description description = new Description();
+        description.setText("");
+
+        pieChart.setDescription(description);
+        pieChart.setData(pieData);
+
+        pieChart.invalidate();
+    }
+
+    public static String trimString(String text, int maxLength) {
+        if (text.length() <= maxLength) {
+            return text;
+        } else {
+            return text.substring(0, maxLength);
+        }
+    }
+
+    private void showSalesAuctionsListError(ProcessErrorCodes errorCode) {
+        String errorMessage = "";
+
+        switch (errorCode) {
+            case REQUEST_FORMAT_ERROR:
+                errorMessage = getString(R.string.modifycategory_badrequest_toast_message);
+                break;
+            case FATAL_ERROR:
+                errorMessage = getString(R.string.modifycategory_error_toast_message);
+                break;
+            default:
+                errorMessage = getString(R.string.modifycategory_error_toast_message);
+        }
+
+        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 }
