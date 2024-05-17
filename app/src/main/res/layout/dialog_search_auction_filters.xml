@@ -32,7 +32,8 @@
                 android:text="@string/searchauction_filters_categories"
                 style="@style/TvParagraphStyle"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_marginBottom="4dp"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/categoryFiltersListRecyclerView"
                 android:layout_width="wrap_content"
@@ -45,7 +46,8 @@
                 android:layout_marginTop="24dp"
                 style="@style/TvParagraphStyle"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_marginBottom="4dp"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/priceFiltersListRecyclerView"
                 android:layout_width="wrap_content"

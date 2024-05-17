@@ -85,7 +85,8 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:id="@+id/auctionsListRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 tools:itemCount="1"
                 tools:listitem="@layout/template_auction_details"
                 android:layout_marginHorizontal="12dp"/>
@@ -97,8 +98,8 @@
                 android:layout_marginHorizontal="12dp"
                 android:textAlignment="center"
                 style="@style/TvSmallStyle"
-                android:layout_marginTop="8dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:paddingVertical="4dp"/>
             <TextView
                 android:id="@+id/loadingAuctionsTextView"
                 android:layout_width="match_parent"
@@ -106,10 +107,10 @@
                 android:text="@string/searchauction_loading_auctions"
                 android:layout_marginHorizontal="12dp"
                 android:textAlignment="center"
-                style="@style/TvSubtitleStyle"
+                style="@style/TvSmallStyle"
                 android:textColor="@color/dark_primary"
-                android:layout_marginTop="8dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:paddingVertical="4dp"/>
             <LinearLayout
                 android:id="@+id/emptyAuctionsMessageLinearLayout"
                 android:layout_width="match_parent"
