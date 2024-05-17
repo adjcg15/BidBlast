@@ -116,7 +116,6 @@ public class AuctionsRepository {
             IProcessStatusListener<List<Auction>> statusListener){
         IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
-        Log.d("VALORES", auctioneerId + startDate + endDate);
         auctionsService.getUserSalesAuctionsList(authHeader, auctioneerId, startDate, endDate).enqueue(new Callback<List<AuctionJSONResponse>>() {
             @Override
             public void onResponse(Call<List<AuctionJSONResponse>> call, Response<List<AuctionJSONResponse>> response) {

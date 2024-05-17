@@ -83,6 +83,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(ConsultSalesStatisticsViewModel.class);
+        getSalesAuctionsList();
     }
 
     @Override
@@ -94,7 +95,6 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         setupSalesAuctionsListStatusListener();
         setupFirstDateListener();
         setupSecondDateListener();
-        getSalesAuctionsList();
         return binding.getRoot();
     }
 
@@ -121,6 +121,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                         binding.firstDateEditText.setText(selectedDate);
                         LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
                         startDate = DateToolkit.parseISO8601FromLocalDate(date);
+                        Log.d("SI GUARDE EL PRIMERO", startDate);
                     }
                 }, year, month, dayOfMonth);
 
@@ -162,6 +163,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                         binding.secondDateEditText.setText(selectedDate);
                         LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth + 1);
                         endDate = DateToolkit.parseISO8601FromLocalDate(date);
+                        Log.d("SI GUARDE EL SEGUNDO", endDate);
                     }
                 }, year, month, dayOfMonth);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
@@ -173,10 +175,6 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         binding.firstDateEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 profitsEarned = 0;
                 categories.clear();
                 categoriesCount.clear();
@@ -184,9 +182,16 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                 salesDates.clear();
                 salesDatesAmounts.clear();
                 salesDatesCount.clear();
-                if (startDate != null && endDate != null) {
-                    getSalesAuctionsList();
-                }
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getSalesAuctionsList();
+                    }
+                }, 1);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
 
             @Override
@@ -210,9 +215,12 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                 salesDates.clear();
                 salesDatesAmounts.clear();
                 salesDatesCount.clear();
-                if (startDate != null && endDate != null) {
-                    getSalesAuctionsList();
-                }
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getSalesAuctionsList();
+                    }
+                }, 1);
             }
 
             @Override
@@ -356,8 +364,8 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         float totalAmount = 0;
         for (int i = 0; i < salesAuctionsList.size(); i++) {
             Auction auction = salesAuctionsList.get(i);
-            if (!salesDates.contains(auction.getLastOffer().getCreationDate())) {
-                salesDates.add(auction.getLastOffer().getCreationDate());
+            if (!salesDates.contains(auction.getUpdatedDate())) {
+                salesDates.add(auction.getUpdatedDate());
             }
         }
         for (int i = 0; i < salesDates.size(); i++) {
@@ -366,7 +374,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
             Date saleSate = salesDates.get(i);
             for (int j = 0; j < salesAuctionsList.size(); j++) {
                 Auction auction = salesAuctionsList.get(j);
-                if (saleSate.equals(auction.getLastOffer().getCreationDate())) {
+                if (saleSate.equals(auction.getUpdatedDate())) {
                     count += 1;
                     amount += auction.getLastOffer().getAmount();
                 }
