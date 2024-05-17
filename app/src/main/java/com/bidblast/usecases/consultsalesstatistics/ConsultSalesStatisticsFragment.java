@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
+import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.Session;
 import com.bidblast.model.Auction;
 import com.bidblast.model.AuctionCategory;
@@ -46,11 +49,13 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import com.bidblast.databinding.FragmentConsultSalesStatisticsBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -63,6 +68,11 @@ public class ConsultSalesStatisticsFragment extends Fragment {
     private float profitsEarned = 0;
     private final List<String> categories = new ArrayList<>();
     private final List<Integer> categoriesCount = new ArrayList<>();
+    private final List<Date> salesDates = new ArrayList<>();
+    private  final List<Integer> salesDatesCount = new ArrayList<>();
+    private  final List<Float> salesDatesAmounts = new ArrayList<>();
+    private String startDate;
+    private String endDate;
     public ConsultSalesStatisticsFragment() {
     }
     public static ConsultSalesStatisticsFragment newInstance() {
@@ -82,9 +92,9 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         setupFirstDateEditText();
         setupSecondDateEditText();
         setupSalesAuctionsListStatusListener();
-        if(viewModel.getSalesAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
-            viewModel.recoverSalesAuctions(Session.getInstance().getUser().getId(), null, null);
-        }
+        setupFirstDateListener();
+        setupSecondDateListener();
+        getSalesAuctionsList();
         return binding.getRoot();
     }
 
@@ -109,6 +119,8 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                         binding.firstDateEditText.setText(selectedDate);
+                        LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
+                        startDate = DateToolkit.parseISO8601FromLocalDate(date);
                     }
                 }, year, month, dayOfMonth);
 
@@ -148,6 +160,8 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                         binding.secondDateEditText.setText(selectedDate);
+                        LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth + 1);
+                        endDate = DateToolkit.parseISO8601FromLocalDate(date);
                     }
                 }, year, month, dayOfMonth);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
@@ -155,12 +169,75 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         datePickerDialog.show();
     }
 
+    private void setupFirstDateListener() {
+        binding.firstDateEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                profitsEarned = 0;
+                categories.clear();
+                categoriesCount.clear();
+                salesAuctionsList.clear();
+                salesDates.clear();
+                salesDatesAmounts.clear();
+                salesDatesCount.clear();
+                if (startDate != null && endDate != null) {
+                    getSalesAuctionsList();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void setupSecondDateListener() {
+        binding.secondDateEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                profitsEarned = 0;
+                categories.clear();
+                categoriesCount.clear();
+                salesAuctionsList.clear();
+                salesDates.clear();
+                salesDatesAmounts.clear();
+                salesDatesCount.clear();
+                if (startDate != null && endDate != null) {
+                    getSalesAuctionsList();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void getSalesAuctionsList() {
+        if(viewModel.getSalesAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
+            viewModel.recoverSalesAuctions(Session.getInstance().getUser().getId(), startDate, endDate);
+        }
+    }
+
     private void setupSalesAuctionsListStatusListener() {
         viewModel.getSalesAuctionsListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             if (requestStatus == RequestStatus.DONE) {
                 salesAuctionsList = viewModel.getSalesAuctionsList().getValue();
-                CalculateAndShowSalesStatistics();
-                CalculateAndShowCategoryStatistics();
+                if (salesAuctionsList.size() != 0) {
+                    CalculateAndShowSalesStatistics();
+                    CalculateAndShowCategoryStatistics();
+                    CalculateAndShowFeaturedDay();
+                } else {
+                    collapseStatisticsSections();
+                }
             }
 
             if (requestStatus == RequestStatus.ERROR) {
@@ -173,7 +250,14 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         });
     }
 
+    private void collapseStatisticsSections() {
+        binding.earnedProfitsSection.setVisibility(View.GONE);
+        binding.salesCategoriesSection.setVisibility(View.GONE);
+        binding.bestDateSection.setVisibility(View.GONE);
+    }
+
     private void CalculateAndShowSalesStatistics() {
+        binding.earnedProfitsSection.setVisibility(View.VISIBLE);
         BarChart barChart = binding.barChart;
         List<BarEntry> entries = new ArrayList<>();
         List<String> labels = new ArrayList<>();
@@ -220,9 +304,11 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         barChart.getDescription().setTextSize(16f);
         barChart.getDescription().setTextColor(Color.BLACK);
         barChart.animateY(2000);
+        barChart.invalidate();
     }
 
     private void CalculateAndShowCategoryStatistics() {
+        binding.salesCategoriesSection.setVisibility(View.VISIBLE);
         for (int i = 0; i < salesAuctionsList.size(); i++) {
             Auction auction = salesAuctionsList.get(i);
             if (!categories.contains(auction.getCategory().getTitle())) {
@@ -261,6 +347,49 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         pieChart.setData(pieData);
 
         pieChart.invalidate();
+    }
+
+    private void CalculateAndShowFeaturedDay() {
+        binding.bestDateSection.setVisibility(View.VISIBLE);
+        Date bestDate = new Date();
+        int totalAuctions = 0;
+        float totalAmount = 0;
+        for (int i = 0; i < salesAuctionsList.size(); i++) {
+            Auction auction = salesAuctionsList.get(i);
+            if (!salesDates.contains(auction.getLastOffer().getCreationDate())) {
+                salesDates.add(auction.getLastOffer().getCreationDate());
+            }
+        }
+        for (int i = 0; i < salesDates.size(); i++) {
+            int count = 0;
+            float amount = 0;
+            Date saleSate = salesDates.get(i);
+            for (int j = 0; j < salesAuctionsList.size(); j++) {
+                Auction auction = salesAuctionsList.get(j);
+                if (saleSate.equals(auction.getLastOffer().getCreationDate())) {
+                    count += 1;
+                    amount += auction.getLastOffer().getAmount();
+                }
+            }
+            salesDatesCount.add(count);
+            salesDatesAmounts.add(amount);
+        }
+
+        float amountMax = 0;
+        for (int i = 0; i < salesDates.size(); i++) {
+            Date saleSate = salesDates.get(i);
+            int auctions = salesDatesCount.get(i);
+            float amount = salesDatesAmounts.get(i);
+            if (amount > amountMax) {
+                bestDate = saleSate;
+                totalAuctions = auctions;
+                totalAmount = amount;
+            }
+        }
+
+        binding.bestDateTextView.setText(DateToolkit.parseToFullDate(bestDate));
+        binding.totalAuctionsTextView.setText(String.valueOf(totalAuctions));
+        binding.totalAmountTextView.setText(String.valueOf(totalAmount));
     }
 
     public static String trimString(String text, int maxLength) {
