@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.bidblast.api.RequestStatus;
+import com.bidblast.lib.ApiFormatter;
 import com.bidblast.model.Auction;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.model.PriceRange;
@@ -72,8 +73,23 @@ public class SearchAuctionViewModel {
         int totalAuctionsLoaded = auctionsList.getValue() != null
             ? auctionsList.getValue().size()
             : 0;
+
+        int minimumPrice = 0, maximumPrice = Integer.MAX_VALUE;
+        PriceRange priceFilter = priceFilterSelected.getValue();
+        if(priceFilter != null) {
+            if(priceFilter.getMinimumAmount() != Float.NEGATIVE_INFINITY) {
+                minimumPrice = (int)priceFilter.getMinimumAmount();
+            }
+
+            if(priceFilter.getMaximumAmount() != Float.POSITIVE_INFINITY) {
+                maximumPrice = (int)priceFilter.getMaximumAmount();
+            }
+        }
+
         new AuctionsRepository().getAuctionsList(
             searchQuery, limit, totalAuctionsLoaded,
+            ApiFormatter.parseToPlainMultiValueParam(categoryFiltersSelected.getValue()),
+            minimumPrice, maximumPrice,
             new IProcessStatusListener<List<Auction>>() {
                 @Override
                 public void onSuccess(List<Auction> auctions) {

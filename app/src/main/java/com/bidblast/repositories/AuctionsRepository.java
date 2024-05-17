@@ -26,12 +26,15 @@ public class AuctionsRepository {
         String searchQuery,
         int limit,
         int offset,
+        String categories,
+        int minimumPrice,
+        int maximumPrice,
         IProcessStatusListener<List<Auction>> statusListener
     ) {
         IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
 
-        auctionsService.getAuctionsList(authHeader, searchQuery, limit, offset).enqueue(new Callback<List<AuctionJSONResponse>>() {
+        auctionsService.getAuctionsList(authHeader, searchQuery, limit, offset, categories, minimumPrice, maximumPrice).enqueue(new Callback<List<AuctionJSONResponse>>() {
             @Override
             public void onResponse(Call<List<AuctionJSONResponse>> call, Response<List<AuctionJSONResponse>> response) {
                 if(response.isSuccessful()) {
@@ -100,6 +103,7 @@ public class AuctionsRepository {
 
             @Override
             public void onFailure(Call<List<AuctionJSONResponse>> call, Throwable t) {
+                t.printStackTrace();
                 statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });

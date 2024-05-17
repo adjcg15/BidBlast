@@ -112,6 +112,8 @@ public class SearchAuctionFragment extends Fragment {
             filtersDialog.setOnDismissListener(dialog -> {
                 if (shouldSaveFilters[0]) {
                     viewModel.saveTemporaryFilters();
+                    viewModel.cleanAuctionsList();
+                    loadAuctions();
                 } else {
                     viewModel.discardTemporaryFilters();
                 }
@@ -177,7 +179,8 @@ public class SearchAuctionFragment extends Fragment {
 
     private void handleFastCategoryFilterClick(AuctionCategory category) {
         viewModel.toggleCategoryFilter(category);
-        //TODO: clean the showed auctions list and show a new one with the filters coincidence
+        viewModel.cleanAuctionsList();
+        loadAuctions();
     }
 
     private void handleCategoryFilterClick(AuctionCategory category) {
