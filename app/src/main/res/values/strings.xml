@@ -73,7 +73,13 @@
     <string name="consultsalesstatistics_first_date_action">Fecha inicio</string>
     <string name="consultsalesstatistics_second_date_action">Fecha fin</string>
     <string name="consultsalesstatistics_profits_earned">Total de ganacias obtenidas</string>
-    <string name="consultsalesstatistics_sales_categories">Categorías de ventas</string>
+    <string name="consultsalesstatistics_sales_categories">Categorías de ventas</string>>
+    <string name="consultsalesstatistics_empty_sales_auctions_title">¡Aún no tienes ventas!</string>
+    <string name="consultsalesstatistics_empty_sales_auctions_text">Por el momento no tienes ventas, por lo que no se pueden ver estadísticas</string>
+    <string name="consultsalesstatistics_empty_sales_auctions_dates_title">¡Sin coincidencias!</string>
+    <string name="consultsalesstatistics_empty_sales_auctions_dates_text">No hemos encontrado ninguna subasta vendida en el rango de fechas solicitado</string>
+    <string name="consultsalesstatistics_error_loading_title">¡Estamos teniendo problemas!</string>
+    <string name="consultsalesstatistics_error_loading_text">En este momento no podemos cargar las estadísticas, por favor intente en otro momento</string>
 
     <string name="consultcategories_searchbar_hint">Buscar categoría</string>
     <string name="consultcategories_edit_action">Editar</string>

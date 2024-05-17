@@ -122,7 +122,6 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                         binding.firstDateEditText.setText(selectedDate);
                         LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
                         startDate = DateToolkit.parseISO8601FromLocalDate(date);
-                        Log.d("SI GUARDE EL PRIMERO", startDate);
                     }
                 }, year, month, dayOfMonth);
 
@@ -164,7 +163,6 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                         binding.secondDateEditText.setText(selectedDate);
                         LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth + 1);
                         endDate = DateToolkit.parseISO8601FromLocalDate(date);
-                        Log.d("SI GUARDE EL SEGUNDO", endDate);
                     }
                 }, year, month, dayOfMonth);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
@@ -245,11 +243,19 @@ public class ConsultSalesStatisticsFragment extends Fragment {
             if (requestStatus == RequestStatus.DONE) {
                 salesAuctionsList = viewModel.getSalesAuctionsList().getValue();
                 if (salesAuctionsList.size() != 0) {
-                    CalculateAndShowSalesStatistics();
-                    CalculateAndShowCategoryStatistics();
-                    CalculateAndShowFeaturedDay();
+                    collapseSalesAuctionsImageError();
+                    collapseEmptySalesAuctionsImage();
+                    calculateAndShowSalesStatistics();
+                    calculateAndShowCategoryStatistics();
+                    calculateAndShowFeaturedDay();
                 } else {
+                    if (startDate == null && endDate == null) {
+                        collapseDatesRangeSection();
+                    } else {
+                        changeEmptySalesAuctionsImageStringValues();
+                    }
                     collapseStatisticsSections();
+                    showEmptySalesAuctionsImage();
                 }
             }
 
@@ -257,20 +263,20 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                 ProcessErrorCodes errorCode = viewModel.getSalesAuctionsListErrorCode().getValue();
 
                 if(errorCode != null) {
-                    showSalesAuctionsListError(errorCode);
+                    showSalesAuctionsImageError();
                 }
             }
         });
     }
 
     private void collapseStatisticsSections() {
-        binding.earnedProfitsSection.setVisibility(View.GONE);
-        binding.salesCategoriesSection.setVisibility(View.GONE);
-        binding.bestDateSection.setVisibility(View.GONE);
+        binding.earnedProfitsLinerLayout.setVisibility(View.GONE);
+        binding.salesCategoriesLinerLayout.setVisibility(View.GONE);
+        binding.bestDateLinerLayout.setVisibility(View.GONE);
     }
 
-    private void CalculateAndShowSalesStatistics() {
-        binding.earnedProfitsSection.setVisibility(View.VISIBLE);
+    private void calculateAndShowSalesStatistics() {
+        binding.earnedProfitsLinerLayout.setVisibility(View.VISIBLE);
         BarChart barChart = binding.barChart;
         List<BarEntry> entries = new ArrayList<>();
         List<String> labels = new ArrayList<>();
@@ -320,8 +326,8 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         barChart.invalidate();
     }
 
-    private void CalculateAndShowCategoryStatistics() {
-        binding.salesCategoriesSection.setVisibility(View.VISIBLE);
+    private void calculateAndShowCategoryStatistics() {
+        binding.salesCategoriesLinerLayout.setVisibility(View.VISIBLE);
         for (int i = 0; i < salesAuctionsList.size(); i++) {
             Auction auction = salesAuctionsList.get(i);
             if (!categories.contains(auction.getCategory().getTitle())) {
@@ -362,8 +368,8 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         pieChart.invalidate();
     }
 
-    private void CalculateAndShowFeaturedDay() {
-        binding.bestDateSection.setVisibility(View.VISIBLE);
+    private void calculateAndShowFeaturedDay() {
+        binding.bestDateLinerLayout.setVisibility(View.VISIBLE);
         Date bestDate = new Date();
         int totalAuctions = 0;
         float totalAmount = 0;
@@ -415,20 +421,33 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         }
     }
 
-    private void showSalesAuctionsListError(ProcessErrorCodes errorCode) {
-        String errorMessage = "";
+    private void collapseDatesRangeSection() {
+        binding.datesTitleTextView.setVisibility(View.GONE);
+        binding.datesRangeLinerLayout.setVisibility(View.GONE);
+    }
 
-        switch (errorCode) {
-            case REQUEST_FORMAT_ERROR:
-                errorMessage = getString(R.string.modifycategory_badrequest_toast_message);
-                break;
-            case FATAL_ERROR:
-                errorMessage = getString(R.string.modifycategory_error_toast_message);
-                break;
-            default:
-                errorMessage = getString(R.string.modifycategory_error_toast_message);
-        }
+    private void changeEmptySalesAuctionsImageStringValues() {
+        String emptySalesAuctionsTitle = getString(R.string.consultsalesstatistics_empty_sales_auctions_dates_title);
+        String emptySalesAuctionsText = getString(R.string.consultsalesstatistics_empty_sales_auctions_dates_text);
+        binding.emptySalesAuctionsTitle.setText(emptySalesAuctionsTitle);
+        binding.emptySalesAuctionsText.setText(emptySalesAuctionsText);
+    }
 
-        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
+    private void showSalesAuctionsImageError() {
+        collapseStatisticsSections();
+        binding.errorLoadingSalesAuctionsLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void collapseSalesAuctionsImageError() {
+        binding.errorLoadingSalesAuctionsLinearLayout.setVisibility(View.GONE);
+    }
+
+    private void showEmptySalesAuctionsImage() {
+        collapseStatisticsSections();
+        binding.emptySalesAuctionsMessageLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void collapseEmptySalesAuctionsImage() {
+        binding.emptySalesAuctionsMessageLinearLayout.setVisibility(View.GONE);
     }
 }
