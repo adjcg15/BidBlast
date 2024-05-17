@@ -19,7 +19,6 @@ public class ApiFormatter {
             plainParameter = builder.toString();
         }
 
-        System.out.println("CATEGORIES: " + plainParameter);
         return plainParameter;
     }
 }
