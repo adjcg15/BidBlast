@@ -16,6 +16,9 @@ public interface IAuctionsService {
         @Header("Authorization") String authHeader,
         @Query("query") String searchQuery,
         @Query("limit") int limit,
-        @Query("offset") int offset
+        @Query("offset") int offset,
+        @Query("categories") String categories,
+        @Query("minimumPrice") int minimumPrice,
+        @Query("maximumPrice") int maximumPrice
     );
 }
