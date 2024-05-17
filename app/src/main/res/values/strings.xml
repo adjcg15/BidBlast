@@ -61,6 +61,8 @@
     <string name="consultsalesstatistics_title">Estadísticas de ventas</string>
     <string name="consultsalesstatistics_date_range">Seleccione un rango de fechas</string>
     <string name="consultsalesstatistics_featured_sales_day">Día de ventas destacado</string>
+    <string name="consultsalesstatistics_first_featured_day_message">¡Muchas felicidades! en este día lograste concretar</string>
+    <string name="consultsalesstatistics_second_featured_day_message">subasta(s), generando un total de:</string>
     <string name="consultsalesstatistics_message_bidblast">¡Sigue subastando en <font color="#FF5C00"><b>Bid</b></font><font color="#454545"><b>Blast</b></font>!</string>
     <string name="consultsalesstatistics_first_date_action">Fecha inicio</string>
     <string name="consultsalesstatistics_second_date_action">Fecha fin</string>

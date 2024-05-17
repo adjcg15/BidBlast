@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
+import com.bidblast.lib.CurrencyToolkit;
 import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.Session;
 import com.bidblast.model.Auction;
@@ -185,7 +186,9 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getSalesAuctionsList();
+                        if (startDate != null && endDate != null) {
+                            getSalesAuctionsList();
+                        }
                     }
                 }, 1);
             }
@@ -218,7 +221,9 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getSalesAuctionsList();
+                        if (startDate != null && endDate != null) {
+                            getSalesAuctionsList();
+                        }
                     }
                 }, 1);
             }
@@ -276,7 +281,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
             labels.add(trimString(auction.getTitle(), 12));
         }
 
-        binding.profitsEarnedTextView.setText(String.valueOf(profitsEarned));
+        binding.profitsEarnedTextView.setText(CurrencyToolkit.parseToMXN(profitsEarned));
         BarDataSet dataSet = new BarDataSet(entries, "Subastas vendidas");
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         BarData barData = new BarData(dataSet);
@@ -396,8 +401,10 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         }
 
         binding.bestDateTextView.setText(DateToolkit.parseToFullDate(bestDate));
-        binding.totalAuctionsTextView.setText(String.valueOf(totalAuctions));
-        binding.totalAmountTextView.setText(String.valueOf(totalAmount));
+        String featuredDayMessage = getString(R.string.consultsalesstatistics_first_featured_day_message) +
+                " " + totalAuctions + " " + getString(R.string.consultsalesstatistics_second_featured_day_message);
+        binding.totalAuctionsTextView.setText(featuredDayMessage);
+        binding.totalAmountTextView.setText(CurrencyToolkit.parseToMXN(totalAmount));
     }
 
     public static String trimString(String text, int maxLength) {
