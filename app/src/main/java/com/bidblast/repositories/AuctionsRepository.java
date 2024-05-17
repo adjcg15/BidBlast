@@ -1,7 +1,10 @@
 package com.bidblast.repositories;
 
+import android.util.Log;
+
 import com.bidblast.api.ApiClient;
 import com.bidblast.api.IAuctionsService;
+import com.bidblast.api.responses.auctioncategories.AuctionCategoryJSONResponse;
 import com.bidblast.api.responses.auctions.AuctionAuctioneerJSONResponse;
 import com.bidblast.api.responses.auctions.AuctionJSONResponse;
 import com.bidblast.api.responses.auctions.AuctionLastOfferJSONResponse;
@@ -9,6 +12,7 @@ import com.bidblast.api.responses.auctions.AuctionMediaFileJSONResponse;
 import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.Session;
 import com.bidblast.model.Auction;
+import com.bidblast.model.AuctionCategory;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.model.User;
@@ -104,6 +108,67 @@ public class AuctionsRepository {
             @Override
             public void onFailure(Call<List<AuctionJSONResponse>> call, Throwable t) {
                 t.printStackTrace();
+                statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+            }
+        });
+    }
+
+    public void getUserSalesAuctionsList(
+            int auctioneerId,
+            String startDate,
+            String endDate,
+            IProcessStatusListener<List<Auction>> statusListener){
+        IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
+        String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
+        auctionsService.getUserSalesAuctionsList(authHeader, auctioneerId, startDate, endDate).enqueue(new Callback<List<AuctionJSONResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuctionJSONResponse>> call, Response<List<AuctionJSONResponse>> response) {
+                if (response.isSuccessful()) {
+                    List<AuctionJSONResponse> body = response.body();
+
+                    if (body != null) {
+                        List<Auction> auctionsList = new ArrayList<>();
+
+                        for(AuctionJSONResponse auctionRes : body) {
+                            Auction auction = new Auction();
+
+                            auction.setId(auctionRes.getId());
+                            auction.setTitle(auctionRes.getTitle());
+                            auction.setUpdatedDate(DateToolkit.parseDateFromIS8601(auctionRes.getUpdatedDate()));
+
+                            AuctionCategoryJSONResponse categoryRes = auctionRes.getCategory();
+                            if (categoryRes != null) {
+                                AuctionCategory category = new AuctionCategory();
+
+                                category.setId(categoryRes.getId());
+                                category.setTitle(categoryRes.getTitle());
+
+                                auction.setCategory(category);
+                            }
+
+                            AuctionLastOfferJSONResponse lastOfferRes = auctionRes.getLastOffer();
+                            if(lastOfferRes != null) {
+                                Offer lastOffer = new Offer();
+
+                                lastOffer.setId(lastOfferRes.getId());
+                                lastOffer.setAmount(lastOfferRes.getAmount());
+                                lastOffer.setCreationDate(DateToolkit.parseDateFromIS8601(lastOfferRes.getCreationDate()));
+
+                                auction.setLastOffer(lastOffer);
+                            }
+                            auctionsList.add(auction);
+                        }
+                        statusListener.onSuccess(auctionsList);
+                    } else {
+                        statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                    }
+                } else {
+                    statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AuctionJSONResponse>> call, Throwable t) {
                 statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });

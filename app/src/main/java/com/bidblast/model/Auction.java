@@ -18,10 +18,13 @@ public class Auction {
     private User auctioneer;
     private List<HypermediaFile> mediaFiles;
     private Offer lastOffer;
+    private AuctionCategory category;
+    private String state;
+    private Date updatedDate;
 
     public Auction() { }
 
-    public Auction(int id, String title, String description, float basePrice, float minimumBid, Date approvalDate, Date closesAt, int daysAvailable, User auctioneer, List<HypermediaFile> mediaFiles, Offer lastOffer) {
+    public Auction(int id, String title, String description, float basePrice, float minimumBid, Date approvalDate, Date closesAt, int daysAvailable, User auctioneer, List<HypermediaFile> mediaFiles, Offer lastOffer, AuctionCategory category, String state, Date updatedDate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -33,6 +36,9 @@ public class Auction {
         this.auctioneer = auctioneer;
         this.mediaFiles = mediaFiles;
         this.lastOffer = lastOffer;
+        this.category = category;
+        this.state = state;
+        this.updatedDate = updatedDate;
     }
 
     public int getId() {
@@ -121,6 +127,30 @@ public class Auction {
 
     public void setLastOffer(Offer lastOffer) {
         this.lastOffer = lastOffer;
+    }
+
+    public AuctionCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(AuctionCategory category){
+        this.category = category;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     @Override

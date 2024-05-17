@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -32,7 +31,7 @@
                 android:layout_marginStart="15dp"
                 style="@style/TvHeaderTitleStyle"/>
         </LinearLayout>
-        
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -60,6 +59,7 @@
                     android:layout_marginBottom="12dp">
 
                     <EditText
+                        android:id="@+id/firstDateEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.55"
@@ -76,25 +76,28 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/space_icon"/>
                     <EditText
+                        android:id="@+id/secondDateEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.55"
                         style="@style/EdTxtGenericStyle"
                         android:hint="@string/consultsalesstatistics_second_date_action"
                         android:clickable="true"
-                        android:focusable="false"
+                        android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:drawableRight="@drawable/calendar_icon"/>
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/earnedProfitsSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/gray_rounded_border"
-                    android:padding="20dp">
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -103,6 +106,7 @@
                         style="@style/TvTitleStyle"
                         android:text="@string/consultsalesstatistics_profits_earned"/>
                     <TextView
+                        android:id="@+id/profitsEarnedTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -118,6 +122,7 @@
 
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/salesCategoriesSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -138,10 +143,12 @@
                         android:layout_height="250dp" />
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/bestDateSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/gray_rounded_border"
+                    android:layout_marginBottom="20dp"
                     android:padding="20dp">
 
                     <TextView
@@ -151,6 +158,7 @@
                         style="@style/TvTitleStyle"
                         android:text="@string/consultsalesstatistics_featured_sales_day"/>
                     <TextView
+                        android:id="@+id/bestDateTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -159,15 +167,16 @@
                         android:text="29 de febrero de 2024"/>
 
                     <TextView
+                        android:id="@+id/totalAuctionsTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:layout_marginEnd="20dp"
                         android:layout_marginStart="20dp"
-                        style="@style/TvParagraphStyle"
-                        android:text="¡Muchas felicidades! en este día lograste concretar 12 subastas, generando un total de:"/>
+                        style="@style/TvParagraphStyle"/>
 
                     <TextView
+                        android:id="@+id/totalAmountTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -183,10 +192,8 @@
                         android:layout_marginStart="25dp"
                         style="@style/TvParagraphStyle"
                         android:text="@string/consultsalesstatistics_message_bidblast"/>
-
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-
     </LinearLayout>
 </layout>
