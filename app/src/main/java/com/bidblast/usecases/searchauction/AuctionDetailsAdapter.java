@@ -15,11 +15,14 @@ import com.bidblast.lib.CurrencyToolkit;
 import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.Auction;
+import com.bidblast.model.AuctionCategory;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.model.User;
 
 public class AuctionDetailsAdapter extends ListAdapter<Auction, AuctionDetailsAdapter.AuctionViewHolder> {
+    private OnAuctionClickListener onAuctionClickListener;
+
     public static final DiffUtil.ItemCallback<Auction> DIFF_CALLBACK =
         new DiffUtil.ItemCallback<Auction>() {
             @Override
@@ -52,7 +55,11 @@ public class AuctionDetailsAdapter extends ListAdapter<Auction, AuctionDetailsAd
         holder.bind(auction);
     }
 
-    public static class AuctionViewHolder extends RecyclerView.ViewHolder {
+    public void setOnAuctionClickListener(OnAuctionClickListener onAuctionClickListener) {
+        this.onAuctionClickListener = onAuctionClickListener;
+    }
+
+    public class AuctionViewHolder extends RecyclerView.ViewHolder {
         private final TemplateAuctionDetailsBinding binding;
 
         public AuctionViewHolder(@NonNull TemplateAuctionDetailsBinding binding) {
@@ -75,6 +82,10 @@ public class AuctionDetailsAdapter extends ListAdapter<Auction, AuctionDetailsAd
                 )
             );
 
+            binding.bidOnAuctionButton.setOnClickListener(v -> {
+                onAuctionClickListener.onBidOnAuctionButtonClick(auction.getId());
+            });
+
             binding.auctioneerNameTextView.setText(auction.getAuctioneer().getFullName());
             String auctioneerAvatar = auctioneer.getAvatar();
             if(auctioneerAvatar != null && !auctioneerAvatar.isEmpty()) {
@@ -89,5 +100,9 @@ public class AuctionDetailsAdapter extends ListAdapter<Auction, AuctionDetailsAd
 
             binding.executePendingBindings();
         }
+    }
+
+    interface OnAuctionClickListener {
+        void onBidOnAuctionButtonClick(int idAuction);
     }
 }

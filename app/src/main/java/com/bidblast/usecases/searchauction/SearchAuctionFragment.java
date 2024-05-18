@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import com.bidblast.databinding.FragmentSearchAuctionBinding;
 import com.bidblast.model.Auction;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.model.PriceRange;
+import com.bidblast.usecases.bidonauction.BidOnAuctionFragment;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -57,6 +60,7 @@ public class SearchAuctionFragment extends Fragment {
         this.viewModel = new SearchAuctionViewModel();
 
         auctionsListAdapter = new AuctionDetailsAdapter();
+        auctionsListAdapter.setOnAuctionClickListener(this::handleOpenBidOnAuctionFragment);
         binding.auctionsListRecyclerView.setAdapter(auctionsListAdapter);
 
         fastCategoryFiltersListAdapter = new CategoryFilterAdapter(viewModel, false);
@@ -205,6 +209,16 @@ public class SearchAuctionFragment extends Fragment {
 
     private void handlePriceFilterClick(PriceRange priceRange) {
         viewModel.toggleTemporaryPriceFilter(priceRange);
+    }
+
+    private void handleOpenBidOnAuctionFragment(int idAuction) {
+        BidOnAuctionFragment bidOnAuctionFragment = BidOnAuctionFragment.newInstance(idAuction);
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.mainViewFragmentLayout, bidOnAuctionFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void setupRecyclerViewScrollListener() {
