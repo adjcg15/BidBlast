@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:itemCount="6"
-            tools:listitem="@layout/auction_details_with_state_template"
+            tools:listitem="@layout/template_auction_details_with_state"
             android:layout_margin="12dp"/>
     </LinearLayout>
 </layout>

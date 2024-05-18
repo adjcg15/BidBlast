@@ -5,7 +5,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class ApiClient {
     private static final ApiClient apiClient = new ApiClient();
-    public static final String API_BASE_URL = "http://10.0.2.2:3000/api/";
+    public static final String API_BASE_URL = "http://192.168.100.164:3000/api/";
     private final Retrofit retrofit;
 
     private IAuthenticationService authenticationService;
