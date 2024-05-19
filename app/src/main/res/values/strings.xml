@@ -61,6 +61,13 @@
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
     <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>
     <string name="consultcompletedauctions_purchased_date_message">Comprado el %s</string>
+    <string name="consultcompletedauctions_empty_completed_auctions_title">¡Aún no tienes compras!</string>
+    <string name="consultcompletedauctions_empty_completed_auctions_text">Por el momento no tienes subastas compradas, las subastas que compres aparecerán aquí</string>
+    <string name="consultcompletedauctions_empty_completed_auctions_by_search_title">¡Sin coincidencias!</string>
+    <string name="consultcompletedauctions_empty_completed_auctions_by_search_text">No hemos encontrado ninguna subasta comprada que coincida con su búsqueda</string>
+    <string name="consultcompletedauctions_loading_completed_auctions">Cargando subastas compradas...</string>
+    <string name="consultcompletedauctions_error_loading_title">¡Estamos teniendo problemas!</string>
+    <string name="consultcompletedauctions_error_loading_text">En este momento no podemos cargar las subastas compradas, por favor intente en otro momento</string>
 
     <string name="consultcreatedauctions_searchbar_hint">Buscar en ventas</string>
     <string name="consultcreatedauctions_sales_statistics_action">Estadísticas de ventas</string>

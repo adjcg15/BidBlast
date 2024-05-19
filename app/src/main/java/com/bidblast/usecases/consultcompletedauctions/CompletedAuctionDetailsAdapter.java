@@ -80,11 +80,19 @@ public class CompletedAuctionDetailsAdapter extends ListAdapter<Auction, Complet
             User auctioneer = auction.getAuctioneer();
             Offer lastOffer = auction.getLastOffer();
 
+            binding.auctionFirstTitleTextView.setVisibility(View.GONE);
+            binding.auctionRejectedStateMessageTextView.setVisibility(View.GONE);
+            binding.auctionLastOfferTitleTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTitleTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTextView.setVisibility(View.GONE);
+            binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.GONE);
+            binding.viewMadeOffersButton.setVisibility(View.GONE);
+
             binding.auctionSecondTitleTextView.setText(auction.getTitle());
             HypermediaFile auctionImage = auction.getMediaFiles().get(0);
             binding.auctionMainImageImageView.setImageBitmap(ImageToolkit.parseBitmapFromBase64(auctionImage.getContent()));
-            String purchasedDate = DateToolkit.parseToFullDateWithHour(auction.getClosesAt());
-            binding.auctionFinalAmountTextView.setText(
+            String purchasedDate = DateToolkit.parseToFullDateWithHour(auction.getUpdatedDate());
+            binding.auctionDescriptionTextView.setText(
                 String.format(
                     binding.getRoot().getContext().getString(R.string.consultcompletedauctions_purchased_date_message),
                     purchasedDate
