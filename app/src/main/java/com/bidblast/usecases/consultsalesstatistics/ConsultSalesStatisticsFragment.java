@@ -100,12 +100,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
     }
 
     private void setupFirstDateEditText(){
-        binding.firstDateEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerToFirstDate();
-            }
-        });
+        binding.firstDateEditText.setOnClickListener(v -> showDatePickerToFirstDate());
     }
 
     private void showDatePickerToFirstDate(){
@@ -115,14 +110,11 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-                        binding.firstDateEditText.setText(selectedDate);
-                        LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth);
-                        startDate = DateToolkit.parseISO8601FromLocalDate(date);
-                    }
+                (view, year1, monthOfYear, dayOfMonth1) -> {
+                    String selectedDate = dayOfMonth1 + "/" + (monthOfYear + 1) + "/" + year1;
+                    binding.firstDateEditText.setText(selectedDate);
+                    LocalDate date = LocalDate.of(year1, monthOfYear + 1, dayOfMonth1);
+                    startDate = DateToolkit.parseISO8601FromLocalDate(date);
                 }, year, month, dayOfMonth);
 
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
@@ -156,14 +148,11 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         }
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-                        binding.secondDateEditText.setText(selectedDate);
-                        LocalDate date = LocalDate.of(year, monthOfYear + 1, dayOfMonth + 1);
-                        endDate = DateToolkit.parseISO8601FromLocalDate(date);
-                    }
+                (view, year1, monthOfYear, dayOfMonth1) -> {
+                    String selectedDate = dayOfMonth1 + "/" + (monthOfYear + 1) + "/" + year1;
+                    binding.secondDateEditText.setText(selectedDate);
+                    LocalDate date = LocalDate.of(year1, monthOfYear + 1, dayOfMonth1 + 1);
+                    endDate = DateToolkit.parseISO8601FromLocalDate(date);
                 }, year, month, dayOfMonth);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
         datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
@@ -181,12 +170,9 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                 salesDates.clear();
                 salesDatesAmounts.clear();
                 salesDatesCount.clear();
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (startDate != null && endDate != null) {
-                            getSalesAuctionsList();
-                        }
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if (startDate != null && endDate != null) {
+                        getSalesAuctionsList();
                     }
                 }, 1);
             }
@@ -216,12 +202,9 @@ public class ConsultSalesStatisticsFragment extends Fragment {
                 salesDates.clear();
                 salesDatesAmounts.clear();
                 salesDatesCount.clear();
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (startDate != null && endDate != null) {
-                            getSalesAuctionsList();
-                        }
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if (startDate != null && endDate != null) {
+                        getSalesAuctionsList();
                     }
                 }, 1);
             }
