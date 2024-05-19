@@ -47,30 +47,30 @@ public class ConsultCompletedAuctionsFragment extends Fragment {
         completedAuctionDetailsAdapter = new CompletedAuctionDetailsAdapter(getContext());
         binding.completedAuctionsListRecyclerView.setAdapter(completedAuctionDetailsAdapter);
 
-        setupAuctionsListStatusListener();
-        setupAuctionsListListener();
+        setupCompletedAuctionsListStatusListener();
+        setupCompletedAuctionsListListener();
         setupRecyclerViewScrollListener();
-        setupStillAuctionsLeftToLoadListener();
-        setupSearchAuctionsImageButton();
-        loadAuctions();
+        setupStillCompletedAuctionsLeftToLoadListener();
+        setupSearchCompletedAuctionsImageButton();
+        loadCompletedAuctions();
         return binding.getRoot();
     }
 
-    private void setupSearchAuctionsImageButton() {
+    private void setupSearchCompletedAuctionsImageButton() {
         binding.searchAuctionsImageButton.setOnClickListener(v -> {
             viewModel.cleanAuctionsList();
-            loadAuctions();
+            loadCompletedAuctions();
         });
     }
 
-    private void loadAuctions() {
+    private void loadCompletedAuctions() {
         searchQuery = binding.searchbarEditText.getText().toString();
         int customerId = Session.getInstance().getUser().getId();
 
         viewModel.recoverAuctions(customerId, searchQuery, TOTAL_AUCTIONS_TO_LOAD);
     }
 
-    private void setupAuctionsListStatusListener() {
+    private void setupCompletedAuctionsListStatusListener() {
         viewModel.getAuctionsListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             binding.emptyCompletedAuctionsMessageLinearLayout.setVisibility(View.GONE);
 
@@ -123,7 +123,7 @@ public class ConsultCompletedAuctionsFragment extends Fragment {
         });
     }
 
-    private void setupStillAuctionsLeftToLoadListener() {
+    private void setupStillCompletedAuctionsLeftToLoadListener() {
         viewModel.getStillAuctionsLeftToLoad().observe(getViewLifecycleOwner(), stillAuctionsLeftToLoad -> {
             if(stillAuctionsLeftToLoad) {
                 binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
@@ -133,7 +133,7 @@ public class ConsultCompletedAuctionsFragment extends Fragment {
         });
     }
 
-    private void setupAuctionsListListener() {
+    private void setupCompletedAuctionsListListener() {
         viewModel.getAuctionsList().observe(getViewLifecycleOwner(), auctionsList -> {
             completedAuctionDetailsAdapter.submitList(auctionsList);
         });
@@ -156,7 +156,7 @@ public class ConsultCompletedAuctionsFragment extends Fragment {
                             && totalItemCount >= TOTAL_AUCTIONS_TO_LOAD
                             && Boolean.TRUE.equals(viewModel.getStillAuctionsLeftToLoad().getValue())
                             && viewModel.getAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
-                        loadAuctions();
+                        loadCompletedAuctions();
                     }
                 }
             }
