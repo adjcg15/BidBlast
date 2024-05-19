@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bidblast.R;
 import com.bidblast.databinding.TemplateCarouselItemBinding;
+import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.HypermediaFile;
 
 import java.util.List;
 
 public class CarouselItemAdapter extends ListAdapter<HypermediaFile, CarouselItemAdapter.CarouselItemViewHolder> {
-    private OnCarouselItemClickListener onCarouselItemClickListener;
-    private final LiveData<List<HypermediaFile>> hypermediaFilesFullList;
+    private final CarouselViewModel carouselViewModel;
 
     public static final DiffUtil.ItemCallback<HypermediaFile> DIFF_CALLBACK =
         new DiffUtil.ItemCallback<HypermediaFile>() {
@@ -33,9 +33,9 @@ public class CarouselItemAdapter extends ListAdapter<HypermediaFile, CarouselIte
             }
         };
 
-    protected CarouselItemAdapter(LiveData<List<HypermediaFile>> hypermediaFilesFullList) {
+    public CarouselItemAdapter(CarouselViewModel carouselViewModel) {
         super(DIFF_CALLBACK);
-        this.hypermediaFilesFullList = hypermediaFilesFullList;
+        this.carouselViewModel = carouselViewModel;
     }
 
     @NonNull
@@ -53,10 +53,6 @@ public class CarouselItemAdapter extends ListAdapter<HypermediaFile, CarouselIte
         holder.bind(hypermediaFile);
     }
 
-    public void setOnCarouselItemClickListener(OnCarouselItemClickListener onCarouselItemClickListener) {
-        this.onCarouselItemClickListener = onCarouselItemClickListener;
-    }
-
     public class CarouselItemViewHolder extends RecyclerView.ViewHolder {
         private final TemplateCarouselItemBinding binding;
 
@@ -66,47 +62,31 @@ public class CarouselItemAdapter extends ListAdapter<HypermediaFile, CarouselIte
         }
 
         public void bind(HypermediaFile hypermediaFile) {
+            setupSelectedItemChangeListener(hypermediaFile);
+            setupItemClickListener(hypermediaFile);
+
             String hypermediaType = hypermediaFile.getMimeType();
-
             if(hypermediaType.startsWith("image")) {
-                setupImageClickListener(hypermediaFile);
-            } else if (hypermediaType.startsWith("video")) {
-                setupVideoClickListener(hypermediaFile);
+                binding.itemImageView.setImageBitmap(
+                    ImageToolkit.parseBitmapFromBase64(hypermediaFile.getContent())
+                );
             }
         }
 
-        private void setupVideoClickListener(HypermediaFile currentFile) {
+        private void setupItemClickListener(HypermediaFile currentFile) {
             binding.getRoot().setOnClickListener(v -> {
-                onCarouselItemClickListener.onVideoSelected(currentFile);
-
-                toggleCarouselItemStyle(currentFile);
+                carouselViewModel.setSelectedFile(currentFile);
             });
         }
 
-        private void setupImageClickListener(HypermediaFile currentFile) {
-            binding.getRoot().setOnClickListener(v -> {
-                onCarouselItemClickListener.onImageSelected(currentFile);
-
-                toggleCarouselItemStyle(currentFile);
-            });
-        }
-
-        private void toggleCarouselItemStyle(HypermediaFile currentFile) {
-            List<HypermediaFile> filesList =  hypermediaFilesFullList.getValue();
-            if(filesList != null) {
-                for(HypermediaFile file : filesList) {
-                    if(file.getId() == currentFile.getId()) {
-                        binding.itemImageView.setBackgroundResource(R.drawable.carousel_selected_item_background);
-                    } else {
-                        binding.itemImageView.setBackgroundResource(R.drawable.carousel_item_background);
-                    }
+        private void setupSelectedItemChangeListener(HypermediaFile currentFile) {
+            carouselViewModel.getSelectedFile().observeForever(selectedFile -> {
+                if(selectedFile != null && currentFile.getId() == selectedFile.getId()) {
+                    binding.itemContainerConstraintLayout.setBackgroundResource(R.drawable.carousel_selected_item_background);
+                } else {
+                    binding.itemContainerConstraintLayout.setBackgroundResource(R.drawable.carousel_item_background);
                 }
-            }
+            });
         }
-    }
-
-    interface OnCarouselItemClickListener {
-        void onImageSelected(HypermediaFile hypermediaFile);
-        void onVideoSelected(HypermediaFile hypermediaFile);
     }
 }
