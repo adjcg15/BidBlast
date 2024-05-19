@@ -101,6 +101,8 @@
     <string name="postitem_base_price">Precio base <font color="#FF5C00">*</font></string>
     <string name="postitem_media">Fotos y videos <font color="#FF5C00">*</font></string>
 
+    <string name="bidonauction_title">Artículo en subasta</string>
+
     <string name="mainmenu_auctions">Subastas</string>
     <string name="mainmenu_purchases">Compras</string>
     <string name="mainmenu_sales">Ventas</string>

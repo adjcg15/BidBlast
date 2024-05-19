@@ -1,5 +1,7 @@
 package com.bidblast.model;
 
+import java.util.Objects;
+
 public class HypermediaFile {
     private int id;
     private String content;
@@ -45,5 +47,18 @@ public class HypermediaFile {
 
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HypermediaFile that = (HypermediaFile) o;
+        return id == that.id && Objects.equals(content, that.content) && Objects.equals(name, that.name) && Objects.equals(mimeType, that.mimeType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, content, name, mimeType);
     }
 }
