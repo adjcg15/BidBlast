@@ -60,6 +60,7 @@
 
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
     <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>
+    <string name="consultcompletedauctions_purchased_date_message">Comprado el %s</string>
 
     <string name="consultcreatedauctions_searchbar_hint">Buscar en ventas</string>
     <string name="consultcreatedauctions_sales_statistics_action">Estadísticas de ventas</string>
