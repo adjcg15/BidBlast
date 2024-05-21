@@ -26,10 +26,10 @@
             android:name=".usecases.consultcategories.ConsultCategoriesActivity"
             android:exported="false"/>
         <activity
-            android:name=".usecases.signup.SignUpActivity"
+            android:name=".usecases.login.LoginActivity"
             android:exported="false"/>
         <activity
-            android:name=".usecases.login.LoginActivity"
+            android:name=".usecases.signup.SignUpActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -6,9 +6,13 @@ import com.bidblast.R;
 import com.bidblast.api.ApiClient;
 import com.bidblast.api.IAuthenticationService;
 import com.bidblast.api.requests.authentication.UserCredentialsBody;
+import com.bidblast.api.requests.authentication.UserRegisterBody;
 import com.bidblast.api.responses.authentication.UserLoginJSONResponse;
+import com.bidblast.api.responses.authentication.UserRegisterJSONResponse;
 import com.bidblast.lib.Session;
 import com.bidblast.model.User;
+
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +54,32 @@ public class AuthenticationRepository {
             @Override
             public void onFailure(Call<UserLoginJSONResponse> call, Throwable t) {
                 statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+            }
+        });
+    }
+    public void createAccount(UserRegisterBody body, IEmptyProcessStatusListener creationlistener) {
+        IAuthenticationService authService = ApiClient.getInstance().getAuthenticationService();
+        authService.createAccount(body).enqueue(new Callback<UserRegisterJSONResponse>() {
+            @Override
+            public void onResponse(Call<UserRegisterJSONResponse> call, Response<UserRegisterJSONResponse> response) {
+                if (response.isSuccessful()) {
+                    UserRegisterJSONResponse body = response.body();
+
+                    if (body != null && body.getAccount() != null) {
+                        int accountId = body.getAccount().getIdAccount();
+                        String email = body.getAccount().getEmail();
+                        creationlistener.onSuccess();
+                    } else {
+                        creationlistener.onError(ProcessErrorCodes.FATAL_ERROR);
+                    }
+                } else {
+                    creationlistener.onError(ProcessErrorCodes.FATAL_ERROR);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserRegisterJSONResponse> call, Throwable t) {
+                creationlistener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });
     }

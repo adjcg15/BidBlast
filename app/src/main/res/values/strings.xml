@@ -107,4 +107,8 @@
     <string name="mainmenu_purchases">Compras</string>
     <string name="mainmenu_sales">Ventas</string>
     <string name="mainmenu_new_auction">Subastar</string>
+    <string name="signup_invalid_input_toast_message">Verifique que la información ingresada coincida con los formatos requeridos</string>
+    <string name="signup_error_toast_message">No fue posible crear la cuenta, intente más tarde</string>
+    <string name="signup_password_mismatch_error">Las contraseñas ingresadas no coinciden,verifique la información</string>
+    <string name="signup_success_message">Su cuenta ha sido creada con éxito, inicie sesión para ingresar</string>
 </resources>
