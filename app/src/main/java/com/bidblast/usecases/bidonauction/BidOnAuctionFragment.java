@@ -8,12 +8,16 @@ import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 import com.bidblast.databinding.FragmentBidOnAuctionBinding;
+import com.bidblast.gRPC.Client;
 import com.bidblast.global.CarouselViewModel;
 import com.bidblast.global.CarouselItemAdapter;
 import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.HypermediaFile;
+import com.google.android.exoplayer2.ExoPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,9 @@ public class BidOnAuctionFragment extends Fragment {
     private CarouselViewModel carouselViewModel;
     private FragmentBidOnAuctionBinding binding;
     private CarouselItemAdapter carouselAdapter;
+    private VideoView videoView;
+    private MediaController mediaController;
+    private Client client;
 
     public BidOnAuctionFragment() {
 
@@ -53,6 +60,13 @@ public class BidOnAuctionFragment extends Fragment {
     ) {
         binding = FragmentBidOnAuctionBinding.inflate(inflater, container, false);
 
+        videoView = binding.playerVideoView;
+        mediaController = new MediaController(getActivity());
+        videoView.setMediaController(mediaController);
+
+        client = new Client("192.168.100.164", 3001);
+
+        client.streamVideo(2);
         carouselViewModel = new CarouselViewModel();
 
         carouselAdapter = new CarouselItemAdapter(carouselViewModel);

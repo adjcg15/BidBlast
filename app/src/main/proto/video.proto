@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "com.proto.video";
+
+message VideoRequest {
+    int32 videoId = 1;
+}
+
+message VideoChunkResponse {
+    bytes data = 1;
+}
+
+service VideoService {
+    rpc streamVideo(VideoRequest) returns (stream VideoChunkResponse) {}
+}
