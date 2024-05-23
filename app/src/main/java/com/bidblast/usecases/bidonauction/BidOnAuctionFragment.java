@@ -1,10 +1,15 @@
 package com.bidblast.usecases.bidonauction;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Handler;
+import android.os.Message;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +24,13 @@ import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.HypermediaFile;
 import com.google.android.exoplayer2.ExoPlayer;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class BidOnAuctionFragment extends Fragment {
     private static final String ARG_ID_AUCTION = "id_auction";
@@ -31,6 +41,7 @@ public class BidOnAuctionFragment extends Fragment {
     private VideoView videoView;
     private MediaController mediaController;
     private Client client;
+    private FileOutputStream outputStream;
 
     public BidOnAuctionFragment() {
 
@@ -60,13 +71,41 @@ public class BidOnAuctionFragment extends Fragment {
     ) {
         binding = FragmentBidOnAuctionBinding.inflate(inflater, container, false);
 
+        // Se configura el vide view que están en la vista
         videoView = binding.playerVideoView;
-        mediaController = new MediaController(getActivity());
-        videoView.setMediaController(mediaController);
+        videoView.setMediaController(new MediaController(getContext()));
+        videoView.requestFocus();
 
-        client = new Client("192.168.100.164", 3001);
+        // Inicia el cliente
+        client = new Client("192.168.100.164", 3001, new Handler(msg -> {
+            if (msg.what == 1) {
+                List<byte[]> videoFragments = (List<byte[]>) msg.obj;
+                byte[] videoData = concatVideoFragments(videoFragments);
+                try {
+                    // Crea un archivo temporal para almacenar el video
+                    File tempFile = File.createTempFile("video", "mp4", getContext().getCacheDir());
+                    String tempFilePath = tempFile.getAbsolutePath();
+                    Log.d("TempFile", "Path: " + tempFilePath);
+                    outputStream = new FileOutputStream(tempFile);
+                    outputStream.write(videoData);
+                    outputStream.close();
 
+                    // Configura el VideoView para reproducir el video desde el archivo temporal
+                    videoView.setVideoPath(tempFile.getAbsolutePath());
+                    videoView.setOnPreparedListener(mp -> {
+                        // Inicia la reproducción del video una vez que el VideoView esté preparado
+                        videoView.start();
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return true;
+        }));
+
+        // Solicita el video al cliente
         client.streamVideo(2);
+
         carouselViewModel = new CarouselViewModel();
 
         carouselAdapter = new CarouselItemAdapter(carouselViewModel);
@@ -78,6 +117,62 @@ public class BidOnAuctionFragment extends Fragment {
         recoverAuctionHypermediaFiles();
 
         return binding.getRoot();
+    }
+
+    private byte[] concatVideoFragments(List<byte[]> fragments) {
+        // Verificar que los fragmentos no estén vacíos
+        if (fragments == null || fragments.isEmpty()) {
+            Log.d("BUFFER", "La lista de fragmentos está vacía o es nula");
+            return new byte[0];
+        }
+
+        // Calcular la longitud total del array resultante
+        int totalLength = 0;
+        for (byte[] byteArray : fragments) {
+            totalLength += byteArray.length;
+        }
+
+        // Verificar que la longitud total no sea cero
+        if (totalLength == 0) {
+            Log.d("BUFFER", "La longitud total de los fragmentos es cero");
+            return new byte[0];
+        }
+
+        // Crear el array de bytes con la longitud total
+        byte[] resultArray = new byte[totalLength];
+
+        // Copiar cada array de la lista en el array resultante
+        int currentPosition = 0;
+        for (byte[] byteArray : fragments) {
+            System.arraycopy(byteArray, 0, resultArray, currentPosition, byteArray.length);
+            currentPosition += byteArray.length;
+        }
+
+        // Verificar la longitud del array resultante
+        Log.d("BUFFER", "Longitud del array resultante: " + resultArray.length);
+
+        // Decodificar el array de bytes usando Base64
+        //byte[] decodedArray = Base64.decode(resultArray, Base64.DEFAULT);
+
+        // Verificar la longitud del array decodificado
+        //Log.d("BUFFER", "Longitud del array decodificado: " + decodedArray.length);
+
+        return resultArray;
+    }
+
+
+    // Se destruye el video una vez terminado de reproducir
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        client.shutdown();
+        try {
+            if (outputStream != null) {
+                outputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupGoBackButton() {
