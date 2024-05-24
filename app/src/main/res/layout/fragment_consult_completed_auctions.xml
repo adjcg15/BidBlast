@@ -29,7 +29,7 @@
                     android:background="@color/transparent"
                     android:src="@drawable/go_back_icon" />
                 <EditText
-                    android:id="@+id/searchbarEditText"
+                    android:id="@+id/searchBarEditText"
                     android:layout_height="wrap_content"
                     android:hint="@string/consultcompletedauctions_searchbar_hint"
                     android:layout_marginHorizontal="12dp"
