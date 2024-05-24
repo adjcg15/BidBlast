@@ -29,7 +29,7 @@ public class ConsultCompletedAuctionsViewModel extends ViewModel {
         auctionsList.setValue(new ArrayList<>());
     }
 
-    public void recoverAuctions(int customerId, String searchQuery, int limit) {
+    public void recoverAuctions(String searchQuery, int limit) {
         auctionsListRequestStatus.setValue(RequestStatus.LOADING);
 
         int totalAuctionsLoaded = auctionsList.getValue() != null
@@ -37,7 +37,7 @@ public class ConsultCompletedAuctionsViewModel extends ViewModel {
                 : 0;
 
         new AuctionsRepository().getCompletedAuctionsList(
-                customerId, searchQuery, limit, totalAuctionsLoaded,
+                searchQuery, limit, totalAuctionsLoaded,
                 new IProcessStatusListener<List<Auction>>() {
                     @Override
                     public void onSuccess(List<Auction> auctions) {

@@ -114,7 +114,6 @@ public class AuctionsRepository {
     }
 
     public void getCompletedAuctionsList(
-            int customerId,
             String searchQuery,
             int limit,
             int offset,
@@ -122,7 +121,7 @@ public class AuctionsRepository {
         IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
 
-        auctionsService.getCompletedAuctionsList(authHeader, customerId, searchQuery, limit, offset).enqueue(new Callback<List<AuctionJSONResponse>>() {
+        auctionsService.getCompletedAuctionsList(authHeader, searchQuery, limit, offset).enqueue(new Callback<List<AuctionJSONResponse>>() {
             @Override
             public void onResponse(Call<List<AuctionJSONResponse>> call, Response<List<AuctionJSONResponse>> response) {
                 if(response.isSuccessful()) {
@@ -199,13 +198,12 @@ public class AuctionsRepository {
     }
 
     public void getUserSalesAuctionsList(
-            int auctioneerId,
             String startDate,
             String endDate,
             IProcessStatusListener<List<Auction>> statusListener){
         IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
-        auctionsService.getUserSalesAuctionsList(authHeader, auctioneerId, startDate, endDate).enqueue(new Callback<List<AuctionJSONResponse>>() {
+        auctionsService.getUserSalesAuctionsList(authHeader, startDate, endDate).enqueue(new Callback<List<AuctionJSONResponse>>() {
             @Override
             public void onResponse(Call<List<AuctionJSONResponse>> call, Response<List<AuctionJSONResponse>> response) {
                 if (response.isSuccessful()) {

@@ -65,9 +65,8 @@ public class ConsultCompletedAuctionsFragment extends Fragment {
 
     private void loadCompletedAuctions() {
         searchQuery = binding.searchbarEditText.getText().toString();
-        int customerId = Session.getInstance().getUser().getId();
 
-        viewModel.recoverAuctions(customerId, searchQuery, TOTAL_AUCTIONS_TO_LOAD);
+        viewModel.recoverAuctions(searchQuery, TOTAL_AUCTIONS_TO_LOAD);
     }
 
     private void setupCompletedAuctionsListStatusListener() {

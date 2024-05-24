@@ -217,7 +217,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
 
     private void getSalesAuctionsList() {
         if(viewModel.getSalesAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
-            viewModel.recoverSalesAuctions(Session.getInstance().getUser().getId(), startDate, endDate);
+            viewModel.recoverSalesAuctions(startDate, endDate);
         }
     }
 
