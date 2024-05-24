@@ -10,6 +10,10 @@ import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.repositories.AuthenticationRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import android.util.Log;
 
 public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidFullName = new MutableLiveData<>();
@@ -46,21 +50,25 @@ public class SignUpViewModel extends ViewModel {
     public void validateFullName(String fullName) {
         boolean validationResult = !fullName.isEmpty();
         isValidFullName.setValue(validationResult);
+        Log.d("SignUpViewModel", "Full Name Valid: " + validationResult);
     }
 
     public void validateEmail(String email) {
         boolean validationResult = ValidationToolkit.isValidEmail(email);
         isValidEmail.setValue(validationResult);
+        Log.d("SignUpViewModel", "Email Valid: " + validationResult);
     }
 
     public void validatePassword(String password) {
         boolean validationResult = ValidationToolkit.isValidUserPassword(password);
         isValidPassword.setValue(validationResult);
+        Log.d("SignUpViewModel", "Password Valid: " + validationResult);
     }
 
     public void validateConfirmPassword(String password, String confirmPassword) {
         boolean validationResult = password.equals(confirmPassword);
         isValidConfirmPassword.setValue(validationResult);
+        Log.d("SignUpViewModel", "Confirm Password Valid: " + validationResult);
     }
 
     public void register(String fullName, String email, String phoneNumber, String avatar, String password, String confirmPassword) {
@@ -80,11 +88,13 @@ public class SignUpViewModel extends ViewModel {
             new AuthenticationRepository().createAccount(registerBody, new IEmptyProcessStatusListener() {
                 @Override
                 public void onSuccess() {
+                    Log.d("SignUpViewModel", "Account created successfully");
                     signUpRequestStatus.setValue(RequestStatus.DONE);
                 }
 
                 @Override
                 public void onError(ProcessErrorCodes errorStatus) {
+                    Log.e("SignUpViewModel", "Error creating account: " + errorStatus);
                     signUpErrorCode.setValue(errorStatus);
                     signUpRequestStatus.setValue(RequestStatus.ERROR);
                 }
@@ -94,4 +104,3 @@ public class SignUpViewModel extends ViewModel {
         }
     }
 }
-

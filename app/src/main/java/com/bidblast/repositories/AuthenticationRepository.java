@@ -57,29 +57,29 @@ public class AuthenticationRepository {
             }
         });
     }
-    public void createAccount(UserRegisterBody body, IEmptyProcessStatusListener creationlistener) {
+    public void createAccount(UserRegisterBody body, IEmptyProcessStatusListener creationListener) {
         IAuthenticationService authService = ApiClient.getInstance().getAuthenticationService();
         authService.createAccount(body).enqueue(new Callback<UserRegisterJSONResponse>() {
             @Override
             public void onResponse(Call<UserRegisterJSONResponse> call, Response<UserRegisterJSONResponse> response) {
                 if (response.isSuccessful()) {
-                    UserRegisterJSONResponse body = response.body();
-
-                    if (body != null && body.getAccount() != null) {
-                        int accountId = body.getAccount().getIdAccount();
-                        String email = body.getAccount().getEmail();
-                        creationlistener.onSuccess();
+                    UserRegisterJSONResponse responseBody = response.body();
+                    if (responseBody != null && responseBody.getAccount() != null) {
+                        creationListener.onSuccess();
                     } else {
-                        creationlistener.onError(ProcessErrorCodes.FATAL_ERROR);
+                        System.err.println("Response body or account is null");
+                        creationListener.onError(ProcessErrorCodes.FATAL_ERROR);
                     }
                 } else {
-                    creationlistener.onError(ProcessErrorCodes.FATAL_ERROR);
+                    System.err.println("Response not successful: " + response.code());
+                    creationListener.onError(ProcessErrorCodes.FATAL_ERROR);
                 }
             }
 
             @Override
             public void onFailure(Call<UserRegisterJSONResponse> call, Throwable t) {
-                creationlistener.onError(ProcessErrorCodes.FATAL_ERROR);
+                System.err.println("Request failed: " + t.getMessage());
+                creationListener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });
     }

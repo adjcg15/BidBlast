@@ -30,13 +30,13 @@
                     android:importantForAccessibility="no" />
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="29dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/app_text_logo"
+                    android:layout_width="282dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="0dp"
-                    android:importantForAccessibility="no"/>
+                    android:layout_weight="1"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/app_text_logo" />
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
@@ -103,15 +103,17 @@
                 android:id="@+id/fullNameError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 style="@style/TvErrorField"
-                android:text="Ingrese su nombre completo"/>
+                android:visibility="gone"
+                android:text="@string/signup_full_name_request"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/signup_mandatory_email"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="5dp"
+                style="@style/TvBlackTagDecoratorStyle"/>
             <EditText
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
@@ -124,34 +126,37 @@
                 android:layout_width="match_parent"
                 android:id="@+id/emailError"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 style="@style/TvErrorField"
-                android:text="Ingrese su dirección de correo electrónico"/>
+                android:visibility="gone"
+                android:text="@string/signup_email_request"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/signup_phone_number"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                style="@style/TvBlackTagDecoratorStyle"/>
             <EditText
                 android:id="@+id/phoneNumberEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
+                android:inputType="phone"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/signup_mandatory_password"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                style="@style/TvBlackTagDecoratorStyle"/>
             <EditText
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="************"
+                android:hint="@string/sign_up_hidden_password"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 style="@style/EdTxtGenericStyle"/>
@@ -159,16 +164,18 @@
                 android:id="@+id/passwordError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 style="@style/TvErrorField"
-                android:text="Ingrese una contraseña"/>
+                android:visibility="gone"
+                android:text="@string/signup_password_request"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/signup_confirm_password"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                style="@style/TvBlackTagDecoratorStyle"/>
             <EditText
                 android:id="@+id/confirmPasswordEditText"
                 android:layout_width="match_parent"
@@ -182,15 +189,16 @@
                 android:id="@+id/unverifiedPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
                 style="@style/TvErrorField"
-                android:text="Confirme la contraseña ingresada"/>
+                android:visibility="gone"
+                android:text="@string/signup_confirm_password_request"/>
             <Button
                 android:id="@+id/signUpButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/BtnPrimaryStyle"
-                android:text="Registrarme"
+                android:layout_marginTop="10dp"
+                android:text="@string/signup_register"
                 android:layout_marginBottom="50dp"/>
         </LinearLayout>
     </ScrollView>

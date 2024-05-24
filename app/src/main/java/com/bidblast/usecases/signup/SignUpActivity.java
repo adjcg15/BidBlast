@@ -13,6 +13,7 @@ import com.bidblast.databinding.ActivitySignUpBinding;
 import com.bidblast.repositories.ProcessErrorCodes;
 import com.bidblast.usecases.login.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
+import android.util.Log;
 
 public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
@@ -42,6 +43,12 @@ public class SignUpActivity extends AppCompatActivity {
                     String confirmPassword = binding.confirmPasswordEditText.getText().toString().trim();
                     String avatar = "";
 
+                    Log.d("SignUpActivity", "Full Name: " + fullName);
+                    Log.d("SignUpActivity", "Email: " + email);
+                    Log.d("SignUpActivity", "Phone Number: " + phoneNumber);
+                    Log.d("SignUpActivity", "Password: " + password);
+                    Log.d("SignUpActivity", "Confirm Password: " + confirmPassword);
+
                     if (password.equals(confirmPassword)) {
                         viewModel.register(fullName, email, phoneNumber, avatar, password, confirmPassword);
                     } else {
@@ -51,7 +58,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
     private boolean validateFields() {
         String fullName = binding.fullNameEditText.getText().toString().trim();
         String email = binding.emailEditText.getText().toString().trim();
@@ -146,3 +152,4 @@ public class SignUpActivity extends AppCompatActivity {
         Snackbar.make(binding.getRoot(), getString(R.string.signup_password_mismatch_error), Snackbar.LENGTH_SHORT).show();
     }
 }
+
