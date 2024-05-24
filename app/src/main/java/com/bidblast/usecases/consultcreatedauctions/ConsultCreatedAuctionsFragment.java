@@ -28,7 +28,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
 
     private static final int TOTAL_AUCTIONS_TO_LOAD = 5;
     private FragmentConsultCompletedAuctionsBinding binding;
-    private ConsultCompletedAuctionsViewModel viewModel;
+    private ConsultCreatedAuctionsViewModel viewModel;
     private CreatedAuctionDetailsAdapter createdAuctionDetailsAdapter;
     private String searchQuery;
     public ConsultCreatedAuctionsFragment() {
@@ -42,7 +42,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ConsultCompletedAuctionsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ConsultCreatedAuctionsViewModel.class);
     }
 
     @Override

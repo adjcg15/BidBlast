@@ -6,6 +6,7 @@ public class AuctionLastOfferJSONResponse {
     private int id;
     private float amount;
     private String creationDate;
+    private AuctionCustomerJSONResponse customer;
 
     public AuctionLastOfferJSONResponse() { }
 
@@ -37,5 +38,13 @@ public class AuctionLastOfferJSONResponse {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public AuctionCustomerJSONResponse getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(AuctionCustomerJSONResponse customer) {
+        this.customer = customer;
     }
 }

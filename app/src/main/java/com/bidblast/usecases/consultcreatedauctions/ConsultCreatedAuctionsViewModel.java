@@ -36,7 +36,7 @@ public class ConsultCreatedAuctionsViewModel extends ViewModel {
                 ? auctionsList.getValue().size()
                 : 0;
 
-        new AuctionsRepository().getCompletedAuctionsList(
+        new AuctionsRepository().getCreatedAuctionsList(
                 searchQuery, limit, totalAuctionsLoaded,
                 new IProcessStatusListener<List<Auction>>() {
                     @Override
