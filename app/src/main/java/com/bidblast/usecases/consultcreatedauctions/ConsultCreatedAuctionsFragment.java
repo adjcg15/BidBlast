@@ -52,29 +52,29 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
         createdAuctionDetailsAdapter = new CreatedAuctionDetailsAdapter(getContext());
         binding.completedAuctionsListRecyclerView.setAdapter(createdAuctionDetailsAdapter);
 
-        setupCompletedAuctionsListStatusListener();
-        setupCompletedAuctionsListListener();
+        setupCreatedAuctionsListStatusListener();
+        setupCreatedAuctionsListListener();
         setupRecyclerViewScrollListener();
-        setupStillCompletedAuctionsLeftToLoadListener();
-        setupSearchCompletedAuctionsImageButton();
-        loadCompletedAuctions();
+        setupStillCreatedAuctionsLeftToLoadListener();
+        setupSearchCreatedAuctionsImageButton();
+        loadCreatedAuctions();
         return binding.getRoot();
     }
 
-    private void setupSearchCompletedAuctionsImageButton() {
+    private void setupSearchCreatedAuctionsImageButton() {
         binding.searchAuctionsImageButton.setOnClickListener(v -> {
             viewModel.cleanAuctionsList();
-            loadCompletedAuctions();
+            loadCreatedAuctions();
         });
     }
 
-    private void loadCompletedAuctions() {
+    private void loadCreatedAuctions() {
         searchQuery = binding.searchBarEditText.getText().toString();
 
         viewModel.recoverAuctions(searchQuery, TOTAL_AUCTIONS_TO_LOAD);
     }
 
-    private void setupCompletedAuctionsListStatusListener() {
+    private void setupCreatedAuctionsListStatusListener() {
         viewModel.getAuctionsListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             binding.emptyCompletedAuctionsMessageLinearLayout.setVisibility(View.GONE);
 
@@ -127,7 +127,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
         });
     }
 
-    private void setupStillCompletedAuctionsLeftToLoadListener() {
+    private void setupStillCreatedAuctionsLeftToLoadListener() {
         viewModel.getStillAuctionsLeftToLoad().observe(getViewLifecycleOwner(), stillAuctionsLeftToLoad -> {
             if(stillAuctionsLeftToLoad) {
                 binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
@@ -137,7 +137,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
         });
     }
 
-    private void setupCompletedAuctionsListListener() {
+    private void setupCreatedAuctionsListListener() {
         viewModel.getAuctionsList().observe(getViewLifecycleOwner(), auctionsList -> {
             createdAuctionDetailsAdapter.submitList(auctionsList);
         });

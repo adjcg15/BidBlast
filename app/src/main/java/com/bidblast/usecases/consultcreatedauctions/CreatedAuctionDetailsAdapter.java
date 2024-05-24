@@ -25,6 +25,12 @@ import com.bidblast.usecases.consultcompletedauctions.CompletedAuctionDetailsAda
 
 public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAuctionDetailsAdapter.CreatedAuctionViewHolder> {
     private Context context;
+    private static final String STATE_PROPOSED = "PROPUESTA";
+    private static final String STATE_PUBLISHED = "PUBLICADA";
+    private static final String STATE_REJECTED= "RECHAZADA";
+    private static final String STATE_CLOSED = "CERRADA";
+    private static final String STATE_CONCRETE = "PUBLICADA";
+    private static final String STATE_FINISHED = "FINALIZADA";
 
     public static final DiffUtil.ItemCallback<Auction> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Auction>() {
@@ -78,6 +84,9 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
         }
 
         public void bind(Auction auction) {
+            if (auction.getAuctionState() == STATE_PUBLISHED) {
+
+            }
 
             binding.executePendingBindings();
         }
