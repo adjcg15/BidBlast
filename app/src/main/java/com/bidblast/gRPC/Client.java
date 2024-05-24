@@ -11,26 +11,23 @@ import com.proto.video.VideoServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import okio.ByteString;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Client {
-    private ManagedChannel channel;
-    private VideoServiceGrpc.VideoServiceStub videoServiceStub;
-    private Handler handler;
-    private List<byte[]> videoFragments;
+    private static ManagedChannel channel = null;
+    private final VideoServiceGrpc.VideoServiceStub videoServiceStub;
+    private static final String GRPC_URL = "192.168.100.164";
+    private static final int GRPC_PORT = 3001;
+    private final Handler handler;
 
-    public Client(String host, int port, Handler handler) {
+    public Client(Handler handler) {
         this.handler = handler;
-        channel = ManagedChannelBuilder.forAddress(host, port)
+        channel = ManagedChannelBuilder.forAddress(GRPC_URL, GRPC_PORT)
                 .usePlaintext()
                 .build();
         videoServiceStub = VideoServiceGrpc.newStub(channel);
-        videoFragments = new ArrayList<>();
     }
 
     public void streamVideo(int videoId) {
@@ -40,12 +37,9 @@ public class Client {
             @Override
             public void onNext(VideoChunkResponse value) {
                 byte[] videoChunk = value.getData().toByteArray();
-                if (videoChunk.length > 0) {
-                    Log.d("CLIENT", "Received video chunk: " + Arrays.toString(videoChunk) + " " + videoChunk.length);
-                    videoFragments.add(videoChunk);
-                } else {
-                    Log.d("CLIENT", "Received video chunk is empty");
-                }
+                List<byte[]> videoFragments = new ArrayList<>();
+                videoFragments.add(videoChunk);
+                sendVideoChunksToHandler(videoFragments);
             }
 
             @Override
@@ -56,19 +50,17 @@ public class Client {
             @Override
             public void onCompleted() {
                 Log.d("CLIENT", "Video fetching completed");
-                Log.d("CLIENT", "Total fragments received: " + videoFragments.size());
-                for (byte[] fragment : videoFragments) {
-                    Log.d("CLIENT", "Fragment size: " + fragment.length);
-                }
-                sendVideoToFragment();
             }
-
         });
     }
 
-    private void sendVideoToFragment() {
+    private void sendVideoChunksToHandler(List<byte[]> videoFragments) {
         Message message = handler.obtainMessage(1, videoFragments);
         message.sendToTarget();
+    }
+
+    public static boolean getChannelStatus() {
+        return channel != null;
     }
 
     public void shutdown() {
