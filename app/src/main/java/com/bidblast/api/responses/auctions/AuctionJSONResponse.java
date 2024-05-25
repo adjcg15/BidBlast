@@ -11,6 +11,7 @@ public class AuctionJSONResponse {
     private String closesAt;
     private String updatedDate;
     private String auctionState;
+    private float basePrice;
     private float minimumBid;
     private int daysAvailable;
 
@@ -128,5 +129,13 @@ public class AuctionJSONResponse {
 
     public void setDaysAvailable(int daysAvailable) {
         this.daysAvailable = daysAvailable;
+    }
+
+    public float getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(float basePrice) {
+        this.basePrice = basePrice;
     }
 }

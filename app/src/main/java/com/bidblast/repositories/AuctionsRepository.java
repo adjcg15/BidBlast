@@ -224,6 +224,7 @@ public class AuctionsRepository {
                             auction.setTitle(auctionRes.getTitle());
                             auction.setUpdatedDate(DateToolkit.parseDateFromIS8601(auctionRes.getUpdatedDate()));
                             auction.setAuctionState(auctionRes.getAuctionState());
+                            auction.setBasePrice(auctionRes.getBasePrice());
                             auction.setMinimumBid(auctionRes.getMinimumBid());
                             auction.setDaysAvailable(auctionRes.getDaysAvailable());
 
