@@ -31,7 +31,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
     private static final String STATE_PUBLISHED = "PUBLICADA";
     private static final String STATE_REJECTED= "RECHAZADA";
     private static final String STATE_CLOSED = "CERRADA";
-    private static final String STATE_CONCRETE = "PUBLICADA";
+    private static final String STATE_CONCRETE = "CONCRETADA";
     private static final String STATE_FINISHED = "FINALIZADA";
 
     public static final DiffUtil.ItemCallback<Auction> DIFF_CALLBACK =
@@ -103,6 +103,9 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             }
             if (auction.getAuctionState().equals(STATE_REJECTED)) {
                 loadRejectedAuctionInformation(auction);
+            }
+            if (auction.getAuctionState().equals(STATE_CONCRETE) || auction.getAuctionState().equals(STATE_FINISHED)) {
+                loadConcreteOrFinishedAuctionInformation(auction);
             }
 
             binding.executePendingBindings();
@@ -221,6 +224,48 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
                 )
             );
             binding.auctionDescriptionTextView.setText(review.getComments());
+        }
+
+        private void loadConcreteOrFinishedAuctionInformation(Auction auction) {
+            User customer = auction.getLastOffer().getCustomer();
+            Offer lastOffer = auction.getLastOffer();
+
+            binding.auctionFirstTitleTextView.setVisibility(View.GONE);
+            binding.auctionRejectedStateMessageTextView.setVisibility(View.GONE);
+            binding.auctionLastOfferTitleTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTitleTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTextView.setVisibility(View.GONE);
+            binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.GONE);
+            binding.viewMadeOffersButton.setVisibility(View.GONE);
+
+            binding.auctionSecondTitleTextView.setText(auction.getTitle());
+            HypermediaFile auctionImage = auction.getMediaFiles().get(0);
+            binding.auctionMainImageImageView.setImageBitmap(
+                    ImageToolkit.parseBitmapFromBase64(auctionImage.getContent())
+            );
+            String soldDate = DateToolkit.parseToFullDateWithHour(auction.getUpdatedDate());
+            binding.auctionDescriptionTextView.setText(
+                String.format(
+                    binding.getRoot().getContext().getString(
+                        R.string.consultcompletedauctions_purchased_date_message
+                    ),
+                    soldDate
+                )
+            );
+
+            binding.auctioneerNameTextView.setText(customer.getFullName());
+            String customerPhoneNumber = customer.getPhoneNumber();
+            if (customerPhoneNumber == null || customerPhoneNumber.isEmpty()) {
+                binding.auctioneerPhoneNumberImageButton.setVisibility(View.GONE);
+            }
+            String customerAvatar = customer.getAvatar();
+            if(customerAvatar != null && !customerAvatar.isEmpty()) {
+                binding.auctioneerAvatarImageView.setImageBitmap(
+                        ImageToolkit.parseBitmapFromBase64(customerAvatar)
+                );
+            }
+
+            binding.auctionFinalAmountTextView.setText(CurrencyToolkit.parseToMXN(lastOffer.getAmount()));
         }
     }
 }

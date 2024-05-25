@@ -240,8 +240,7 @@ public class AuctionsRepository {
                                 AuctionCustomerJSONResponse customerRes = auctionRes.getLastOffer().getCustomer();
                                 if(customerRes != null) {
                                     User customer = new User();
-
-                                    customer.setId(auctionRes.getId());
+                                    customer.setId(customerRes.getId());
                                     customer.setFullName(customerRes.getFullName());
                                     customer.setPhoneNumber(customerRes.getPhoneNumber());
                                     customer.setEmail(customerRes.getEmail());
