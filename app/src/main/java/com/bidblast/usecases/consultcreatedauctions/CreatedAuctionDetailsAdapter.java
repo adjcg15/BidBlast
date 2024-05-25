@@ -101,6 +101,9 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             if (auction.getAuctionState().equals(STATE_CLOSED)) {
                 loadClosedAuctionInformation(auction);
             }
+            if (auction.getAuctionState().equals(STATE_REJECTED)) {
+                loadRejectedAuctionInformation(auction);
+            }
 
             binding.executePendingBindings();
         }
@@ -195,6 +198,29 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionWithoutOffersStateMessageTextView.setText(
                 R.string.consultcreatedauctions_auction_closed_without_offers_text
             );
+        }
+
+        private void loadRejectedAuctionInformation(Auction auction) {
+            AuctionReview review = auction.getReview();
+            binding.customerInformationLinearLayout.setVisibility(View.GONE);
+            binding.auctionSecondTitleTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTitleTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTextView.setVisibility(View.GONE);
+            binding.auctionLastOfferTitleTextView.setVisibility(View.GONE);
+            binding.auctionFinalAmountTextView.setVisibility(View.GONE);
+            binding.viewMadeOffersButton.setVisibility(View.GONE);
+            binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.GONE);
+
+            binding.auctionFirstTitleTextView.setText(auction.getTitle());
+            binding.auctionRejectedStateMessageTextView.setText(
+                String.format(
+                    binding.getRoot().getContext().getString(
+                            R.string.consultcreatedauctions_rejected_date_message
+                    ),
+                    DateToolkit.parseToFullDateWithHour(auction.getUpdatedDate())
+                )
+            );
+            binding.auctionDescriptionTextView.setText(review.getComments());
         }
     }
 }
