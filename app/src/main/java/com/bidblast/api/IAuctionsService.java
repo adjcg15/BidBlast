@@ -33,10 +33,10 @@ public interface IAuctionsService {
 
     @GET("users/auctions")
     Call<List<AuctionJSONResponse>> getCreatedAuctionsList(
-            @Header("Authorization") String authHeader,
-            @Query("query") String searchQuery,
-            @Query("limit") int limit,
-            @Query("offset") int offset
+        @Header("Authorization") String authHeader,
+        @Query("query") String searchQuery,
+        @Query("limit") int limit,
+        @Query("offset") int offset
     );
 
     @GET("users/sold-auctions")

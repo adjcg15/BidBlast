@@ -58,14 +58,98 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:id="@+id/eq_recycler"
+                android:id="@+id/createdAuctionsRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 tools:itemCount="6"
                 tools:listitem="@layout/template_auction_details_with_state"
                 android:layout_marginBottom="12dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"/>
+            <TextView
+                android:id="@+id/allAuctionsLoadedTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/searchauction_all_auctions_loaded"
+                android:layout_marginHorizontal="12dp"
+                android:textAlignment="center"
+                style="@style/TvSmallStyle"
+                android:visibility="gone"
+                android:paddingVertical="4dp"/>
+            <TextView
+                android:id="@+id/loadingAuctionsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/consultcreatedauctions_loading_created_auctions"
+                android:layout_marginHorizontal="12dp"
+                android:textAlignment="center"
+                style="@style/TvSmallStyle"
+                android:textColor="@color/dark_primary"
+                android:visibility="gone"
+                android:paddingVertical="4dp"/>
+            <LinearLayout
+                android:id="@+id/emptyCreatedAuctionsMessageLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="80dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="195dp"
+                    android:layout_height="214dp"
+                    android:src="@drawable/empty_items_generic"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"/>
+                <TextView
+                    android:id="@+id/emptyCompletedAuctionsTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/consultcreatedauctions_empty_created_auctions_title"
+                    style="@style/TvSubtitleStyle"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:id="@+id/emptyCompletedAuctionsTextTextView"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/consultcreatedauctions_empty_created_auctions_text"
+                    style="@style/TvParagraphStyle"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/errorLoadingCreatedAuctionsLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:orientation="vertical"
+                android:paddingTop="200dp"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="220dp"
+                    android:layout_height="137dp"
+                    android:src="@drawable/error_loading_generic"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/consultcreatedauctions_error_loading_title"
+                    style="@style/TvSubtitleStyle"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/consultcreatedauctions_error_loading_text"
+                    style="@style/TvParagraphStyle"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"/>
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 </layout>

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,17 +16,15 @@ import android.view.ViewGroup;
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentConsultCompletedAuctionsBinding;
+import com.bidblast.databinding.FragmentConsultCreatedAuctionsBinding;
 import com.bidblast.model.Auction;
-import com.bidblast.usecases.consultcompletedauctions.CompletedAuctionDetailsAdapter;
-import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
-import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsViewModel;
 
 import java.util.List;
 
 public class ConsultCreatedAuctionsFragment extends Fragment {
 
     private static final int TOTAL_AUCTIONS_TO_LOAD = 5;
-    private FragmentConsultCompletedAuctionsBinding binding;
+    private FragmentConsultCreatedAuctionsBinding binding;
     private ConsultCreatedAuctionsViewModel viewModel;
     private CreatedAuctionDetailsAdapter createdAuctionDetailsAdapter;
     private String searchQuery;
@@ -35,8 +32,8 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
 
     }
 
-    public static ConsultCompletedAuctionsFragment newInstance() {
-        return new ConsultCompletedAuctionsFragment();
+    public static ConsultCreatedAuctionsFragment newInstance() {
+        return new ConsultCreatedAuctionsFragment();
     }
 
     @Override
@@ -48,9 +45,9 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentConsultCompletedAuctionsBinding.inflate(inflater, container, false);
+        binding = FragmentConsultCreatedAuctionsBinding.inflate(inflater, container, false);
         createdAuctionDetailsAdapter = new CreatedAuctionDetailsAdapter(getContext());
-        binding.completedAuctionsListRecyclerView.setAdapter(createdAuctionDetailsAdapter);
+        binding.createdAuctionsRecyclerView.setAdapter(createdAuctionDetailsAdapter);
 
         setupCreatedAuctionsListStatusListener();
         setupCreatedAuctionsListListener();
@@ -76,7 +73,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
 
     private void setupCreatedAuctionsListStatusListener() {
         viewModel.getAuctionsListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
-            binding.emptyCompletedAuctionsMessageLinearLayout.setVisibility(View.GONE);
+            binding.emptyCreatedAuctionsMessageLinearLayout.setVisibility(View.GONE);
 
             if(requestStatus == RequestStatus.LOADING) {
                 binding.loadingAuctionsTextView.setVisibility(View.VISIBLE);
@@ -84,12 +81,12 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
                 binding.loadingAuctionsTextView.setVisibility(View.GONE);
 
                 if(requestStatus == RequestStatus.DONE) {
-                    binding.errorLoadingCompletedAuctionsLinearLayout.setVisibility(View.GONE);
+                    binding.errorLoadingCreatedAuctionsLinearLayout.setVisibility(View.GONE);
 
                     List<Auction> auctions = viewModel.getAuctionsList().getValue();
                     if(auctions != null && auctions.size() != 0) {
-                        binding.completedAuctionsListRecyclerView.setVisibility(View.VISIBLE);
-                        binding.emptyCompletedAuctionsMessageLinearLayout.setVisibility(View.GONE);
+                        binding.createdAuctionsRecyclerView.setVisibility(View.VISIBLE);
+                        binding.emptyCreatedAuctionsMessageLinearLayout.setVisibility(View.GONE);
                     } else {
                         if (searchQuery == null || searchQuery.isEmpty()) {
                             binding.emptyCompletedAuctionsTitleTextView.setText(
@@ -114,13 +111,13 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
                                     )
                             );
                         }
-                        binding.completedAuctionsListRecyclerView.setVisibility(View.GONE);
-                        binding.emptyCompletedAuctionsMessageLinearLayout.setVisibility(View.VISIBLE);
+                        binding.createdAuctionsRecyclerView.setVisibility(View.GONE);
+                        binding.emptyCreatedAuctionsMessageLinearLayout.setVisibility(View.VISIBLE);
                         binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
                     }
                 } else if (requestStatus == RequestStatus.ERROR) {
-                    binding.errorLoadingCompletedAuctionsLinearLayout.setVisibility(View.VISIBLE);
-                    binding.completedAuctionsListRecyclerView.setVisibility(View.GONE);
+                    binding.errorLoadingCreatedAuctionsLinearLayout.setVisibility(View.VISIBLE);
+                    binding.createdAuctionsRecyclerView.setVisibility(View.GONE);
                     binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
                 }
             }
@@ -144,7 +141,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
     }
 
     private void setupRecyclerViewScrollListener() {
-        binding.completedAuctionsListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.createdAuctionsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -160,7 +157,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
                             && totalItemCount >= TOTAL_AUCTIONS_TO_LOAD
                             && Boolean.TRUE.equals(viewModel.getStillAuctionsLeftToLoad().getValue())
                             && viewModel.getAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
-                        loadCompletedAuctions();
+                        loadCreatedAuctions();
                     }
                 }
             }
