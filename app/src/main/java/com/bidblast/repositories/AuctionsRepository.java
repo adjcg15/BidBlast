@@ -227,6 +227,7 @@ public class AuctionsRepository {
                             auction.setBasePrice(auctionRes.getBasePrice());
                             auction.setMinimumBid(auctionRes.getMinimumBid());
                             auction.setDaysAvailable(auctionRes.getDaysAvailable());
+                            auction.setClosesAt(DateToolkit.parseDateFromIS8601(auctionRes.getClosesAt()));
 
                             AuctionLastOfferJSONResponse lastOfferRes = auctionRes.getLastOffer();
                             if(lastOfferRes != null) {

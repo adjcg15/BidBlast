@@ -72,6 +72,7 @@
     <string name="consultcreatedauctions_see_offers_made">Ver ofertas realizadas</string>
     <string name="consultcreatedauctions_sold_date_message">Vendido el %s</string>
     <string name="consultcreatedauctions_available_date_message">Disponible hasta el %s</string>
+    <string name="consultcreatedauctions_closed_date_message">Se cerró el %s</string>
     <string name="consultcreatedauctions_first_proposed_time_message">Propuesto para %s</string>
     <string name="consultcreatedauctions_second_proposed_time_message">%d días en subasta</string>
     <string name="consultcreatedauctions_empty_created_auctions_title">¡Aún no tienes subastas creadas!</string>

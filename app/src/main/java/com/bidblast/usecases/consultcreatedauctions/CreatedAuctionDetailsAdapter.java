@@ -95,16 +95,17 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             if (auction.getAuctionState().equals(STATE_PUBLISHED)) {
                 loadPublishedAuctionInformation(auction);
             }
-
             if (auction.getAuctionState().equals(STATE_PROPOSED)) {
                 loadProposedAuctionInformation(auction);
+            }
+            if (auction.getAuctionState().equals(STATE_CLOSED)) {
+                loadClosedAuctionInformation(auction);
             }
 
             binding.executePendingBindings();
         }
 
         private void setTemplateElementsVisible() {
-            binding.customerInformationLinearLayout.setVisibility(View.VISIBLE);
             binding.customerInformationLinearLayout.setVisibility(View.VISIBLE);
             binding.auctionFirstTitleTextView.setVisibility(View.VISIBLE);
             binding.auctionRejectedStateMessageTextView.setVisibility(View.VISIBLE);
@@ -125,7 +126,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionMinimumBidTitleTextView.setVisibility(View.GONE);
             binding.auctionMinimumBidTextView.setVisibility(View.GONE);
             binding.auctionSecondTitleTextView.setText(auction.getTitle());
-            String timeLeft = DateToolkit.parseToFullDateWithHour(auction.getUpdatedDate());
+            String timeLeft = DateToolkit.parseToFullDateWithHour(auction.getClosesAt());
             binding.auctionDescriptionTextView.setText(
                     String.format(
                             binding.getRoot().getContext().getString(
@@ -170,6 +171,30 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionDescriptionTextView.setText(fullMessage);
             binding.auctionFinalAmountTextView.setText(CurrencyToolkit.parseToMXN(auction.getBasePrice()));
             binding.auctionMinimumBidTextView.setText(CurrencyToolkit.parseToMXN(auction.getMinimumBid()));
+        }
+
+        private void loadClosedAuctionInformation(Auction auction) {
+            binding.customerInformationLinearLayout.setVisibility(View.GONE);
+            binding.auctionFirstTitleTextView.setVisibility(View.GONE);
+            binding.auctionRejectedStateMessageTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTitleTextView.setVisibility(View.GONE);
+            binding.auctionMinimumBidTextView.setVisibility(View.GONE);
+            binding.auctionLastOfferTitleTextView.setVisibility(View.GONE);
+            binding.auctionFinalAmountTextView.setVisibility(View.GONE);
+            binding.viewMadeOffersButton.setVisibility(View.GONE);
+
+            binding.auctionSecondTitleTextView.setText(auction.getTitle());
+            binding.auctionDescriptionTextView.setText(
+                String.format(
+                    binding.getRoot().getContext().getString(
+                            R.string.consultcreatedauctions_closed_date_message
+                    ),
+                    DateToolkit.parseToFullDate(auction.getUpdatedDate())
+                )
+            );
+            binding.auctionWithoutOffersStateMessageTextView.setText(
+                R.string.consultcreatedauctions_auction_closed_without_offers_text
+            );
         }
     }
 }
