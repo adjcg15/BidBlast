@@ -1,4 +1,4 @@
-package com.bidblast.usecases.consultcompletedauctions;
+package com.bidblast.usecases.consultcreatedauctions;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,7 +13,7 @@ import com.bidblast.repositories.ProcessErrorCodes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsultCompletedAuctionsViewModel extends ViewModel {
+public class ConsultCreatedAuctionsViewModel extends ViewModel {
     private final MutableLiveData<List<Auction>> auctionsList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<RequestStatus> auctionsListRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<Boolean> stillAuctionsLeftToLoad = new MutableLiveData<>(true);
@@ -36,7 +36,7 @@ public class ConsultCompletedAuctionsViewModel extends ViewModel {
                 ? auctionsList.getValue().size()
                 : 0;
 
-        new AuctionsRepository().getCompletedAuctionsList(
+        new AuctionsRepository().getCreatedAuctionsList(
                 searchQuery, limit, totalAuctionsLoaded,
                 new IProcessStatusListener<List<Auction>>() {
                     @Override

@@ -21,6 +21,8 @@ public class Auction {
     private AuctionCategory category;
     private String state;
     private Date updatedDate;
+    private String auctionState;
+    private AuctionReview review;
 
     public Auction() { }
 
@@ -151,6 +153,22 @@ public class Auction {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getAuctionState() {
+        return auctionState;
+    }
+
+    public void setAuctionState(String auctionState) {
+        this.auctionState = auctionState;
+    }
+
+    public AuctionReview getReview() {
+        return review;
+    }
+
+    public void setReview(AuctionReview review) {
+        this.review = review;
     }
 
     @Override

@@ -96,7 +96,14 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         setupSalesAuctionsListStatusListener();
         setupFirstDateListener();
         setupSecondDateListener();
+        setupDiscardModifyCategoryButton();
         return binding.getRoot();
+    }
+
+    private void setupDiscardModifyCategoryButton() {
+        binding.goBackImageButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
     }
 
     private void setupFirstDateEditText(){
@@ -217,7 +224,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
 
     private void getSalesAuctionsList() {
         if(viewModel.getSalesAuctionsListRequestStatus().getValue() != RequestStatus.LOADING) {
-            viewModel.recoverSalesAuctions(Session.getInstance().getUser().getId(), startDate, endDate);
+            viewModel.recoverSalesAuctions(startDate, endDate);
         }
     }
 

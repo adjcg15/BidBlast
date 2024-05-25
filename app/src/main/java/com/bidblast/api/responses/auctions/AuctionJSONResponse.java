@@ -10,6 +10,10 @@ public class AuctionJSONResponse {
     private String title;
     private String closesAt;
     private String updatedDate;
+    private String auctionState;
+    private float basePrice;
+    private float minimumBid;
+    private int daysAvailable;
 
     private List<AuctionMediaFileJSONResponse> mediaFiles;
 
@@ -18,6 +22,7 @@ public class AuctionJSONResponse {
     private AuctionLastOfferJSONResponse lastOffer;
 
     private AuctionCategoryJSONResponse category;
+    private AuctionReviewJSONResponse review;
 
     public AuctionJSONResponse() { }
 
@@ -92,5 +97,45 @@ public class AuctionJSONResponse {
 
     public void setCategory(AuctionCategoryJSONResponse category) {
         this.category = category;
+    }
+
+    public String getAuctionState() {
+        return auctionState;
+    }
+
+    public void setAuctionState(String auctionState) {
+        this.auctionState = auctionState;
+    }
+
+    public AuctionReviewJSONResponse getReview() {
+        return review;
+    }
+
+    public void setReview(AuctionReviewJSONResponse review) {
+        this.review = review;
+    }
+
+    public float getMinimumBid() {
+        return minimumBid;
+    }
+
+    public void setMinimumBid(float minimumBid) {
+        this.minimumBid = minimumBid;
+    }
+
+    public int getDaysAvailable() {
+        return daysAvailable;
+    }
+
+    public void setDaysAvailable(int daysAvailable) {
+        this.daysAvailable = daysAvailable;
+    }
+
+    public float getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(float basePrice) {
+        this.basePrice = basePrice;
     }
 }

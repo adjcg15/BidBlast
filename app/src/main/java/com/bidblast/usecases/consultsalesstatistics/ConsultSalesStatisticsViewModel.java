@@ -27,11 +27,11 @@ public class ConsultSalesStatisticsViewModel extends ViewModel {
     public LiveData<RequestStatus> getSalesAuctionsListRequestStatus() {
         return salesAuctionsListRequestStatus;
     }
-    public void recoverSalesAuctions(int auctioneerId, String startDate, String endDate) {
+    public void recoverSalesAuctions(String startDate, String endDate) {
         salesAuctionsListRequestStatus.setValue(RequestStatus.LOADING);
 
         new AuctionsRepository().getUserSalesAuctionsList(
-                auctioneerId, startDate, endDate,
+                startDate, endDate,
                 new IProcessStatusListener<List<Auction>>() {
                     @Override
                     public void onSuccess(List<Auction> auctions) {
