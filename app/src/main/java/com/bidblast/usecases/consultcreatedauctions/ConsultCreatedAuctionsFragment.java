@@ -1,5 +1,7 @@
 package com.bidblast.usecases.consultcreatedauctions;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentConsultCompletedAuctionsBinding;
 import com.bidblast.databinding.FragmentConsultCreatedAuctionsBinding;
 import com.bidblast.model.Auction;
+import com.bidblast.usecases.consultsalesstatistics.ConsultSalesStatisticsFragment;
 
 import java.util.List;
 
@@ -55,7 +58,19 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
         setupStillCreatedAuctionsLeftToLoadListener();
         setupSearchCreatedAuctionsImageButton();
         loadCreatedAuctions();
+        setupConsultSalesStatisticsButton();
         return binding.getRoot();
+    }
+
+    private void setupConsultSalesStatisticsButton() {
+        binding.consultSalesStatisticsButton.setOnClickListener(v -> {
+            ConsultSalesStatisticsFragment salesStatisticsFragment = new ConsultSalesStatisticsFragment();
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.mainViewFragmentLayout, salesStatisticsFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
     }
 
     private void setupSearchCreatedAuctionsImageButton() {

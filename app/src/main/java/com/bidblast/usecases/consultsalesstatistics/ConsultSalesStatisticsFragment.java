@@ -96,7 +96,14 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         setupSalesAuctionsListStatusListener();
         setupFirstDateListener();
         setupSecondDateListener();
+        setupDiscardModifyCategoryButton();
         return binding.getRoot();
+    }
+
+    private void setupDiscardModifyCategoryButton() {
+        binding.goBackImageButton.setOnClickListener(v -> {
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
     }
 
     private void setupFirstDateEditText(){
