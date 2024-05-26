@@ -27,6 +27,7 @@
                 android:gravity="center_vertical">
 
                 <ImageView
+                    android:id="@+id/goBackImageView"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/go_back_orange_icon"
@@ -215,16 +216,30 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
                 style="@style/TvBlackTagDecoratorStyle"/>
-            <EditText
-                android:id="@+id/confirmPasswordEditText"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="************"
-                tools:ignore="HardcodedText"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                android:maxLength="15"
-                style="@style/EdTxtGenericStyle"/>
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/confirmPasswordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="************"
+                    tools:ignore="HardcodedText"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword"
+                    android:maxLength="15"
+                    style="@style/EdTxtGenericStyle"/>
+
+                <ImageView
+                    android:id="@+id/confirmPasswordToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:src="@drawable/eye_icon" />
+            </RelativeLayout>
             <TextView
                 android:id="@+id/unverifiedPassword"
                 android:layout_width="match_parent"

@@ -136,7 +136,9 @@ public class SignUpActivity extends AppCompatActivity {
         setupSignUpStatusListener();
         setupSelectPhotoButtonClick();
         setupPasswordToggle();
+        setupConfirmPasswordToggle();
         setupPasswordRules();
+        setupGoBackListener();
     }
     private void setupPasswordToggle() {
         ImageView passwordToggle = findViewById(R.id.passwordToggle);
@@ -421,6 +423,26 @@ public class SignUpActivity extends AppCompatActivity {
                 .setPositiveButton("OK", (dialog, which) -> navigateToLogin())
                 .setCancelable(false)
                 .show();
+    }
+    private void setupConfirmPasswordToggle() {
+        ImageView confirmPasswordToggle = findViewById(R.id.confirmPasswordToggle);
+        EditText confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
+
+        confirmPasswordToggle.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                confirmPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                confirmPasswordToggle.setImageResource(R.drawable.eye_icon);
+            } else {
+                confirmPasswordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                confirmPasswordToggle.setImageResource(R.drawable.eye_icon);
+            }
+            isPasswordVisible = !isPasswordVisible;
+            confirmPasswordEditText.setSelection(confirmPasswordEditText.length());
+        });
+    }
+    private void setupGoBackListener() {
+        ImageView goBackImageView = findViewById(R.id.goBackImageView);
+        goBackImageView.setOnClickListener(v -> navigateToLogin());
     }
 }
 
