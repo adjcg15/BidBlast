@@ -22,6 +22,7 @@ public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidConfirmPassword = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> signUpRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<ProcessErrorCodes> signUpErrorCode = new MutableLiveData<>();
+    private final MutableLiveData<String> avatarBase64 = new MutableLiveData<>();
 
     public LiveData<Boolean> isValidFullName() {
         return isValidFullName;
@@ -46,7 +47,12 @@ public class SignUpViewModel extends ViewModel {
     public LiveData<ProcessErrorCodes> getSignUpErrorCode() {
         return signUpErrorCode;
     }
-
+    public LiveData<String> getAvatarBase64() {
+        return avatarBase64;
+    }
+    public void setAvatarBase64(String base64Image) {
+        avatarBase64.setValue(base64Image);
+    }
     public void validateFullName(String fullName) {
         boolean validationResult = !fullName.isEmpty();
         isValidFullName.setValue(validationResult);
@@ -83,8 +89,13 @@ public class SignUpViewModel extends ViewModel {
                 Boolean.TRUE.equals(isValidConfirmPassword.getValue())) {
 
             signUpRequestStatus.setValue(RequestStatus.LOADING);
-
-            UserRegisterBody registerBody = new UserRegisterBody(fullName, email, phoneNumber, avatar, password);
+            String avatarBase64 = getAvatarBase64().getValue();
+            UserRegisterBody registerBody;
+            if (avatarBase64 != null) {
+                registerBody = new UserRegisterBody(fullName, email, phoneNumber, avatarBase64, password);
+            } else {
+                registerBody = new UserRegisterBody(fullName, email, phoneNumber, null,password);
+            }
             new AuthenticationRepository().createAccount(registerBody, new IEmptyProcessStatusListener() {
                 @Override
                 public void onSuccess() {
