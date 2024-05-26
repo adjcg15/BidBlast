@@ -119,12 +119,14 @@
                     android:layout_height="wrap_content"
                     android:text="@string/login_account_question"/>
                 <TextView
+                    android:id="@+id/loginRegisterTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textColor="@color/secondary"
                     android:text="@string/login_register_action"
-                    android:layout_marginStart="4dp"/>
+                    android:layout_marginStart="4dp"
+                    android:onClick="openSignUpActivity"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

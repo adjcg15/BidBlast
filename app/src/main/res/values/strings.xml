@@ -126,4 +126,19 @@
     <string name="mainmenu_purchases">Compras</string>
     <string name="mainmenu_sales">Ventas</string>
     <string name="mainmenu_new_auction">Subastar</string>
+
+    <string name="signup_invalid_input_toast_message">El correo electrónico ingresado, ya se encuentra en uso por otra cuenta en BidBlast</string>
+    <string name="signup_error_toast_message">No fue posible crear la cuenta, intente más tarde</string>
+    <string name="signup_password_mismatch_error">Las contraseñas ingresadas no coinciden,verifique la información</string>
+    <string name="signup_success_message">Su cuenta ha sido creada con éxito, inicie sesión para ingresar</string>
+    <string name="signup_full_name_request">Ingrese su nombre completo</string>
+    <string name="sign_up_hidden_password">************</string>
+    <string name="signup_email_request">Ingrese una dirección de correo electrónico válido</string>
+    <string name="signup_password_request">Ingrese una contraseña que cumpla con los requisitos establecidos</string>
+    <string name="signup_confirm_password_request">Confirme la contraseña ingresada</string>
+    <string name="signup_register">Registrarme</string>
+    <string name="signup_password_rules">• Al menos una letra mayúscula\n• Al menos un número\n• Extensión entre 10 y 15 caracteres</string>
+    <string name="signup_password_mismatch_title">Contraseña con formato inválido</string>
+    <string name="signup_password_rules_error_message">La contraseña no cumple con las reglas establecidas</string>
+
 </resources>
