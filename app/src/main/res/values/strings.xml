@@ -118,4 +118,5 @@
     <string name="signup_password_request">Ingrese una contraseña</string>
     <string name="signup_confirm_password_request">Confirme la contraseña ingresada</string>
     <string name="signup_register">Registrarme</string>
+    <string name="password_rules">• Al menos una letra mayúscula\n• Al menos un número\n• Extensión entre 5 y 8 caracteres</string>
 </resources>

@@ -1,4 +1,5 @@
 package com.bidblast.usecases.signup;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -7,9 +8,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -37,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
     private SignUpViewModel viewModel;
     private static final int PERMISSION_REQUEST_READ_MEDIA_IMAGES = 100;
+    private boolean isPasswordVisible = false;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -69,8 +78,11 @@ public class SignUpActivity extends AppCompatActivity {
             Uri croppedUri = UCrop.getOutput(data);
             if (croppedUri != null) {
                 if (isValidImageSize(croppedUri)) {
+                    // Convertir la imagen a base64
                     String base64Image = convertImageToBase64(croppedUri);
+                    // Mostrar la imagen en la interfaz de usuario
                     binding.imageSelected.setImageURI(croppedUri);
+                    // Pasar la imagen base64 al ViewModel
                     viewModel.setAvatarBase64(base64Image);
                 } else {
                     Toast.makeText(this, "La imagen seleccionada es demasiado grande", Toast.LENGTH_SHORT).show();
@@ -83,6 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
     }
+
     private String convertImageToBase64(Uri imageUri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
@@ -97,6 +110,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return null;
     }
+
     private boolean isValidImageSize(Uri imageUri) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
@@ -124,8 +138,70 @@ public class SignUpActivity extends AppCompatActivity {
         setupFieldsValidations();
         setupSignUpStatusListener();
         setupSelectPhotoButtonClick();
+        setupPasswordToggle();
+        setupPasswordRules();
+    }
+    private void setupPasswordToggle() {
+        ImageView passwordToggle = findViewById(R.id.passwordToggle);
+        EditText passwordEditText = findViewById(R.id.passwordEditText);
+
+        passwordToggle.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.eye_icon);
+            } else {
+                passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.eye_icon);
+            }
+            isPasswordVisible = !isPasswordVisible;
+            passwordEditText.setSelection(passwordEditText.length());
+        });
+    }
+    private void setupPasswordRules() {
+        EditText passwordEditText = findViewById(R.id.passwordEditText);
+        TextView passwordRules = findViewById(R.id.passwordRules);
+
+        passwordEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                passwordRules.setVisibility(View.VISIBLE);
+            } else {
+                passwordRules.setVisibility(View.GONE);
+            }
+        });
+
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validatePasswordRules(s.toString(), passwordRules);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
+    private void validatePasswordRules(String password, TextView passwordRules) {
+        String rules = getString(R.string.password_rules);
+        if (password.matches(".*[A-Z].*")) {
+            rules = rules.replace("• Al menos una letra mayúscula", "✔ Al menos una letra mayúscula");
+        } else {
+            rules = rules.replace("✔ Al menos una letra mayúscula", "• Al menos una letra mayúscula");
+        }
+        if (password.matches(".*\\d.*")) {
+            rules = rules.replace("• Al menos un número", "✔ Al menos un número");
+        } else {
+            rules = rules.replace("✔ Al menos un número", "• Al menos un número");
+        }
+        if (password.length() >= 5 && password.length() <= 8) {
+            rules = rules.replace("• Extensión entre 5 y 8 caracteres", "✔ Extensión entre 5 y 8 caracteres");
+        } else {
+            rules = rules.replace("✔ Extensión entre 5 y 8 caracteres", "• Extensión entre 5 y 8 caracteres");
+        }
+        passwordRules.setText(rules);
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -184,10 +260,9 @@ public class SignUpActivity extends AppCompatActivity {
                     String phoneNumber = binding.phoneNumberEditText.getText().toString().trim();
                     String password = binding.passwordEditText.getText().toString().trim();
                     String confirmPassword = binding.confirmPasswordEditText.getText().toString().trim();
-                    String avatar = "";
 
                     if (password.equals(confirmPassword)) {
-                        viewModel.register(fullName, email, phoneNumber, avatar, password, confirmPassword);
+                        viewModel.register(this, fullName, email, phoneNumber, password, confirmPassword);
                     } else {
                         showPasswordMismatchError();
                     }
@@ -253,6 +328,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
     private void setupSignUpStatusListener() {
         viewModel.getSignUpRequestStatus().observe(this, requestStatus -> {
             if (requestStatus != null) {
@@ -319,4 +395,5 @@ public class SignUpActivity extends AppCompatActivity {
         Snackbar.make(binding.getRoot(), "Las contraseñas no coinciden", Snackbar.LENGTH_SHORT).show();
     }
 }
+
 

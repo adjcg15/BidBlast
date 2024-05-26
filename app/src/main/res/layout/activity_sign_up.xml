@@ -155,14 +155,37 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
                 style="@style/TvBlackTagDecoratorStyle"/>
-            <EditText
-                android:id="@+id/passwordEditText"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/sign_up_hidden_password"
+                    android:importantForAutofill="no"
+                    android:inputType="textPassword"
+                    android:paddingEnd="40dp"
+                    style="@style/EdTxtGenericStyle" />
+
+                <ImageView
+                    android:id="@+id/passwordToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:src="@drawable/eye_icon" />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/passwordRules"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/sign_up_hidden_password"
-                android:importantForAutofill="no"
-                android:inputType="textPassword"
-                style="@style/EdTxtGenericStyle"/>
+                android:layout_marginTop="8dp"
+                android:text="@string/password_rules"
+                android:visibility="gone"
+                android:padding="8dp"/>
             <TextView
                 android:id="@+id/passwordError"
                 android:layout_width="match_parent"

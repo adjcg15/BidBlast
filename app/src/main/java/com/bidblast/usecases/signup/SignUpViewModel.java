@@ -3,17 +3,17 @@ package com.bidblast.usecases.signup;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import android.content.Context;
+import android.util.Log;
 
+import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
 import com.bidblast.api.requests.authentication.UserRegisterBody;
+import com.bidblast.lib.ImageToolkit;
 import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.repositories.AuthenticationRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import android.util.Log;
 
 public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidFullName = new MutableLiveData<>();
@@ -47,12 +47,15 @@ public class SignUpViewModel extends ViewModel {
     public LiveData<ProcessErrorCodes> getSignUpErrorCode() {
         return signUpErrorCode;
     }
+
     public LiveData<String> getAvatarBase64() {
         return avatarBase64;
     }
+
     public void setAvatarBase64(String base64Image) {
         avatarBase64.setValue(base64Image);
     }
+
     public void validateFullName(String fullName) {
         boolean validationResult = !fullName.isEmpty();
         isValidFullName.setValue(validationResult);
@@ -77,7 +80,7 @@ public class SignUpViewModel extends ViewModel {
         Log.d("SignUpViewModel", "Confirm Password Valid: " + validationResult);
     }
 
-    public void register(String fullName, String email, String phoneNumber, String avatar, String password, String confirmPassword) {
+    public void register(Context context, String fullName, String email, String phoneNumber, String password, String confirmPassword) {
         validateFullName(fullName);
         validateEmail(email);
         validatePassword(password);
@@ -90,12 +93,13 @@ public class SignUpViewModel extends ViewModel {
 
             signUpRequestStatus.setValue(RequestStatus.LOADING);
             String avatarBase64 = getAvatarBase64().getValue();
-            UserRegisterBody registerBody;
-            if (avatarBase64 != null) {
-                registerBody = new UserRegisterBody(fullName, email, phoneNumber, avatarBase64, password);
-            } else {
-                registerBody = new UserRegisterBody(fullName, email, phoneNumber, null,password);
+
+            if (avatarBase64 == null) {
+                avatarBase64 = ImageToolkit.convertDrawableToBase64(context, R.drawable.avatar_icon);
             }
+
+            UserRegisterBody registerBody = new UserRegisterBody(fullName, email, phoneNumber, avatarBase64, password);
+
             new AuthenticationRepository().createAccount(registerBody, new IEmptyProcessStatusListener() {
                 @Override
                 public void onSuccess() {
