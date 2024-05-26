@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -68,7 +69,9 @@ public class SignUpActivity extends AppCompatActivity {
             Uri croppedUri = UCrop.getOutput(data);
             if (croppedUri != null) {
                 if (isValidImageSize(croppedUri)) {
+                    String base64Image = convertImageToBase64(croppedUri);
                     binding.imageSelected.setImageURI(croppedUri);
+                    viewModel.setAvatarBase64(base64Image);
                 } else {
                     Toast.makeText(this, "La imagen seleccionada es demasiado grande", Toast.LENGTH_SHORT).show();
                 }
@@ -79,6 +82,20 @@ public class SignUpActivity extends AppCompatActivity {
                 Log.e("UCrop", "Error al recortar la imagen: " + cropError.getMessage());
             }
         }
+    }
+    private String convertImageToBase64(Uri imageUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            if (inputStream != null) {
+                byte[] buffer = new byte[inputStream.available()];
+                inputStream.read(buffer);
+                inputStream.close();
+                return Base64.encodeToString(buffer, Base64.DEFAULT);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     private boolean isValidImageSize(Uri imageUri) {
         try {
