@@ -127,6 +127,10 @@
     <string name="mainmenu_sales">Ventas</string>
     <string name="mainmenu_new_auction">Subastar</string>
 
+    <string name="moderatormenu_categories">Categorías</string>
+    <string name="moderatormenu_auctions">Subastas</string>
+    <string name="moderatormenu_statistics">Estadísticas</string>
+
     <string name="signup_invalid_input_toast_message">El correo electrónico ingresado, ya se encuentra en uso por otra cuenta en BidBlast</string>
     <string name="signup_error_toast_message">No fue posible crear la cuenta, intente más tarde</string>
     <string name="signup_password_mismatch_error">Las contraseñas ingresadas no coinciden,verifique la información</string>

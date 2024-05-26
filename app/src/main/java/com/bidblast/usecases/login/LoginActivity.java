@@ -10,10 +10,14 @@ import android.view.View;
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.ActivityLoginBinding;
+import com.bidblast.lib.Session;
 import com.bidblast.menus.mainmenu.MainMenuActivity;
+import com.bidblast.menus.moderatormenu.ModeratorMenuActivity;
 import com.bidblast.repositories.ProcessErrorCodes;
 import com.bidblast.usecases.signup.SignUpActivity;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -46,7 +50,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startMainMenuActivity() {
-        Intent intent = new Intent(this, MainMenuActivity.class);
+        String MODERATOR_ROLE = "MODERATOR";
+        List<String> userRoles = Session.getInstance().getUser().getRoles();
+
+        Intent intent;
+        if(userRoles.contains(MODERATOR_ROLE)) {
+            intent = new Intent(this, ModeratorMenuActivity.class);
+        } else {
+            intent = new Intent(this, MainMenuActivity.class);
+        }
+
         startActivity(intent);
     }
 
@@ -115,9 +128,9 @@ public class LoginActivity extends AppCompatActivity {
 
         Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
     }
+
     public void openSignUpActivity(View view) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
-
 }
