@@ -12,6 +12,7 @@ import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.ActivityLoginBinding;
 import com.bidblast.menus.mainmenu.MainMenuActivity;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.usecases.signup.SignUpActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public class LoginActivity extends AppCompatActivity {
@@ -114,4 +115,9 @@ public class LoginActivity extends AppCompatActivity {
 
         Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
     }
+    public void openSignUpActivity(View view) {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
 }
