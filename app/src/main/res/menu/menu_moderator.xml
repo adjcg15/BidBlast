@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/categoriesMenuItem"
+        android:title="@string/moderatormenu_categories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/categories_menu_icon"
+        android:textSize="12sp"/>
+    <item
+        android:id="@+id/auctionsMenuItem"
+        android:title="@string/moderatormenu_auctions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/auctions_menu_icon"
+        android:textSize="12sp"/>
+    <item
+        android:id="@+id/statisticsMenuItem"
+        android:title="@string/moderatormenu_statistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/statistics_menu_icon"
+        android:textSize="12sp"/>
+</menu>
