@@ -29,7 +29,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -85,11 +84,8 @@ public class SignUpActivity extends AppCompatActivity {
         try {
             InputStream inputStream = getContentResolver().openInputStream(imageUri);
             if (inputStream != null) {
-                // Obtener el tamaño del archivo de la imagen en bytes
                 int fileSize = inputStream.available();
-                // Convertir el tamaño a megabytes
-                double fileSizeInMB = fileSize / (1024 * 1024.0); // Convertir a megabytes
-                // Establecer el límite máximo de tamaño de imagen en 0.5 MB
+                double fileSizeInMB = fileSize / (1024 * 1024.0);
                 double maxSizeInMB = 0.5;
                 return fileSizeInMB <= maxSizeInMB;
             }
@@ -240,7 +236,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
     private void setupSignUpStatusListener() {
         viewModel.getSignUpRequestStatus().observe(this, requestStatus -> {
             if (requestStatus != null) {
