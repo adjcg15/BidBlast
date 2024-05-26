@@ -78,11 +78,8 @@ public class SignUpActivity extends AppCompatActivity {
             Uri croppedUri = UCrop.getOutput(data);
             if (croppedUri != null) {
                 if (isValidImageSize(croppedUri)) {
-                    // Convertir la imagen a base64
                     String base64Image = convertImageToBase64(croppedUri);
-                    // Mostrar la imagen en la interfaz de usuario
                     binding.imageSelected.setImageURI(croppedUri);
-                    // Pasar la imagen base64 al ViewModel
                     viewModel.setAvatarBase64(base64Image);
                 } else {
                     Toast.makeText(this, "La imagen seleccionada es demasiado grande", Toast.LENGTH_SHORT).show();
@@ -175,16 +172,16 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validatePasswordRules(s.toString(), passwordRules);
+                viewModel.validatePasswordRules(s.toString());
+                updatePasswordRules(s.toString(), passwordRules);
             }
 
             @Override
             public void afterTextChanged(Editable s) {}
         });
     }
-
-    private void validatePasswordRules(String password, TextView passwordRules) {
-        String rules = getString(R.string.password_rules);
+    private void updatePasswordRules(String password, TextView passwordRules) {
+        String rules = getString(R.string.signup_password_rules);
         if (password.matches(".*[A-Z].*")) {
             rules = rules.replace("• Al menos una letra mayúscula", "✔ Al menos una letra mayúscula");
         } else {
@@ -195,13 +192,14 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
             rules = rules.replace("✔ Al menos un número", "• Al menos un número");
         }
-        if (password.length() >= 5 && password.length() <= 8) {
-            rules = rules.replace("• Extensión entre 5 y 8 caracteres", "✔ Extensión entre 5 y 8 caracteres");
+        if (password.length() >= 10 && password.length() <= 15) {
+            rules = rules.replace("• Extensión entre 10 y 15 caracteres", "✔ Extensión entre 10 y 15 caracteres");
         } else {
-            rules = rules.replace("✔ Extensión entre 5 y 8 caracteres", "• Extensión entre 5 y 8 caracteres");
+            rules = rules.replace("✔ Extensión entre 10 y 15 caracteres", "• Extensión entre 10 y 15 caracteres");
         }
         passwordRules.setText(rules);
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -281,11 +279,31 @@ public class SignUpActivity extends AppCompatActivity {
         viewModel.validateEmail(email);
         viewModel.validatePassword(password);
         viewModel.validateConfirmPassword(password, confirmPassword);
+        viewModel.validatePasswordRules(password);
+
+        boolean isPasswordValid = Boolean.TRUE.equals(viewModel.isValidPassword().getValue());
+        boolean isPasswordRulesValid = Boolean.TRUE.equals(viewModel.isValidPasswordRules().getValue());
+
+        if (!isPasswordValid) {
+            binding.passwordError.setVisibility(View.VISIBLE);
+            binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+        } else {
+            binding.passwordError.setVisibility(View.GONE);
+            binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_background);
+            binding.passwordRulesError.setVisibility(View.GONE);
+        }
+
+        if (!isPasswordRulesValid) {
+            binding.passwordRulesError.setVisibility(View.VISIBLE);
+        } else {
+            binding.passwordRulesError.setVisibility(View.GONE);
+        }
 
         return Boolean.TRUE.equals(viewModel.isValidFullName().getValue())
                 && Boolean.TRUE.equals(viewModel.isValidEmail().getValue())
-                && Boolean.TRUE.equals(viewModel.isValidPassword().getValue())
-                && Boolean.TRUE.equals(viewModel.isValidConfirmPassword().getValue());
+                && isPasswordValid
+                && Boolean.TRUE.equals(viewModel.isValidConfirmPassword().getValue())
+                && isPasswordRulesValid;
     }
 
     private void setupFieldsValidations() {
@@ -315,6 +333,7 @@ public class SignUpActivity extends AppCompatActivity {
             } else {
                 binding.passwordError.setVisibility(View.VISIBLE);
                 binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+                binding.passwordRulesError.setVisibility(View.VISIBLE);
             }
         });
 
@@ -338,10 +357,7 @@ public class SignUpActivity extends AppCompatActivity {
                         break;
                     case DONE:
                         hideLoading();
-                        Snackbar.make(binding.getRoot(), R.string.signup_success_message, Snackbar.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, LoginActivity.class)
-                                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                        finish();
+                        showConfirmationDialog();
                         break;
                     case ERROR:
                         hideLoading();
@@ -392,7 +408,19 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void showPasswordMismatchError() {
-        Snackbar.make(binding.getRoot(), "Las contraseñas no coinciden", Snackbar.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.signup_password_mismatch_title)
+                .setMessage(R.string.signup_password_mismatch_error)
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
+    }
+    private void showConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Registro exitoso")
+                .setMessage("Tu cuenta ha sido creada exitosamente, inicia sesión para comenzar en el mundo de las subastas.")
+                .setPositiveButton("OK", (dialog, which) -> navigateToLogin())
+                .setCancelable(false)
+                .show();
     }
 }
 

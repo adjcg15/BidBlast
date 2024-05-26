@@ -23,6 +23,7 @@ public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<RequestStatus> signUpRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<ProcessErrorCodes> signUpErrorCode = new MutableLiveData<>();
     private final MutableLiveData<String> avatarBase64 = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isValidPasswordRules = new MutableLiveData<>();
 
     public LiveData<Boolean> isValidFullName() {
         return isValidFullName;
@@ -51,11 +52,17 @@ public class SignUpViewModel extends ViewModel {
     public LiveData<String> getAvatarBase64() {
         return avatarBase64;
     }
+    public LiveData<Boolean> isValidPasswordRules() { return isValidPasswordRules; }
 
     public void setAvatarBase64(String base64Image) {
         avatarBase64.setValue(base64Image);
     }
-
+    public void validatePasswordRules(String password) {
+        boolean hasUppercase = password.matches(".*[A-Z].*");
+        boolean hasNumber = password.matches(".*\\d.*");
+        boolean validLength = password.length() >= 10 && password.length() <= 15;
+        isValidPasswordRules.setValue(hasUppercase && hasNumber && validLength);
+    }
     public void validateFullName(String fullName) {
         boolean validationResult = !fullName.isEmpty();
         isValidFullName.setValue(validationResult);

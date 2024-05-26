@@ -101,6 +101,7 @@
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
+                android:maxLength="250"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
                 android:id="@+id/fullNameError"
@@ -123,6 +124,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/login_email_example"
                 android:importantForAutofill="no"
+                android:maxLength="60"
                 android:inputType="textEmailAddress"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
@@ -145,7 +147,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"
-                android:inputType="phone"
+                android:maxLength="10"
+                android:inputType="number"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
                 android:layout_width="match_parent"
@@ -166,6 +169,7 @@
                     android:hint="@string/sign_up_hidden_password"
                     android:importantForAutofill="no"
                     android:inputType="textPassword"
+                    android:maxLength="15"
                     android:paddingEnd="40dp"
                     style="@style/EdTxtGenericStyle" />
 
@@ -183,7 +187,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/password_rules"
+                android:text="@string/signup_password_rules"
                 android:visibility="gone"
                 android:padding="8dp"/>
             <TextView
@@ -193,6 +197,15 @@
                 style="@style/TvErrorField"
                 android:visibility="gone"
                 android:text="@string/signup_password_request"/>
+            <TextView
+                android:id="@+id/passwordRulesError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                style="@style/TvErrorField"
+                android:textSize="12sp"
+                android:visibility="gone"
+                android:text="@string/signup_password_rules_error_message"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -210,6 +223,7 @@
                 tools:ignore="HardcodedText"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
+                android:maxLength="15"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
                 android:id="@+id/unverifiedPassword"
