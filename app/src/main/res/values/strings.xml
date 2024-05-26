@@ -59,7 +59,6 @@
     <string name="modifycategory_success_toast_message">Categoría modificada con éxito</string>
 
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
-    <string name="consultcompletedauctions_see_offers_made">Ver ofertas realizadas</string>
     <string name="consultcompletedauctions_purchased_date_message">Comprado el %s</string>
     <string name="consultcompletedauctions_empty_completed_auctions_title">¡Aún no tienes compras!</string>
     <string name="consultcompletedauctions_empty_completed_auctions_text">Por el momento no tienes subastas compradas, las subastas que compres aparecerán aquí</string>
@@ -70,7 +69,27 @@
     <string name="consultcompletedauctions_error_loading_text">En este momento no podemos cargar las subastas compradas, por favor intente en otro momento</string>
 
     <string name="consultcreatedauctions_searchbar_hint">Buscar en ventas</string>
+    <string name="consultcreatedauctions_see_offers_made">Ver ofertas realizadas</string>
+    <string name="consultcreatedauctions_sold_date_message">Vendido el %s</string>
+    <string name="consultcreatedauctions_available_date_message">Disponible hasta el %s</string>
+    <string name="consultcreatedauctions_closed_date_message">Se cerró el %s</string>
+    <string name="consultcreatedauctions_rejected_date_message">Se rechazó el %s</string>
+    <string name="consultcreatedauctions_first_proposed_time_message">Propuesto para %s</string>
+    <string name="consultcreatedauctions_second_proposed_time_message">%d días en subasta</string>
+    <string name="consultcreatedauctions_empty_created_auctions_title">¡Aún no tienes subastas creadas!</string>
+    <string name="consultcreatedauctions_empty_created_auctions_text">Por el momento no tienes subastas propias, las subastas que crees aparecerán aquí</string>
+    <string name="consultcreatedauctions_empty_created_auctions_by_search_title">¡Sin coincidencias!</string>
+    <string name="consultcreatedauctions_empty_created_auctions_by_search_text">No hemos encontrado ninguna subasta creada que coincida con su búsqueda</string>
+    <string name="consultcreatedauctions_loading_created_auctions">Cargando subastas creadas...</string>
+    <string name="consultcreatedauctions_error_loading_title">¡Estamos teniendo problemas!</string>
+    <string name="consultcreatedauctions_error_loading_text">En este momento no podemos cargar las subastas creadas, por favor intente en otro momento</string>
     <string name="consultcreatedauctions_sales_statistics_action">Estadísticas de ventas</string>
+    <string name="consultcreatedauctions_auction_rejected_state_text">Subasta rechazada %s</string>
+    <string name="consultcreatedauctions_auction_last_offer_title">Última oferta</string>
+    <string name="consultcreatedauctions_auction_base_price_title">Precio base</string>
+    <string name="consultcreatedauctions_auction_minimum_bid_title">Puja mínima</string>
+    <string name="consultcreatedauctions_auction_closed_without_offers_text">No hubo ofertas realizadas</string>
+    <string name="consultcreatedauctions_auction_published_without_offers_text">Aún no hay ofertas realizadas</string>
 
     <string name="consultsalesstatistics_title">Estadísticas de ventas</string>
     <string name="consultsalesstatistics_date_range">Seleccione un rango de fechas</string>

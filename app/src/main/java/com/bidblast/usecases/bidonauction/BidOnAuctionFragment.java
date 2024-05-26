@@ -1,20 +1,31 @@
 package com.bidblast.usecases.bidonauction;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bidblast.databinding.FragmentBidOnAuctionBinding;
+import com.bidblast.gRPC.Client;
 import com.bidblast.global.CarouselViewModel;
 import com.bidblast.global.CarouselItemAdapter;
 import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.HypermediaFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +35,12 @@ public class BidOnAuctionFragment extends Fragment {
     private CarouselViewModel carouselViewModel;
     private FragmentBidOnAuctionBinding binding;
     private CarouselItemAdapter carouselAdapter;
+    private SurfaceView surfaceView;
+    private MediaPlayer mediaPlayer;
+    private static final String TAG = "VideoFragment";
+    private Client client;
+    private File tempFile;
+    private BufferedOutputStream bufferedOutputStream;
 
     public BidOnAuctionFragment() {
 
@@ -54,9 +71,11 @@ public class BidOnAuctionFragment extends Fragment {
         binding = FragmentBidOnAuctionBinding.inflate(inflater, container, false);
 
         carouselViewModel = new CarouselViewModel();
+        mediaPlayer = new MediaPlayer();
 
         carouselAdapter = new CarouselItemAdapter(carouselViewModel);
         binding.carouselFilesList.setAdapter(carouselAdapter);
+        surfaceView = binding.playerSurfaceView;
 
         setupGoBackButton();
         setupCarouselItemsListener();
@@ -64,6 +83,94 @@ public class BidOnAuctionFragment extends Fragment {
         recoverAuctionHypermediaFiles();
 
         return binding.getRoot();
+    }
+
+    private void loadVideoOnSurfaceView(int videoId) {
+        mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+            //TODO Manejo de mensaje cuando hay error en el stream
+            return true;
+        });
+
+        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
+
+        client = new Client(new Handler(msg -> {
+            if (msg.what == 1) {
+                List<byte[]> videoFragments = (List<byte[]>) msg.obj;
+                for (byte[] videoChunk : videoFragments) {
+                    addVideoChunk(videoChunk);
+                }
+            }
+            return true;
+        }));
+
+        client.streamVideo(videoId);
+
+        try {
+            tempFile = File.createTempFile("video", ".avi", requireContext().getCacheDir());
+            bufferedOutputStream = new BufferedOutputStream(Files.newOutputStream(tempFile.toPath()));
+        } catch (IOException e) {
+            Log.e(TAG, "Error creating temp file", e);
+        }
+
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(@NonNull SurfaceHolder holder) {
+                mediaPlayer.setDisplay(holder);
+            }
+
+            @Override
+            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+            }
+
+            @Override
+            public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+            }
+        });
+    }
+
+    private void addVideoChunk(byte[] videoChunk) {
+        if (videoChunk != null && videoChunk.length > 0) {
+            try {
+                bufferedOutputStream.flush();
+                bufferedOutputStream.write(videoChunk);
+                if (!mediaPlayer.isPlaying() && mediaPlayer.getCurrentPosition() == 0) {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(tempFile.getAbsolutePath());
+                    mediaPlayer.prepareAsync();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Error writing video chunk to file", e);
+            }
+        } else {
+            Log.e(TAG, "Received empty video chunk or null");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        deleteVideoInCache();
+    }
+
+    private void deleteVideoInCache() {
+        if (mediaPlayer != null) {
+            mediaPlayer.reset();
+        }
+        if (Client.getChannelStatus() && client != null) {
+            client.shutdown();
+            client = null;
+        }
+        if (bufferedOutputStream != null) {
+            try {
+                bufferedOutputStream.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Error closing BufferedOutputStream", e);
+            }
+        }
+        if (tempFile != null && tempFile.exists()) {
+            tempFile.delete();
+        }
     }
 
     private void setupGoBackButton() {
@@ -120,10 +227,14 @@ public class BidOnAuctionFragment extends Fragment {
                         ImageToolkit.parseBitmapFromBase64(selectedFile.getContent())
                     );
                     binding.showedFileImageView.setVisibility(View.VISIBLE);
-                    binding.videoContainer.setVisibility(View.GONE);
+                    // Siempre que se seleccione una imagen, se debe eliminar el video en caso de haberse
+                    // solicitado antes
+                    deleteVideoInCache();
+                    binding.playerSurfaceView.setVisibility(View.GONE);
                 } else if (hypermediaType.startsWith("video")) {
                     binding.showedFileImageView.setVisibility(View.GONE);
-                    binding.videoContainer.setVisibility(View.VISIBLE);
+                    binding.playerSurfaceView.setVisibility(View.VISIBLE);
+                    loadVideoOnSurfaceView(2);
                 }
             }
         });

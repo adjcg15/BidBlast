@@ -23,19 +23,25 @@ public interface IAuctionsService {
         @Query("maximumPrice") int maximumPrice
     );
 
-    @GET("users/{usid}/completed-auctions")
+    @GET("users/completed-auctions")
     Call<List<AuctionJSONResponse>> getCompletedAuctionsList(
         @Header("Authorization") String authHeader,
-        @Path("usid") int customerId,
         @Query("query") String searchQuery,
         @Query("limit") int limit,
         @Query("offset") int offset
     );
 
-    @GET("users/{usid}/sales-auctions")
+    @GET("users/auctions")
+    Call<List<AuctionJSONResponse>> getCreatedAuctionsList(
+        @Header("Authorization") String authHeader,
+        @Query("query") String searchQuery,
+        @Query("limit") int limit,
+        @Query("offset") int offset
+    );
+
+    @GET("users/sold-auctions")
     Call<List<AuctionJSONResponse>> getUserSalesAuctionsList(
         @Header("Authorization") String authHeader,
-        @Path("usid") int auctioneerId,
         @Query("startDate") String startDate,
         @Query("endDate") String endDate
     );
