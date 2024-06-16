@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
@@ -15,12 +14,9 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
@@ -51,12 +47,12 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import com.bidblast.databinding.FragmentConsultSalesStatisticsBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -372,10 +368,15 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         for (int i = 0; i < salesDates.size(); i++) {
             int count = 0;
             float amount = 0;
-            Date saleSate = salesDates.get(i);
+            LocalDate saleDate = salesDates.get(i).toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
             for (int j = 0; j < salesAuctionsList.size(); j++) {
                 Auction auction = salesAuctionsList.get(j);
-                if (saleSate.equals(auction.getUpdatedDate())) {
+                LocalDate updatedDate = auction.getUpdatedDate().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+                if (saleDate.equals(updatedDate)) {
                     count += 1;
                     amount += auction.getLastOffer().getAmount();
                 }

@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bidblast.databinding.FragmentBidOnAuctionBinding;
-import com.bidblast.gRPC.Client;
+import com.bidblast.grpc.Client;
 import com.bidblast.global.CarouselViewModel;
 import com.bidblast.global.CarouselItemAdapter;
 import com.bidblast.lib.ImageToolkit;
@@ -234,7 +234,7 @@ public class BidOnAuctionFragment extends Fragment {
                 } else if (hypermediaType.startsWith("video")) {
                     binding.showedFileImageView.setVisibility(View.GONE);
                     binding.playerSurfaceView.setVisibility(View.VISIBLE);
-                    loadVideoOnSurfaceView(2);
+                    loadVideoOnSurfaceView(61);
                 }
             }
         });
