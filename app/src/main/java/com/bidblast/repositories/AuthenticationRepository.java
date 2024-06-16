@@ -57,27 +57,28 @@ public class AuthenticationRepository {
             }
         });
     }
-    public void createAccount(UserRegisterBody body, IEmptyProcessStatusListener creationListener) {
-        IAuthenticationService authService = ApiClient.getInstance().getAuthenticationService();
-        authService.createAccount(body).enqueue(new Callback<UserRegisterJSONResponse>() {
+    public void createUser(
+            UserRegisterBody userBody,
+            IEmptyProcessStatusListener statusListener) {
+        IAuthenticationService authenticationService = ApiClient.getInstance().getAuthenticationService();
+        authenticationService.createAccount(userBody).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<UserRegisterJSONResponse> call, Response<UserRegisterJSONResponse> response) {
-                if (response.isSuccessful()) {
-                    UserRegisterJSONResponse responseBody = response.body();
-                    if (responseBody != null && responseBody.getAccount() != null) {
-                        creationListener.onSuccess();
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    statusListener.onSuccess();
+                }else{
+                    if(response.code() == 400) {
+                        statusListener.onError(ProcessErrorCodes.REQUEST_FORMAT_ERROR);
                     } else {
-                        System.err.println("Response body or account is null");
-                        creationListener.onError(ProcessErrorCodes.REQUEST_FORMAT_ERROR);
+                        System.out.println(response.code());
+                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
                     }
-                } else {
-                    creationListener.onError(ProcessErrorCodes.REQUEST_FORMAT_ERROR);
                 }
             }
 
             @Override
-            public void onFailure(Call<UserRegisterJSONResponse> call, Throwable t) {
-                creationListener.onError(ProcessErrorCodes.FATAL_ERROR);
+            public void onFailure(Call<Void> call, Throwable t) {
+                statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });
     }
