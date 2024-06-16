@@ -69,6 +69,7 @@ dependencies {
     implementation 'io.grpc:grpc-okhttp:1.64.0'
     implementation 'io.grpc:grpc-protobuf-lite:1.64.0'
     implementation 'io.grpc:grpc-stub:1.64.0'
+    implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'org.apache.tomcat:annotations-api:6.0.53'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.16.1'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.16.1'
