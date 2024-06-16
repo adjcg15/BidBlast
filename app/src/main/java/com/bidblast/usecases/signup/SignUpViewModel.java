@@ -14,6 +14,7 @@ import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.repositories.AuthenticationRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.google.gson.Gson;
 
 public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidFullName = new MutableLiveData<>();
@@ -52,17 +53,24 @@ public class SignUpViewModel extends ViewModel {
     public LiveData<String> getAvatarBase64() {
         return avatarBase64;
     }
-    public LiveData<Boolean> isValidPasswordRules() { return isValidPasswordRules; }
+
+    public LiveData<Boolean> isValidPasswordRules() {
+        return isValidPasswordRules;
+    }
 
     public void setAvatarBase64(String base64Image) {
         avatarBase64.setValue(base64Image);
     }
+
     public void validatePasswordRules(String password) {
         boolean hasUppercase = password.matches(".*[A-Z].*");
         boolean hasNumber = password.matches(".*\\d.*");
-        boolean validLength = password.length() >= 10 && password.length() <= 15;
-        isValidPasswordRules.setValue(hasUppercase && hasNumber && validLength);
+        boolean hasSpecialChar = password.matches(".*[\\W_].*");
+        boolean validLength = password.length() >= 8;
+
+        isValidPasswordRules.setValue(hasUppercase && hasNumber && hasSpecialChar && validLength);
     }
+
     public void validateFullName(String fullName) {
         boolean validationResult = !fullName.isEmpty();
         isValidFullName.setValue(validationResult);
@@ -80,34 +88,34 @@ public class SignUpViewModel extends ViewModel {
         isValidPassword.setValue(validationResult);
         Log.d("SignUpViewModel", "Password Valid: " + validationResult);
     }
-
     public void validateConfirmPassword(String password, String confirmPassword) {
-        boolean validationResult = password.equals(confirmPassword);
+        boolean validationResult = !password.isEmpty() && !confirmPassword.isEmpty() && password.equals(confirmPassword);
         isValidConfirmPassword.setValue(validationResult);
         Log.d("SignUpViewModel", "Confirm Password Valid: " + validationResult);
     }
-
     public void register(Context context, String fullName, String email, String phoneNumber, String password, String confirmPassword) {
         validateFullName(fullName);
         validateEmail(email);
         validatePassword(password);
         validateConfirmPassword(password, confirmPassword);
 
-        if (Boolean.TRUE.equals(isValidFullName.getValue()) &&
-                Boolean.TRUE.equals(isValidEmail.getValue()) &&
-                Boolean.TRUE.equals(isValidPassword.getValue()) &&
-                Boolean.TRUE.equals(isValidConfirmPassword.getValue())) {
+        if (Boolean.TRUE.equals(isValidFullName().getValue()) &&
+                Boolean.TRUE.equals(isValidEmail().getValue()) &&
+                Boolean.TRUE.equals(isValidPassword().getValue()) &&
+                Boolean.TRUE.equals(isValidConfirmPassword().getValue())) {
 
             signUpRequestStatus.setValue(RequestStatus.LOADING);
             String avatarBase64 = getAvatarBase64().getValue();
 
-            if (avatarBase64 == null) {
-                avatarBase64 = ImageToolkit.convertDrawableToBase64(context, R.drawable.avatar_icon);
+            if (avatarBase64 == null || avatarBase64.isEmpty()) {
+                avatarBase64 = null;
             }
+            String phoneNumberToSend = phoneNumber.isEmpty() ? null : phoneNumber;
 
-            UserRegisterBody registerBody = new UserRegisterBody(fullName, email, phoneNumber, avatarBase64, password);
+            UserRegisterBody registerBody = new UserRegisterBody(fullName, email, phoneNumberToSend, avatarBase64, password);
+            Gson gson = new Gson();
 
-            new AuthenticationRepository().createAccount(registerBody, new IEmptyProcessStatusListener() {
+            new AuthenticationRepository().createUser(registerBody, new IEmptyProcessStatusListener() {
                 @Override
                 public void onSuccess() {
                     Log.d("SignUpViewModel", "Account created successfully");
@@ -125,4 +133,5 @@ public class SignUpViewModel extends ViewModel {
             signUpRequestStatus.setValue(RequestStatus.ERROR);
         }
     }
+
 }

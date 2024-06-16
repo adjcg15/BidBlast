@@ -38,6 +38,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -184,24 +185,33 @@ public class SignUpActivity extends AppCompatActivity {
     }
     private void updatePasswordRules(String password, TextView passwordRules) {
         String rules = getString(R.string.signup_password_rules);
+
         if (password.matches(".*[A-Z].*")) {
             rules = rules.replace("• Al menos una letra mayúscula", "✔ Al menos una letra mayúscula");
         } else {
             rules = rules.replace("✔ Al menos una letra mayúscula", "• Al menos una letra mayúscula");
         }
+
         if (password.matches(".*\\d.*")) {
             rules = rules.replace("• Al menos un número", "✔ Al menos un número");
         } else {
             rules = rules.replace("✔ Al menos un número", "• Al menos un número");
         }
-        if (password.length() >= 10 && password.length() <= 15) {
-            rules = rules.replace("• Extensión entre 10 y 15 caracteres", "✔ Extensión entre 10 y 15 caracteres");
+
+        if (password.matches(".*[\\W_].*")) {
+            rules = rules.replace("• Al menos un carácter especial", "✔ Al menos un carácter especial");
         } else {
-            rules = rules.replace("✔ Extensión entre 10 y 15 caracteres", "• Extensión entre 10 y 15 caracteres");
+            rules = rules.replace("✔ Al menos un carácter especial", "• Al menos un carácter especial");
         }
+
+        if (password.length() >= 8) {
+            rules = rules.replace("• Extensión mínima de 8 caracteres", "✔ Extensión mínima de 8 caracteres");
+        } else {
+            rules = rules.replace("✔ Extensión mínima de 8 caracteres", "• Extensión mínima de 8 caracteres");
+        }
+
         passwordRules.setText(rules);
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -250,7 +260,6 @@ public class SignUpActivity extends AppCompatActivity {
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         galleryLauncher.launch(intent);
     }
-
     private void setupSignUpButtonClick() {
         binding.signUpButton.setOnClickListener(v -> {
             if (validateFields()) {
@@ -270,7 +279,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
     private boolean validateFields() {
         String fullName = binding.fullNameEditText.getText().toString().trim();
         String email = binding.emailEditText.getText().toString().trim();
@@ -285,6 +293,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         boolean isPasswordValid = Boolean.TRUE.equals(viewModel.isValidPassword().getValue());
         boolean isPasswordRulesValid = Boolean.TRUE.equals(viewModel.isValidPasswordRules().getValue());
+        boolean isConfirmPasswordValid = Boolean.TRUE.equals(viewModel.isValidConfirmPassword().getValue());
 
         if (!isPasswordValid) {
             binding.passwordError.setVisibility(View.VISIBLE);
@@ -301,13 +310,20 @@ public class SignUpActivity extends AppCompatActivity {
             binding.passwordRulesError.setVisibility(View.GONE);
         }
 
+        if (!isConfirmPasswordValid && !password.isEmpty() && !confirmPassword.isEmpty()) {
+            binding.unverifiedPassword.setVisibility(View.VISIBLE);
+            binding.confirmPasswordEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+        } else {
+            binding.unverifiedPassword.setVisibility(View.GONE);
+            binding.confirmPasswordEditText.setBackgroundResource(R.drawable.basic_input_background);
+        }
+
         return Boolean.TRUE.equals(viewModel.isValidFullName().getValue())
                 && Boolean.TRUE.equals(viewModel.isValidEmail().getValue())
                 && isPasswordValid
-                && Boolean.TRUE.equals(viewModel.isValidConfirmPassword().getValue())
+                && isConfirmPasswordValid
                 && isPasswordRulesValid;
     }
-
     private void setupFieldsValidations() {
         viewModel.isValidFullName().observe(this, isValidFullName -> {
             if (isValidFullName) {
@@ -419,7 +435,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void showConfirmationDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Registro exitoso")
-                .setMessage("Tu cuenta ha sido creada exitosamente, inicia sesión para comenzar en el mundo de las subastas.")
+                .setMessage("Tu cuenta ha sido creada exitosamente.")
                 .setPositiveButton("OK", (dialog, which) -> navigateToLogin())
                 .setCancelable(false)
                 .show();
