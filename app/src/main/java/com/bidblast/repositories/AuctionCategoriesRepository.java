@@ -165,12 +165,9 @@ public class AuctionCategoriesRepository {
         categoriesService.searchCategories(authHeader, searchQuery).enqueue(new Callback<List<AuctionCategoryJSONResponse>>() {
             @Override
             public void onResponse(Call<List<AuctionCategoryJSONResponse>> call, Response<List<AuctionCategoryJSONResponse>> response) {
-                Log.d("Repository", "Received response: " + response.code());
-
                 if (response.isSuccessful()) {
                     List<AuctionCategoryJSONResponse> body = response.body();
                     if (body != null) {
-                        Log.d("Repository", "Response body size: " + body.size());
 
                         List<AuctionCategory> categoriesList = new ArrayList<>();
                         for (AuctionCategoryJSONResponse categoryRes : body) {
@@ -183,18 +180,14 @@ public class AuctionCategoriesRepository {
                         }
                         statusListener.onSuccess(categoriesList);
                     } else {
-                        Log.e("Repository", "Response body is null");
                         statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
                     }
                 } else {
-                    Log.e("Repository", "Unsuccessful response with code: " + response.code());
                     statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
                 }
             }
-
             @Override
             public void onFailure(Call<List<AuctionCategoryJSONResponse>> call, Throwable t) {
-                Log.e("Repository", "Request failed: " + t.getMessage(), t);
                 statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });

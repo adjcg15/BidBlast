@@ -50,7 +50,7 @@ public class ConsultAuctionCategoriesFragment extends Fragment {
             if (!query.isEmpty()) {
                 viewModel.searchAuctionCategories(query);
             } else {
-                viewModel.loadAuctionCategories(); // Cargar todas las categorías si la consulta está vacía
+                viewModel.loadAuctionCategories();
             }
         });
 
