@@ -1,5 +1,7 @@
 package com.bidblast.repositories;
 
+import android.util.Log;
+
 import com.bidblast.api.ApiClient;
 import com.bidblast.api.IAuctionCategoriesService;
 import com.bidblast.api.requests.auctioncategory.AuctionCategoryBody;
@@ -151,6 +153,49 @@ public class AuctionCategoriesRepository {
             @Override
             public void onFailure(Call call, Throwable t) {
                 statusListener.onError(SaveAuctionCategoryCodes.SERVER_ERROR);
+            }
+        });
+    }
+    public void searchAuctionCategories(String searchQuery, IProcessStatusListener<List<AuctionCategory>> statusListener) {
+        IAuctionCategoriesService categoriesService = ApiClient.getInstance().getAuctionCategoriesService();
+        String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
+
+        Log.d("Repository", "Starting search with query: " + searchQuery);
+
+        categoriesService.searchCategories(authHeader, searchQuery).enqueue(new Callback<List<AuctionCategoryJSONResponse>>() {
+            @Override
+            public void onResponse(Call<List<AuctionCategoryJSONResponse>> call, Response<List<AuctionCategoryJSONResponse>> response) {
+                Log.d("Repository", "Received response: " + response.code());
+
+                if (response.isSuccessful()) {
+                    List<AuctionCategoryJSONResponse> body = response.body();
+                    if (body != null) {
+                        Log.d("Repository", "Response body size: " + body.size());
+
+                        List<AuctionCategory> categoriesList = new ArrayList<>();
+                        for (AuctionCategoryJSONResponse categoryRes : body) {
+                            AuctionCategory category = new AuctionCategory();
+                            category.setId(categoryRes.getId());
+                            category.setTitle(categoryRes.getTitle());
+                            category.setDescription(categoryRes.getDescription());
+                            category.setKeywords(categoryRes.getKeywords());
+                            categoriesList.add(category);
+                        }
+                        statusListener.onSuccess(categoriesList);
+                    } else {
+                        Log.e("Repository", "Response body is null");
+                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                    }
+                } else {
+                    Log.e("Repository", "Unsuccessful response with code: " + response.code());
+                    statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AuctionCategoryJSONResponse>> call, Throwable t) {
+                Log.e("Repository", "Request failed: " + t.getMessage(), t);
+                statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
             }
         });
     }
