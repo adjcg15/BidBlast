@@ -10,7 +10,6 @@ import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
 
 import java.util.List;
-
 public class ConsultAuctionCategoriesViewModel extends ViewModel {
     private final MutableLiveData<List<AuctionCategory>> auctionCategories = new MutableLiveData<>();
     private final MutableLiveData<ProcessErrorCodes> error = new MutableLiveData<>();
@@ -37,4 +36,19 @@ public class ConsultAuctionCategoriesViewModel extends ViewModel {
             }
         });
     }
+    public void searchAuctionCategories(String query) {
+        AuctionCategoriesRepository repository = new AuctionCategoriesRepository();
+        repository.searchAuctionCategories(query, new IProcessStatusListener<List<AuctionCategory>>() {
+            @Override
+            public void onSuccess(List<AuctionCategory> categories) {
+                auctionCategories.postValue(categories);
+            }
+
+            @Override
+            public void onError(ProcessErrorCodes errorCode) {
+                error.postValue(errorCode);
+            }
+        });
+    }
 }
+
