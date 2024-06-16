@@ -11,9 +11,11 @@ public class AuctionJSONResponse {
     private String closesAt;
     private String updatedDate;
     private String auctionState;
+    private String description;
     private float basePrice;
     private float minimumBid;
     private int daysAvailable;
+    private String itemCondition;
 
     private List<AuctionMediaFileJSONResponse> mediaFiles;
 
@@ -22,6 +24,7 @@ public class AuctionJSONResponse {
     private AuctionLastOfferJSONResponse lastOffer;
 
     private AuctionCategoryJSONResponse category;
+
     private AuctionReviewJSONResponse review;
 
     public AuctionJSONResponse() { }
@@ -53,6 +56,14 @@ public class AuctionJSONResponse {
 
     public String getClosesAt() {
         return closesAt;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setClosesAt(String closesAt) {
@@ -91,6 +102,14 @@ public class AuctionJSONResponse {
         this.updatedDate = updatedDate;
     }
 
+    public String getItemCondition() {
+        return itemCondition;
+    }
+
+    public void setItemCondition(String itemCondition) {
+        this.itemCondition = itemCondition;
+    }
+
     public AuctionCategoryJSONResponse getCategory() {
         return category;
     }
@@ -107,12 +126,12 @@ public class AuctionJSONResponse {
         this.auctionState = auctionState;
     }
 
-    public AuctionReviewJSONResponse getReview() {
-        return review;
+    public float getBasePrice() {
+        return basePrice;
     }
 
-    public void setReview(AuctionReviewJSONResponse review) {
-        this.review = review;
+    public void setBasePrice(float basePrice) {
+        this.basePrice = basePrice;
     }
 
     public float getMinimumBid() {
@@ -131,11 +150,11 @@ public class AuctionJSONResponse {
         this.daysAvailable = daysAvailable;
     }
 
-    public float getBasePrice() {
-        return basePrice;
+    public AuctionReviewJSONResponse getReview() {
+        return review;
     }
 
-    public void setBasePrice(float basePrice) {
-        this.basePrice = basePrice;
+    public void setReview(AuctionReviewJSONResponse review) {
+        this.review = review;
     }
 }

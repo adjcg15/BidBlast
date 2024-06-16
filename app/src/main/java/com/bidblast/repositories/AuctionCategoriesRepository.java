@@ -121,7 +121,7 @@ public class AuctionCategoriesRepository {
                 } else {
                     if(response.code() == 401 || response.code() == 403) {
                         statusListener.onError(SaveAuctionCategoryCodes.UNAUTHORIZED);
-                    } else if (response.code() == 400 && response.errorBody() != null) {
+                    } else if ((response.code() == 400 || response.code() == 404) && response.errorBody() != null) {
                         try {
                             String errorBodyString = response.errorBody().string();
                             JsonObject jsonErrorBody = new Gson().fromJson(errorBodyString, JsonObject.class);
