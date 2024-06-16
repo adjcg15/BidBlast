@@ -13,16 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.model.AuctionCategory;
-import com.bidblast.usecases.modifycategory.ModifyAuctionCategoryFragment;
-
 public class ConsultAuctionCategoriesFragment extends Fragment {
     private RecyclerView recyclerView;
     private AuctionCategoryAdapter adapter;
     private ConsultAuctionCategoriesViewModel viewModel;
+    private EditText searchCategoryBarEditText;
+    private ImageButton searchButton;
 
     @Nullable
     @Override
@@ -35,10 +37,22 @@ public class ConsultAuctionCategoriesFragment extends Fragment {
         adapter = new AuctionCategoryAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
+        searchCategoryBarEditText = view.findViewById(R.id.searchCategoryBarEditText);
+        searchButton = view.findViewById(R.id.searchCategoryButton);
+
         viewModel = new ViewModelProvider(this).get(ConsultAuctionCategoriesViewModel.class);
         observeViewModel();
 
         viewModel.loadAuctionCategories();
+
+        searchButton.setOnClickListener(v -> {
+            String query = searchCategoryBarEditText.getText().toString().trim();
+            if (!query.isEmpty()) {
+                viewModel.searchAuctionCategories(query);
+            } else {
+                viewModel.loadAuctionCategories(); // Cargar todas las categorías si la consulta está vacía
+            }
+        });
 
         return view;
     }

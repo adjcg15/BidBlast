@@ -89,3 +89,4 @@ public class AuctionCategoryAdapter extends ListAdapter<AuctionCategory, Auction
         }
     }
 }
+
