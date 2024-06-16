@@ -6,11 +6,10 @@
     <data>
 
     </data>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".usecases.consultcategories.ConsultCategoriesActivity"
+        tools:context=".usecases.consultaauctioncategories.ConsultCategoriesActivity"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,13 +40,21 @@
                 android:contentDescription="@string/searchauction_search_button_action">
             </ImageButton>
         </LinearLayout>
-
+        <Button
+            android:id="@+id/createNewCategoryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            style="@style/BtnTernaryStyle"
+            android:text="@string/consultcategories_create_category"
+            android:textColor="@color/secondary"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/eq_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:itemCount="6"
-            tools:listitem="@layout/category_details_template"
+            tools:listitem="@layout/template_category_details"
             android:layout_margin="12dp"/>
     </LinearLayout>
+
 </layout>

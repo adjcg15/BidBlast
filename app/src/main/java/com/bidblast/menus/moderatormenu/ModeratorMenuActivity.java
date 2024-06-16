@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.bidblast.R;
-import com.bidblast.databinding.ActivityMainMenuBinding;
 import com.bidblast.databinding.ActivityModeratorMenuBinding;
 import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.usecases.consultcreatedauctions.ConsultCreatedAuctionsFragment;
@@ -24,8 +23,7 @@ public class ModeratorMenuActivity extends AppCompatActivity {
         binding = ActivityModeratorMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //TODO: show initial use case fragment
-        showFragment(new AuctionCategoryFormFragment());
+        showFragment(new ConsultAuctionCategoriesFragment());
         setupMenuNavigation();
     }
 
@@ -38,7 +36,7 @@ public class ModeratorMenuActivity extends AppCompatActivity {
             int itemId = item.getItemId();
 
             if (itemId == categoriesMenuItemId) {
-                //TODO: show categories fragment
+                showFragment(new ConsultAuctionCategoriesFragment());
             } else if (itemId == auctionsMenuItemId) {
                 //TODO: show auctions fragment
             } else if (itemId == statisticsMenuItemId) {

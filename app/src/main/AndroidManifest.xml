@@ -26,7 +26,7 @@
             android:name=".menus.mainmenu.MainMenuActivity"
             android:exported="false" />
         <activity
-            android:name=".usecases.consultcategories.ConsultCategoriesActivity"
+            android:name=".usecases.consultaauctioncategories.ConsultCategoriesActivity"
             android:exported="false" />
         <activity
             android:name=".usecases.login.LoginActivity"

@@ -22,69 +22,40 @@
             android:paddingVertical="12dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/titleCategoryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tecnología"
+                android:text=""
                 style="@style/TvTitleStyle"
                 android:textColor="@color/dark_primary"
                 android:layout_marginBottom="12dp"/>
             <TextView
+                android:id="@+id/categoryDescriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="¡Explora el futuro con nuestra amplia selección de tecnología de vanguardia! Desde dispositivos móviles hasta gadgets inteligentes, aquí encontrarás todo lo que necesitas para mantenerte conectado y actualizado en esta era digital"
-                style="@style/TvSmallStyle"
+                android:text=""
+                style="@style/TvParagraphStyle"
                 android:textColor="@color/dark_gray"
                 android:layout_marginBottom="10dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="10dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Celulares"
-                    style="@style/TvBlackTagDecoratorStyle"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="8dp"
-                    android:background="@drawable/black_rounded_border"/>
+                android:padding="5dp">
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbars="none">
                     <LinearLayout
-                        android:id="@+id/linearLayout"
+                        android:id="@+id/categoryKeywordsLinearLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Computadoras"
-                            style="@style/TvBlackTagDecoratorStyle"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="8dp"
-                            android:background="@drawable/black_rounded_border"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Electrónica"
-                            style="@style/TvBlackTagDecoratorStyle"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="8dp"
-                            android:background="@drawable/black_rounded_border"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="SmarthWatch"
-                            style="@style/TvBlackTagDecoratorStyle"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="8dp"
-                            android:background="@drawable/black_rounded_border"/>
                     </LinearLayout>
                 </HorizontalScrollView>
             </LinearLayout>
             <Button
+                android:id="@+id/editCategoryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
