@@ -10,15 +10,17 @@ import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.repositories.AuctionCategoriesRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
+import com.bidblast.repositories.IEmptyProcessWithBusinessErrorListener;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.repositories.businesserrors.ModifyAuctionCategoryCodes;
 
 public class ModifyAuctionCategoryViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidTitle = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isValidDescription = new MutableLiveData<>();
     private final MutableLiveData<Boolean> areValidKeywords = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> modifyAuctionCategoryRequestStatus = new MutableLiveData<>();
-    private final MutableLiveData<ProcessErrorCodes> modifyAuctionCategoryErrorCode = new MutableLiveData<>();
+    private final MutableLiveData<ModifyAuctionCategoryCodes> modifyAuctionCategoryErrorCode = new MutableLiveData<>();
 
     public ModifyAuctionCategoryViewModel(){
 
@@ -40,7 +42,7 @@ public class ModifyAuctionCategoryViewModel extends ViewModel {
         return modifyAuctionCategoryRequestStatus;
     }
 
-    public LiveData<ProcessErrorCodes> getModifyAuctionCategoryErrorCode() {
+    public LiveData<ModifyAuctionCategoryCodes> getModifyAuctionCategoryErrorCode() {
         return  modifyAuctionCategoryErrorCode;
     }
 
@@ -72,7 +74,7 @@ public class ModifyAuctionCategoryViewModel extends ViewModel {
                     auctionCategory.getDescription(),
                     auctionCategory.getKeywords()
             ),
-            new IEmptyProcessStatusListener() {
+            new IEmptyProcessWithBusinessErrorListener<ModifyAuctionCategoryCodes>() {
 
                 @Override
                 public void onSuccess() {
@@ -80,7 +82,7 @@ public class ModifyAuctionCategoryViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onError(ProcessErrorCodes errorCode) {
+                public void onError(ModifyAuctionCategoryCodes errorCode) {
                     modifyAuctionCategoryErrorCode.setValue(errorCode);
                     modifyAuctionCategoryRequestStatus.setValue(RequestStatus.ERROR);
                 }
