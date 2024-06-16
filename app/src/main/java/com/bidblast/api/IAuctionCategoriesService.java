@@ -13,13 +13,18 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface IAuctionCategoriesService {
+    @GET("auction-categories/search")
+    Call<List<AuctionCategoryJSONResponse>> searchCategories(
+            @Header("Authorization") String authHeader,
+            @Query("query") String query
+    );
     @GET("auction-categories/")
     Call<List<AuctionCategoryJSONResponse>> getAuctionCategoriesList(
             @Header("Authorization") String authHeader
     );
-
     @POST("auction-categories/")
     Call<Void> registerAuctionCategory(
             @Header("Authorization") String authHeader,
