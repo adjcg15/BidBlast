@@ -55,4 +55,3 @@ public class UserRegisterBody {
         this.password = password;
     }
 }
-
