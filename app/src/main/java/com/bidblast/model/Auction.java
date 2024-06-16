@@ -21,12 +21,13 @@ public class Auction {
     private AuctionCategory category;
     private String state;
     private Date updatedDate;
+    private String itemCondition;
     private String auctionState;
     private AuctionReview review;
 
     public Auction() { }
 
-    public Auction(int id, String title, String description, float basePrice, float minimumBid, Date approvalDate, Date closesAt, int daysAvailable, User auctioneer, List<HypermediaFile> mediaFiles, Offer lastOffer, AuctionCategory category, String state, Date updatedDate) {
+    public Auction(int id, String title, String description, float basePrice, float minimumBid, Date approvalDate, Date closesAt, int daysAvailable, User auctioneer, List<HypermediaFile> mediaFiles, Offer lastOffer, AuctionCategory category, String state, Date updatedDate, String auctionState, AuctionReview review) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -41,6 +42,8 @@ public class Auction {
         this.category = category;
         this.state = state;
         this.updatedDate = updatedDate;
+        this.auctionState = auctionState;
+        this.review = review;
     }
 
     public int getId() {
@@ -155,6 +158,14 @@ public class Auction {
         this.updatedDate = updatedDate;
     }
 
+    public String getItemCondition() {
+        return itemCondition;
+    }
+
+    public void setItemCondition(String itemCondition) {
+        this.itemCondition = itemCondition;
+    }
+
     public String getAuctionState() {
         return auctionState;
     }
@@ -171,6 +182,8 @@ public class Auction {
         this.review = review;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -182,5 +195,10 @@ public class Auction {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, description, basePrice, minimumBid, approvalDate, closesAt, daysAvailable);
+    }
+
+    @Override
+    public String toString() {
+        return this.title;
     }
 }
