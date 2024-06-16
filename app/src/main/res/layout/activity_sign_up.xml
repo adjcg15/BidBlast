@@ -28,10 +28,10 @@
 
                 <ImageView
                     android:id="@+id/goBackImageView"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/go_back_orange_icon"
-                    android:importantForAccessibility="no" />
+                    android:layout_width="23dp"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/go_back_orange_icon" />
 
                 <ImageView
                     android:layout_width="282dp"
@@ -170,7 +170,7 @@
                     android:hint="@string/sign_up_hidden_password"
                     android:importantForAutofill="no"
                     android:inputType="textPassword"
-                    android:maxLength="15"
+                    android:maxLength="64"
                     android:paddingEnd="40dp"
                     style="@style/EdTxtGenericStyle" />
 
@@ -206,7 +206,7 @@
                 style="@style/TvErrorField"
                 android:textSize="12sp"
                 android:visibility="gone"
-                android:text="@string/signup_password_rules_error_message"/>
+                android:text=""/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -228,7 +228,7 @@
                     tools:ignore="HardcodedText"
                     android:importantForAutofill="no"
                     android:inputType="textPassword"
-                    android:maxLength="15"
+                    android:maxLength="64"
                     style="@style/EdTxtGenericStyle"/>
 
                 <ImageView
