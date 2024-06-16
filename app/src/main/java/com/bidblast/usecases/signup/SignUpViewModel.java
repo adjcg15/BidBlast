@@ -14,7 +14,6 @@ import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.repositories.AuthenticationRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
-import com.google.gson.Gson;
 
 public class SignUpViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isValidFullName = new MutableLiveData<>();
