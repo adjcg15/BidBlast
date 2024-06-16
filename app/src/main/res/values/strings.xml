@@ -42,21 +42,22 @@
     <string name="signup_confirm_password">Confirmar contraseña <font color="#FF5C00">*</font></string>
     <string name="signup_select_photo">Seleccionar foto</string>
 
-    <string name="modifycategory_tittle">Modificar categoría</string>
-    <string name="modifycategory_cancel_action">Cancelar</string>
-    <string name="modifycategory_category_title">Título de la categoría <font color="#FF5C00">*</font></string>
-    <string name="modifycategory_category_example">Ej. Coleccionables</string>
-    <string name="modifycategory_category_description">Descripción de la categoría <font color="#FF5C00">*</font></string>
-    <string name="modifycategory_category_description_example">Descripción breve de los artículos que se encuentran en esta categoría</string>
-    <string name="modifycategory_keywords">Palabras clave <font color="#FF5C00">*</font></string>
-    <string name="modifycategory_keywords_example">Ej. Comics, monedas, historia</string>
-    <string name="modifycategory_modify_action">Modificar categoría</string>
-    <string name="modifycategory_category_title_error">Ingrese un título para la categoría</string>
-    <string name="modifycategory_category_description_error">Ingrese un título para la categoría</string>
-    <string name="modifycategory_category_keywords_error">Ingrese al menos tres palabras clave"</string>
-    <string name="modifycategory_error_toast_message">No fue posible modificar la categoría, intente más tarde</string>
-    <string name="modifycategory_badrequest_toast_message">Ya existe ese título registrado, ingrese otro</string>
-    <string name="modifycategory_success_toast_message">Categoría modificada con éxito</string>
+    <string name="savecategory_modify_tittle">Modificar categoría</string>
+    <string name="savecategory_register_tittle">Registrar categoría</string>
+    <string name="savecategory_cancel_action">Cancelar</string>
+    <string name="savecategory_category_title">Título de la categoría <font color="#FF5C00">*</font></string>
+    <string name="savecategory_category_example">Ej. Coleccionables</string>
+    <string name="savecategory_category_description">Descripción de la categoría <font color="#FF5C00">*</font></string>
+    <string name="savecategory_category_description_example">Descripción breve de los artículos que se encuentran en esta categoría</string>
+    <string name="savecategory_keywords">Palabras clave <font color="#FF5C00">*</font></string>
+    <string name="savecategory_keywords_example">Ej. Comics, monedas, historia</string>
+    <string name="savecategory_category_title_error">Ingrese un título para la categoría</string>
+    <string name="savecategory_category_description_error">Ingrese un título para la categoría</string>
+    <string name="savecategory_category_keywords_error">Ingrese al menos tres palabras clave"</string>
+    <string name="savecategory_error_message">No fue posible modificar la categoría, intente más tarde</string>
+    <string name="savecategory_title_already_exists_toast_message">Ya existe ese título registrado, ingrese otro</string>
+    <string name="savecategory_not_found_toast_message">No se encontró la categoría</string>
+    <string name="savecategory_success_toast_message">Categoría modificada con éxito</string>
 
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
     <string name="consultcompletedauctions_purchased_date_message">Comprado el %s</string>

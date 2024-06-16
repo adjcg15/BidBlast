@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".usecases.modifycategory.ModifyAuctionCategoryFragment">
+            tools:context=".usecases.registerandmodifycategory.AuctionCategoryFormFragment">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,9 +31,10 @@
                     android:src="@drawable/go_back_icon"
                     android:importantForAccessibility="no" />
                 <TextView
+                    android:id="@+id/titleFormTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/modifycategory_tittle"
+                    android:text="@string/savecategory_modify_tittle"
                     android:layout_marginStart="15dp"
                     style="@style/TvHeaderTitleStyle"/>
             </LinearLayout>
@@ -46,12 +47,12 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/cancelModifyCategoryButton"
+                    android:id="@+id/cancelSaveCategoryButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     style="@style/BtnTernaryStyle"
-                    android:text="@string/modifycategory_cancel_action"
+                    android:text="@string/savecategory_cancel_action"
                     android:textColor="@color/secondary"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/modifycategory_category_title"
+                    android:text="@string/savecategory_category_title"
                     style="@style/TvBlackTagDecoratorStyle"/>
                 <EditText
                     android:id="@+id/categoryTitleEditText"
@@ -72,7 +73,7 @@
                     android:imeOptions="flagNoEnterAction"
                     android:importantForAutofill="no"
                     android:text="@{auctionCategory.title}"
-                    android:hint="@string/modifycategory_category_example"
+                    android:hint="@string/savecategory_category_example"
                     style="@style/EdTxtGenericStyle"/>
                 <TextView
                     android:id="@+id/categoryTitleErrorTextView"
@@ -80,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/TvErrorField"
-                    android:text="@string/modifycategory_category_title_error"
+                    android:text="@string/savecategory_category_title_error"
                     android:visibility="gone"/>
 
                 <TextView
@@ -88,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/modifycategory_category_description"
+                    android:text="@string/savecategory_category_description"
                     style="@style/TvBlackTagDecoratorStyle"/>
                 <EditText
                     android:id="@+id/categoryDescriptionEditText"
@@ -102,7 +103,7 @@
                     android:importantForAutofill="no"
                     android:scrollHorizontally="false"
                     android:text="@{auctionCategory.description}"
-                    android:hint="@string/modifycategory_category_description_example"
+                    android:hint="@string/savecategory_category_description_example"
                     style="@style/EdTxtGenericStyle"/>
                 <TextView
                     android:id="@+id/categoryDescriptionErrorTextView"
@@ -110,7 +111,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/TvErrorField"
-                    android:text="@string/modifycategory_category_description_error"
+                    android:text="@string/savecategory_category_description_error"
                     android:visibility="gone"/>
 
                 <TextView
@@ -118,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/modifycategory_keywords"
+                    android:text="@string/savecategory_keywords"
                     style="@style/TvBlackTagDecoratorStyle"/>
                 <EditText
                     android:id="@+id/categoryKeywordsEditText"
@@ -132,7 +133,7 @@
                     android:importantForAutofill="no"
                     android:scrollHorizontally="false"
                     android:text="@{auctionCategory.keywords}"
-                    android:hint="@string/modifycategory_keywords_example"
+                    android:hint="@string/savecategory_keywords_example"
                     style="@style/EdTxtGenericStyle"/>
                 <TextView
                     android:id="@+id/categoryKeywordsErrorTextView"
@@ -140,16 +141,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/TvErrorField"
-                    android:text="@string/modifycategory_category_keywords_error"
+                    android:text="@string/savecategory_category_keywords_error"
                     android:visibility="gone"/>
 
                 <Button
-                    android:id="@+id/modifyCategoryButton"
+                    android:id="@+id/saveCategoryButton"
                     android:layout_marginTop="24dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/BtnPrimaryStyle"
-                    android:text="@string/modifycategory_modify_action"/>
+                    android:text="@string/savecategory_modify_tittle"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

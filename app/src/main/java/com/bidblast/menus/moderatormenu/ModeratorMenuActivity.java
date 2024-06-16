@@ -12,6 +12,7 @@ import com.bidblast.databinding.ActivityMainMenuBinding;
 import com.bidblast.databinding.ActivityModeratorMenuBinding;
 import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.usecases.consultcreatedauctions.ConsultCreatedAuctionsFragment;
+import com.bidblast.usecases.registerandmodifycategory.AuctionCategoryFormFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 public class ModeratorMenuActivity extends AppCompatActivity {
@@ -24,7 +25,7 @@ public class ModeratorMenuActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         //TODO: show initial use case fragment
-        //showFragment(new InitialUseCaseFragment());
+        showFragment(new AuctionCategoryFormFragment());
         setupMenuNavigation();
     }
 

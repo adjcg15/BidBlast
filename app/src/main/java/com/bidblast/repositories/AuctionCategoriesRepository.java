@@ -6,8 +6,7 @@ import com.bidblast.api.requests.auctioncategory.AuctionCategoryBody;
 import com.bidblast.api.responses.auctioncategories.AuctionCategoryJSONResponse;
 import com.bidblast.lib.Session;
 import com.bidblast.model.AuctionCategory;
-import com.bidblast.repositories.businesserrors.ModifyAuctionCategoryCodes;
-import com.bidblast.repositories.businesserrors.RegisterAuctionCategoryCodes;
+import com.bidblast.repositories.businesserrors.SaveAuctionCategoryCodes;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -62,7 +61,7 @@ public class AuctionCategoriesRepository {
 
     public void registerAuctionCategory(
             AuctionCategoryBody auctionCategoryBody,
-            IEmptyProcessWithBusinessErrorListener<RegisterAuctionCategoryCodes> statusListener) {
+            IEmptyProcessWithBusinessErrorListener<SaveAuctionCategoryCodes> statusListener) {
         IAuctionCategoriesService categoriesService = ApiClient.getInstance().getAuctionCategoriesService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
 
@@ -73,7 +72,7 @@ public class AuctionCategoriesRepository {
                     statusListener.onSuccess();
                 } else {
                     if(response.code() == 401 || response.code() == 403) {
-                        statusListener.onError(RegisterAuctionCategoryCodes.UNAUTHORIZED);
+                        statusListener.onError(SaveAuctionCategoryCodes.UNAUTHORIZED);
                     } else if (response.code() == 400 && response.errorBody() != null) {
                         try {
                             String errorBodyString = response.errorBody().string();
@@ -83,25 +82,25 @@ public class AuctionCategoriesRepository {
                                 String apiErrorCode = jsonErrorBody.get("apiErrorCode").getAsString();
 
                                 if (apiErrorCode.equals("CRCT-400001")) {
-                                    statusListener.onError(RegisterAuctionCategoryCodes.TITLE_ALREADY_EXISTS);
+                                    statusListener.onError(SaveAuctionCategoryCodes.TITLE_ALREADY_EXISTS);
                                 } else {
-                                    statusListener.onError(RegisterAuctionCategoryCodes.UNKNOWN);
+                                    statusListener.onError(SaveAuctionCategoryCodes.UNKNOWN);
                                 }
                             } else {
-                                statusListener.onError(RegisterAuctionCategoryCodes.VALIDATION_ERROR);
+                                statusListener.onError(SaveAuctionCategoryCodes.VALIDATION_ERROR);
                             }
                         } catch (IOException ex) {
-                            statusListener.onError(RegisterAuctionCategoryCodes.UNKNOWN);
+                            statusListener.onError(SaveAuctionCategoryCodes.UNKNOWN);
                         }
                     } else {
-                        statusListener.onError(RegisterAuctionCategoryCodes.UNKNOWN);
+                        statusListener.onError(SaveAuctionCategoryCodes.UNKNOWN);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
-                statusListener.onError(RegisterAuctionCategoryCodes.SERVER_ERROR);
+                statusListener.onError(SaveAuctionCategoryCodes.SERVER_ERROR);
             }
         });
     }
@@ -109,7 +108,7 @@ public class AuctionCategoriesRepository {
     public void updateAuctionCategory(
             int idAuctionCategory,
             AuctionCategoryBody auctionCategoryBody,
-            IEmptyProcessWithBusinessErrorListener<ModifyAuctionCategoryCodes> statusListener
+            IEmptyProcessWithBusinessErrorListener<SaveAuctionCategoryCodes> statusListener
     ) {
         IAuctionCategoriesService categoriesService = ApiClient.getInstance().getAuctionCategoriesService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
@@ -121,7 +120,7 @@ public class AuctionCategoriesRepository {
                     statusListener.onSuccess();
                 } else {
                     if(response.code() == 401 || response.code() == 403) {
-                        statusListener.onError(ModifyAuctionCategoryCodes.UNAUTHORIZED);
+                        statusListener.onError(SaveAuctionCategoryCodes.UNAUTHORIZED);
                     } else if (response.code() == 400 && response.errorBody() != null) {
                         try {
                             String errorBodyString = response.errorBody().string();
@@ -131,27 +130,27 @@ public class AuctionCategoriesRepository {
                                 String apiErrorCode = jsonErrorBody.get("apiErrorCode").getAsString();
 
                                 if (apiErrorCode.equals("MCBI-400001")) {
-                                    statusListener.onError(ModifyAuctionCategoryCodes.CATEGORY_NOT_FOUND);
+                                    statusListener.onError(SaveAuctionCategoryCodes.CATEGORY_NOT_FOUND);
                                 } else if (apiErrorCode.equals("MCBI-400002")) {
-                                    statusListener.onError(ModifyAuctionCategoryCodes.TITLE_ALREADY_EXISTS);
+                                    statusListener.onError(SaveAuctionCategoryCodes.TITLE_ALREADY_EXISTS);
                                 } else {
-                                    statusListener.onError(ModifyAuctionCategoryCodes.UNKNOWN);
+                                    statusListener.onError(SaveAuctionCategoryCodes.UNKNOWN);
                                 }
                             } else {
-                                statusListener.onError(ModifyAuctionCategoryCodes.VALIDATION_ERROR);
+                                statusListener.onError(SaveAuctionCategoryCodes.VALIDATION_ERROR);
                             }
                         } catch (IOException ex) {
-                            statusListener.onError(ModifyAuctionCategoryCodes.UNKNOWN);
+                            statusListener.onError(SaveAuctionCategoryCodes.UNKNOWN);
                         }
                     } else {
-                        statusListener.onError(ModifyAuctionCategoryCodes.UNKNOWN);
+                        statusListener.onError(SaveAuctionCategoryCodes.UNKNOWN);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
-                statusListener.onError(ModifyAuctionCategoryCodes.SERVER_ERROR);
+                statusListener.onError(SaveAuctionCategoryCodes.SERVER_ERROR);
             }
         });
     }
