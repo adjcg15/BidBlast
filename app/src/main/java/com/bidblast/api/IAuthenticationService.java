@@ -14,6 +14,6 @@ public interface IAuthenticationService {
 
      @POST("sessions/")
      Call<UserLoginJSONResponse> login(@Body UserCredentialsBody credentials);
-     @POST("accounts/")
-     Call<UserRegisterJSONResponse> createAccount(@Body UserRegisterBody body);
+     @POST("users/")
+     Call<Void> createAccount(@Body UserRegisterBody body);
 }
