@@ -111,6 +111,7 @@
 
     <string name="consultcategories_searchbar_hint">Buscar categoría</string>
     <string name="consultcategories_edit_action">Editar</string>
+    <string name="consultcategories_create_category">Crear categoría</string>
 
     <string name="postitem_view_header">Crea tu subasta</string>
     <string name="postitem_title">Título <font color="#FF5C00">*</font></string>

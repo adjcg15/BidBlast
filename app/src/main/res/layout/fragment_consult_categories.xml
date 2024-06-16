@@ -24,6 +24,7 @@
                 android:src="@drawable/go_back_icon"
                 android:importantForAccessibility="no" />
             <EditText
+                android:id="@+id/searchCategoryBarEditText"
                 android:layout_height="wrap_content"
                 android:hint="@string/consultcategories_searchbar_hint"
                 android:layout_marginHorizontal="12dp"
@@ -33,6 +34,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp" />
             <ImageButton
+                android:id="@+id/searchCategoryButton"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/search_icon"
