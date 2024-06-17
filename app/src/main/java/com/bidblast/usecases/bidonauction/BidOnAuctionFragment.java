@@ -15,24 +15,33 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bidblast.R;
+import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentBidOnAuctionBinding;
 import com.bidblast.grpc.Client;
 import com.bidblast.global.CarouselViewModel;
 import com.bidblast.global.CarouselItemAdapter;
+import com.bidblast.lib.CurrencyToolkit;
+import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.ImageToolkit;
+import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
+import com.bidblast.repositories.ProcessErrorCodes;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
 public class BidOnAuctionFragment extends Fragment {
     private static final String ARG_ID_AUCTION = "id_auction";
     private int idAuction;
+    private Auction auction;
     private CarouselViewModel carouselViewModel;
+    private BidOnAuctionViewModel bidOnAuctionViewModel;
     private FragmentBidOnAuctionBinding binding;
     private CarouselItemAdapter carouselAdapter;
     private SurfaceView surfaceView;
@@ -70,6 +79,8 @@ public class BidOnAuctionFragment extends Fragment {
     ) {
         binding = FragmentBidOnAuctionBinding.inflate(inflater, container, false);
 
+        bidOnAuctionViewModel = new BidOnAuctionViewModel();
+
         carouselViewModel = new CarouselViewModel();
         mediaPlayer = new MediaPlayer();
 
@@ -77,12 +88,91 @@ public class BidOnAuctionFragment extends Fragment {
         binding.carouselFilesList.setAdapter(carouselAdapter);
         surfaceView = binding.playerSurfaceView;
 
+        loadAuction();
         setupGoBackButton();
         setupCarouselItemsListener();
         setupSelectedCarouselItemValueListener();
+        setupAuctionRequestListener();
         recoverAuctionHypermediaFiles();
 
         return binding.getRoot();
+    }
+
+    private void loadAuction() {
+        bidOnAuctionViewModel.recoverAuction(idAuction);
+    }
+
+    private void setupAuctionRequestListener() {
+        bidOnAuctionViewModel.getAuctionRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
+            if (requestStatus == RequestStatus.ERROR) {
+                ProcessErrorCodes errorCode = bidOnAuctionViewModel.getAuctionErrorCode().getValue();
+                if(errorCode == ProcessErrorCodes.AUTH_ERROR) {
+                    finishUserSession();
+                } else {
+                    showErrorLoadingAuction();
+                }
+            }
+
+            if (requestStatus == RequestStatus.DONE) {
+                auction = bidOnAuctionViewModel.getAuction().getValue();
+                showMainView();
+                showAuctionInformation();
+            }
+        });
+    }
+
+    private void showMainView() {
+        binding.mainViewScrollView.setVisibility(View.VISIBLE);
+        binding.errorLoadingAuctionLinearLayout.setVisibility(View.GONE);
+        binding.progressBarLinerLayout.setVisibility(View.GONE);
+    }
+
+    private void showAuctionInformation() {
+        if(auction.getAuctionState() != null) {
+            binding.articleStateTextView.setText(auction.getAuctionState().toUpperCase());
+        }
+        binding.auctionTitleTextView.setText(auction.getTitle());
+
+        if(auction.getLastOffer() != null) {
+            float lastOfferAmount = auction.getLastOffer().getAmount();
+            binding.auctionPriceTextView.setText(CurrencyToolkit.parseToMXN(lastOfferAmount));
+        } else {
+            binding.auctionPriceLabelTextView.setText(R.string.bidonauction_base_price);
+            binding.auctionPriceTextView.setText(CurrencyToolkit.parseToMXN(auction.getBasePrice()));
+        }
+
+        binding.auctionClosingDateTextView.setText(DateToolkit.parseToFullDateWithHour(auction.getClosesAt()));
+        binding.auctionDescriptionTextView.setText(auction.getDescription());
+
+        if(auction.getMinimumBid() != 0) {
+            binding.auctionMinimumBidTextView.setText(CurrencyToolkit.parseToMXN(auction.getMinimumBid()));
+        } else {
+            binding.auctionMinimumBidMessageTextView.setText(R.string.bidonauction_not_minimum_bid);
+            binding.auctionMinimumBidTextView.setVisibility(View.GONE);
+        }
+
+        showHypermediaFilesOnCarousel();
+    }
+
+    private void showHypermediaFilesOnCarousel() {
+        for (HypermediaFile file : auction.getMediaFiles()) {
+            if (file.getContent() == null || file.getContent().isEmpty()) {
+                String content = ImageToolkit.convertDrawableToBase64(requireContext(), R.drawable.video);
+                file.setContent(content);
+            }
+        }
+
+        carouselViewModel.setFilesList(auction.getMediaFiles());
+    }
+
+    private void showErrorLoadingAuction() {
+        binding.errorLoadingAuctionLinearLayout.setVisibility(View.VISIBLE);
+        binding.progressBarLinerLayout.setVisibility(View.GONE);
+        binding.mainViewScrollView.setVisibility(View.GONE);
+    }
+
+    private void finishUserSession() {
+
     }
 
     private void loadVideoOnSurfaceView(int videoId) {

@@ -144,6 +144,11 @@
     <string name="bidonauction_custom_bid_error">Debe ser un número y superar la puja mínima</string>
     <string name="bidonauction_bid_hint">Puja personalizada</string>
     <string name="bidonauction_make_offer">Hacer oferta</string>
+    <string name="bidonauction_last_offer">Última oferta</string>
+    <string name="bidonauction_base_price">Precio base</string>
+    <string name="bidonauction_closes_at">Cierra el: </string>
+    <string name="bidonauction_minimum_bid">El vendedor estableció una puja mínima de </string>
+    <string name="bidonauction_not_minimum_bid">El vendedor NO estableció una puja mínima</string>
 
     <string name="mainmenu_auctions">Subastas</string>
     <string name="mainmenu_purchases">Compras</string>

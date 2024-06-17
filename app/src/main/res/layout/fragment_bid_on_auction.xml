@@ -146,7 +146,7 @@
                             android:id="@+id/auctionPriceLabelTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Última oferta"
+                            android:text="@string/bidonauction_last_offer"
                             style="@style/TvSubtitleStyle"
                             android:textColor="@color/dark_gray"
                             android:layout_marginTop="16dp"/>
@@ -157,12 +157,20 @@
                             android:text="$15,700.00MXN"
                             style="@style/TvTitleStyle"
                             android:textColor="@color/primary"/>
-                        <TextView
-                            android:id="@+id/auctionClosingDateTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cierra el 17 de Junio de 2024 a las 13:09"
-                            style="@style/TvParagraphStyle"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bidonauction_closes_at"/>
+                            <TextView
+                                android:id="@+id/auctionClosingDateTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TvParagraphStyle"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -186,7 +194,7 @@
                                 android:id="@+id/auctionMinimumBidMessageTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="El vendedor estableció una puja mínima de "
+                                android:text="@string/bidonauction_minimum_bid"
                                 style="@style/TvParagraphStyle"/>
                             <TextView
                                 android:id="@+id/auctionMinimumBidTextView"

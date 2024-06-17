@@ -431,7 +431,7 @@ public class AuctionsRepository {
 
                         statusListener.onSuccess(auction);
                     } else {
-                        statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
                     }
                 } else {
                     statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
