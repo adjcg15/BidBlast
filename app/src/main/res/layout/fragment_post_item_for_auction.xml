@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".usecases.postitem.PostItemActivity"
+        tools:context=".usecases.postitemforauction.PostItemForAuctionViewModel"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,6 +57,7 @@
                 style="@style/TvBlackTagDecoratorStyle"/>
 
             <EditText
+                android:id="@+id/auctionTitleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"
@@ -68,14 +69,11 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/postitem_item_state"
                 style="@style/TvBlackTagDecoratorStyle"/>
-
-            <EditText
+            <Spinner
+                android:id="@+id/itemStatusSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
-                android:layout_marginBottom="15dp"
-                style="@style/EdTxtGenericStyle"/>
+                style="@style/SpinnerGenericStyle"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,12 +82,13 @@
                 style="@style/TvBlackTagDecoratorStyle"/>
 
             <EditText
+                android:id="@+id/itemDesctiptionEditText"
                 style="@style/EdTxtGenericStyle"
                 android:layout_width="match_parent"
                 android:layout_height="169dp"
                 android:importantForAutofill="no"
                 android:layout_marginBottom="15dp"
-                android:inputType="textEmailAddress" />
+                android:inputType="text" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,13 +97,15 @@
                 style="@style/TvBlackTagDecoratorStyle"/>
 
             <EditText
+                android:id="@+id/openingDaysEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"
-                android:inputType="textEmailAddress"
+                android:inputType="number"
                 android:layout_marginBottom="15dp"
                 style="@style/EdTxtGenericStyle"/>
             <Button
+                android:id="@+id/nextFragmentButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/BtnPrimaryStyle"
