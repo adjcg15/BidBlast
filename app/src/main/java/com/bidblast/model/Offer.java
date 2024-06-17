@@ -1,6 +1,7 @@
 package com.bidblast.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Offer {
     private int id;
@@ -47,5 +48,18 @@ public class Offer {
 
     public void setCustomer(User customer) {
         this.customer = customer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offer offer = (Offer) o;
+        return id == offer.id && Float.compare(offer.amount, amount) == 0 && Objects.equals(creationDate, offer.creationDate) && Objects.equals(customer, offer.customer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, amount, creationDate, customer);
     }
 }
