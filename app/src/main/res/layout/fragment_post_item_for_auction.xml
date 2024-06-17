@@ -72,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TvErrorField"
-                android:text="Ingrese un título para la subasta"
+                android:text="@string/postitem_title_error"
                 android:visibility="gone"/>
             <TextView
                 android:layout_width="match_parent"
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TvErrorField"
-                android:text="Seleccione el estado de su artículo"
+                android:text="@string/postitem_item_status_error"
                 android:visibility="gone"/>
             <TextView
                 android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TvErrorField"
-                android:text="Ingrese una descripción para su artículo"
+                android:text="@string/postitem_description_error"
                 android:visibility="gone"/>
             <TextView
                 android:layout_width="match_parent"
@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TvErrorField"
-                android:text="Ingrese los días de apertura de la subasta"
+                android:text="@string/postitem_opening_days_error"
                 android:visibility="gone"/>
             <Button
                 android:id="@+id/nextFragmentButton"

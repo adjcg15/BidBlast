@@ -132,6 +132,10 @@
     <string name="postitem_next">Siguiente</string>
     <string name="postitem_base_price">Precio base <font color="#FF5C00">*</font></string>
     <string name="postitem_media">Fotos y videos <font color="#FF5C00">*</font></string>
+    <string name="postitem_title_error">Ingrese un título para la subasta</string>
+    <string name="postitem_item_status_error">Seleccione el estado de su artículo</string>
+    <string name="postitem_description_error">Ingrese una descripción para su artículo</string>
+    <string name="postitem_opening_days_error">Ingrese los días de apertura de la subasta</string>
 
     <string name="bidonauction_title">Artículo en subasta</string>
 
