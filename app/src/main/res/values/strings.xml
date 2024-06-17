@@ -62,6 +62,13 @@
     <string name="getAuction_title">Ofertas en la subasta</string>
     <string name="getAuction_error_loading_title">¡Estamos teniendo problemas para cargar la subasta!</string>
     <string name="getAuction_error_loading_text">En este momento no podemos cargar la subasta, por favor intente en otro momento!</string>
+    <string name="consultoffers_all_offers_loaded">Todas las ofertas cargadas</string>
+    <string name="consultoffers_loading_offers">Cargando ofertas...</string>
+    <string name="consultoffers_error_loading_title">¡Estamos teniendo problemas con las ofertas!</string>
+    <string name="consultoffers_error_loading_text">En este momento no podemos cargar las ofertas, por favor intente en otro momento</string>
+    <string name="consultoffers_empty_offers_title">¡Aún no tienes ofertas!</string>
+    <string name="consultoffers_empty_offers_text">Por el momento no tienes ofertas en la subasta, las nuevas ofertas aparecerán aquí</string>
+    <string name="consultoffers_block_customer">Bloquear comprador</string>
 
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
     <string name="consultcompletedauctions_purchased_date_message">Comprado el %s</string>
