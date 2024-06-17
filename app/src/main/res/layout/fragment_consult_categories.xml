@@ -74,7 +74,7 @@
                 android:id="@+id/loadingCategoriesTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/consultcompletedauctions_loading_completed_auctions"
+                android:text="@string/consultcategories_loading_message"
                 android:layout_marginHorizontal="12dp"
                 android:textAlignment="center"
                 style="@style/TvSmallStyle"
