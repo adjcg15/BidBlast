@@ -1,6 +1,6 @@
 package com.bidblast.usecases.consultoffersonauction;
 
-import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,15 +13,12 @@ import com.bidblast.databinding.TemplateOfferDetailsBinding;
 import com.bidblast.lib.CurrencyToolkit;
 import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.ImageToolkit;
-import com.bidblast.model.Auction;
 import com.bidblast.model.Offer;
 import com.bidblast.model.User;
-import com.bidblast.usecases.consultcreatedauctions.CreatedAuctionDetailsAdapter;
 
 public class OfferDetailsAdapter extends ListAdapter<Offer, OfferDetailsAdapter.OfferViewHolder> {
 
     private OnAuctionClickListener onAuctionClickListener;
-    private Context context;
 
     public static final DiffUtil.ItemCallback<Offer> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Offer>() {
@@ -36,21 +33,16 @@ public class OfferDetailsAdapter extends ListAdapter<Offer, OfferDetailsAdapter.
                 }
             };
 
-    protected OfferDetailsAdapter(Context context) {
+    protected OfferDetailsAdapter() {
         super(DIFF_CALLBACK);
-        this.context = context;
-    }
-    protected OfferDetailsAdapter(@NonNull DiffUtil.ItemCallback<Offer> diffCallback) {
-        super(diffCallback);
     }
 
     @NonNull
     @Override
     public OfferDetailsAdapter.OfferViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        TemplateOfferDetailsBinding binding =
-                TemplateOfferDetailsBinding.inflate(LayoutInflater.from(parent.getContext()));
-
-        return new OfferDetailsAdapter.OfferViewHolder(binding);
+        TemplateOfferDetailsBinding binding = TemplateOfferDetailsBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new OfferViewHolder(binding);
     }
 
     @Override
@@ -86,6 +78,8 @@ public class OfferDetailsAdapter extends ListAdapter<Offer, OfferDetailsAdapter.
             binding.customerOfferDateTextView.setText(offerDate);
             String offerAmount = CurrencyToolkit.parseToMXN(offer.getAmount());
             binding.customerOfferAmountTextView.setText(offerAmount);
+
+            binding.executePendingBindings();
         }
     }
 

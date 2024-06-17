@@ -6,7 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.util.Log;
@@ -25,6 +28,7 @@ import com.bidblast.grpc.Client;
 import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
+import com.bidblast.model.Offer;
 import com.bidblast.repositories.ProcessErrorCodes;
 
 import java.io.BufferedOutputStream;
@@ -39,9 +43,11 @@ public class OffersOnAuctionFragment extends Fragment {
     private FragmentOffersOnAuctionBinding binding;
     private CarouselViewModel carouselViewModel;
     private OffersOnAuctionViewModel offersOnAuctionViewModel;
+    private static final int TOTAL_OFFERS_TO_LOAD = 5;
     private static final String ARG_ID_AUCTION = "id_auction";
     private int idAuction;
     private CarouselItemAdapter carouselAdapter;
+    private OfferDetailsAdapter offerDetailsAdapter;
     private SurfaceView surfaceView;
     private MediaPlayer mediaPlayer;
     private static final String TAG = "VideoFragment";
@@ -79,22 +85,36 @@ public class OffersOnAuctionFragment extends Fragment {
         mediaPlayer = new MediaPlayer();
 
         carouselAdapter = new CarouselItemAdapter(carouselViewModel);
+        offerDetailsAdapter = new OfferDetailsAdapter();
+        offerDetailsAdapter.setOnAuctionClickListener(this::handleBlockUserFragment);
         binding.carouselFilesList.setAdapter(carouselAdapter);
+        binding.offersListRecyclerView.setAdapter(offerDetailsAdapter);
         surfaceView = binding.playerSurfaceView;
-        getAuction();
+        loadAuction();
+        loadOffers();
         setupGoBackButton();
         setupCarouselItemsListener();
+        setupOffersListListener();
         setupSelectedCarouselItemValueListener();
         auctionStatusListener();
+        setupOffersListStatusListener();
+        setupStillOffersLeftToLoadListener();
+        setupRecyclerViewScrollListener();
 
         return binding.getRoot();
     }
 
-    private void getAuction() {
-        if (offersOnAuctionViewModel.getAuctionRequestStatus().getValue() != RequestStatus.LOADING) {
-            offersOnAuctionViewModel.recoverAuction(idAuction);
-            binding.progressBarLinerLayout.setVisibility(View.VISIBLE);
-        }
+    private void loadAuction() {
+        offersOnAuctionViewModel.recoverAuction(idAuction);
+        binding.progressBarLinerLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void loadOffers() {
+        offersOnAuctionViewModel.recoverOffers(idAuction, TOTAL_OFFERS_TO_LOAD);
+    }
+
+    private void handleBlockUserFragment(int idProfile) {
+        //TODO
     }
 
     private void showMediaFilesSection() {
@@ -266,6 +286,76 @@ public class OffersOnAuctionFragment extends Fragment {
                     binding.showedFileImageView.setVisibility(View.GONE);
                     loadVideoOnSurfaceView(selectedFile.getId());
                     binding.progressBarVideo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    private void setupOffersListStatusListener() {
+        offersOnAuctionViewModel.getOffersListRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
+            binding.emptyOffersMessageLinearLayout.setVisibility(View.GONE);
+
+            if(requestStatus == RequestStatus.LOADING) {
+                binding.loadingOffersTextView.setVisibility(View.VISIBLE);
+            } else {
+                binding.loadingOffersTextView.setVisibility(View.GONE);
+
+                if(requestStatus == RequestStatus.DONE) {
+                    binding.errorLoadingOffersLinearLayout.setVisibility(View.GONE);
+
+                    List<Offer> offers = offersOnAuctionViewModel.getOffersList().getValue();
+                    if(offers != null && offers.size() != 0) {
+                        binding.offersListRecyclerView.setVisibility(View.VISIBLE);
+                        binding.emptyOffersMessageLinearLayout.setVisibility(View.GONE);
+                    } else {
+                        binding.offersListRecyclerView.setVisibility(View.GONE);
+                        binding.emptyOffersMessageLinearLayout.setVisibility(View.VISIBLE);
+                        binding.allOffersLoadedTextView.setVisibility(View.GONE);
+                    }
+                } else if (requestStatus == RequestStatus.ERROR) {
+                    binding.errorLoadingOffersLinearLayout.setVisibility(View.VISIBLE);
+                    binding.offersListRecyclerView.setVisibility(View.GONE);
+                    binding.allOffersLoadedTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    private void setupStillOffersLeftToLoadListener() {
+        offersOnAuctionViewModel.getStillOffersLeftToLoad().observe(getViewLifecycleOwner(), stillOffersLeftToLoad -> {
+            if(stillOffersLeftToLoad) {
+                binding.allOffersLoadedTextView.setVisibility(View.GONE);
+            } else {
+                binding.allOffersLoadedTextView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void setupOffersListListener() {
+        offersOnAuctionViewModel.getOffersList().observe(getViewLifecycleOwner(), offersList -> {
+            offerDetailsAdapter.submitList(offersList);
+        });
+    }
+
+    private void setupRecyclerViewScrollListener() {
+        binding.offersListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    int visibleItemCount = layoutManager.getChildCount();
+                    int totalItemCount = layoutManager.getItemCount();
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0
+                            && totalItemCount >= TOTAL_OFFERS_TO_LOAD
+                            && Boolean.TRUE.equals(offersOnAuctionViewModel.getStillOffersLeftToLoad().getValue())
+                            && offersOnAuctionViewModel.getOffersListRequestStatus().getValue() != RequestStatus.LOADING) {
+                        loadOffers();
+                    }
                 }
             }
         });
