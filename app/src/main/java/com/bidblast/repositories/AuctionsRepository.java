@@ -411,6 +411,7 @@ public class AuctionsRepository {
                                 file.setId(fileRes.getId());
                                 file.setName(fileRes.getName());
                                 file.setContent(fileRes.getContent());
+                                file.setMimeType(fileRes.getMimeType());
 
                                 mediaFiles.add(file);
                             }

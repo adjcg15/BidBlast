@@ -86,7 +86,7 @@ public class CompletedAuctionDetailsAdapter extends ListAdapter<Auction, Complet
             binding.auctionMinimumBidTitleTextView.setVisibility(View.GONE);
             binding.auctionMinimumBidTextView.setVisibility(View.GONE);
             binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.GONE);
-            binding.viewMadeOffersButton.setVisibility(View.GONE);
+            binding.seeMadeOffersButton.setVisibility(View.GONE);
 
             binding.auctionSecondTitleTextView.setText(auction.getTitle());
             HypermediaFile auctionImage = auction.getMediaFiles().get(0);

@@ -4,13 +4,15 @@ public class AuctionMediaFileJSONResponse {
     private int id;
     private String content;
     private String name;
+    private String mimeType;
 
     public AuctionMediaFileJSONResponse() { }
 
-    public AuctionMediaFileJSONResponse(int id, String content, String name) {
+    public AuctionMediaFileJSONResponse(int id, String content, String name, String mimeType) {
         this.id = id;
         this.content = content;
         this.name = name;
+        this.mimeType = mimeType;
     }
 
     public int getId() {
@@ -35,5 +37,13 @@ public class AuctionMediaFileJSONResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 }

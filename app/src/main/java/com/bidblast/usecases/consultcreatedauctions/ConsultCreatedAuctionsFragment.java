@@ -20,6 +20,8 @@ import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentConsultCompletedAuctionsBinding;
 import com.bidblast.databinding.FragmentConsultCreatedAuctionsBinding;
 import com.bidblast.model.Auction;
+import com.bidblast.usecases.bidonauction.BidOnAuctionFragment;
+import com.bidblast.usecases.consultoffersonauction.OffersOnAuctionFragment;
 import com.bidblast.usecases.consultsalesstatistics.ConsultSalesStatisticsFragment;
 
 import java.util.List;
@@ -50,6 +52,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentConsultCreatedAuctionsBinding.inflate(inflater, container, false);
         createdAuctionDetailsAdapter = new CreatedAuctionDetailsAdapter(getContext());
+        createdAuctionDetailsAdapter.setOnAuctionClickListener(this::handleOpenBidOnAuctionFragment);
         binding.createdAuctionsRecyclerView.setAdapter(createdAuctionDetailsAdapter);
 
         setupCreatedAuctionsListStatusListener();
@@ -84,6 +87,16 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
         searchQuery = binding.searchBarEditText.getText().toString();
 
         viewModel.recoverAuctions(searchQuery, TOTAL_AUCTIONS_TO_LOAD);
+    }
+
+    private void handleOpenBidOnAuctionFragment(int idAuction) {
+        OffersOnAuctionFragment offersOnAuctionFragment = OffersOnAuctionFragment.newInstance(idAuction);
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.mainViewFragmentLayout, offersOnAuctionFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void setupCreatedAuctionsListStatusListener() {
