@@ -122,7 +122,6 @@
     <string name="consultcategories_error_loading_text">Por el momento no ha sido posible recuperar las categorías de productos, intente nuevamente más tarde</string>
     <string name="consultcategories_empty_search_title">¡Sin coincidencias!</string>
     <string name="consultcategories_empty_search_text">No hemos encontrado una categoría de producto que coincida con su criterio de búsqueda</string>
-    <string name="consultcategories_progressmessage">Cargando categorias de productos</string>
 
 
     <string name="postitem_view_header">Crea tu subasta</string>
@@ -160,5 +159,4 @@
     <string name="signup_password_rules_error_message">La contraseña no cumple con las reglas establecidas</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>
