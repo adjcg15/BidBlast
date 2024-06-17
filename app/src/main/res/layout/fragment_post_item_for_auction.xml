@@ -6,10 +6,12 @@
     <data>
 
     </data>
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".usecases.postitemforauction.PostItemForAuctionViewModel"
         android:orientation="vertical">
         <LinearLayout
@@ -38,6 +40,7 @@
             android:layout_marginLeft="12dp"
             android:orientation="vertical">
             <Button
+                android:id="@+id/cancelCreateAuctionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -64,6 +67,14 @@
                 android:layout_marginBottom="15dp"
                 style="@style/EdTxtGenericStyle"/>
             <TextView
+                android:id="@+id/auctionTitleErrorTextView"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TvErrorField"
+                android:text="Ingrese un título para la subasta"
+                android:visibility="gone"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -73,7 +84,16 @@
                 android:id="@+id/itemStatusSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="18dp"
                 style="@style/SpinnerGenericStyle"/>
+            <TextView
+                android:id="@+id/itemStatusErrorTextView"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TvErrorField"
+                android:text="Seleccione el estado de su artículo"
+                android:visibility="gone"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,10 +105,22 @@
                 android:id="@+id/itemDesctiptionEditText"
                 style="@style/EdTxtGenericStyle"
                 android:layout_width="match_parent"
-                android:layout_height="169dp"
+                android:layout_height="132dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="top|start"
                 android:importantForAutofill="no"
-                android:layout_marginBottom="15dp"
-                android:inputType="text" />
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:overScrollMode="always"
+                android:scrollbars="vertical" />
+            <TextView
+                android:id="@+id/itemDescriptionErrorTextView"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TvErrorField"
+                android:text="Ingrese una descripción para su artículo"
+                android:visibility="gone"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,14 +136,23 @@
                 android:inputType="number"
                 android:layout_marginBottom="15dp"
                 style="@style/EdTxtGenericStyle"/>
+            <TextView
+                android:id="@+id/openingDaysErrorTextView"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TvErrorField"
+                android:text="Ingrese los días de apertura de la subasta"
+                android:visibility="gone"/>
             <Button
                 android:id="@+id/nextFragmentButton"
                 android:layout_width="match_parent"
+                android:layout_marginTop="12dp"
                 android:layout_height="wrap_content"
                 style="@style/BtnPrimaryStyle"
                 android:text="@string/postitem_next"
                 android:layout_marginBottom="50dp"/>
-
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
 </layout>
