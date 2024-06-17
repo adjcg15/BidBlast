@@ -141,6 +141,9 @@
     <string name="postitem_media">Fotos y videos <font color="#FF5C00">*</font></string>
 
     <string name="bidonauction_title">Artículo en subasta</string>
+    <string name="bidonauction_custom_bid_error">Debe ser un número y superar la puja mínima</string>
+    <string name="bidonauction_bid_hint">Puja personalizada</string>
+    <string name="bidonauction_make_offer">Hacer oferta</string>
 
     <string name="mainmenu_auctions">Subastas</string>
     <string name="mainmenu_purchases">Compras</string>
@@ -164,6 +167,4 @@
     <string name="signup_password_rules">• Al menos una letra mayúscula\n• Al menos un número\n• Al menos un carácter especial\n• Extensión mínima de 8 caracteres\n</string>
     <string name="signup_password_mismatch_title">Contraseña con formato inválido</string>
     <string name="signup_password_rules_error_message">La contraseña no cumple con las reglas establecidas</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
