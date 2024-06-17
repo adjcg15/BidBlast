@@ -33,8 +33,6 @@ public class PostItemFragment2 extends Fragment {
             String itemDescription = viewModel.getItemDescription().getValue();
             Integer openingDays = viewModel.getOpeningDays().getValue();
             Integer itemStatus = viewModel.getItemStatus().getValue();
-
-            // Aquí puedes mandar los datos a la base de datos
         });
 
         return view;

@@ -116,6 +116,13 @@
     <string name="consultcategories_searchbar_hint">Buscar categoría</string>
     <string name="consultcategories_edit_action">Editar</string>
     <string name="consultcategories_create_category">Crear categoría</string>
+    <string name="consultcategories_empty_title">¡Aún no existen categorías!</string>
+    <string name="consultcategories_empty_text">Por el momento no existen categorías de productos registradas</string>
+    <string name="consultcategories_error_loading_title">¡Estamos teniendo problemas!\n</string>
+    <string name="consultcategories_error_loading_text">Por el momento no ha sido posible recuperar las categorías de productos, intente nuevamente más tarde</string>
+    <string name="consultcategories_empty_search_title">¡Sin coincidencias!</string>
+    <string name="consultcategories_empty_search_text">No hemos encontrado una categoría de producto que coincida con su criterio de búsqueda</string>
+
 
     <string name="postitem_view_header">Crea tu subasta</string>
     <string name="postitem_title">Título <font color="#FF5C00">*</font></string>
@@ -150,5 +157,6 @@
     <string name="signup_password_rules">• Al menos una letra mayúscula\n• Al menos un número\n• Al menos un carácter especial\n• Extensión mínima de 8 caracteres\n</string>
     <string name="signup_password_mismatch_title">Contraseña con formato inválido</string>
     <string name="signup_password_rules_error_message">La contraseña no cumple con las reglas establecidas</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
