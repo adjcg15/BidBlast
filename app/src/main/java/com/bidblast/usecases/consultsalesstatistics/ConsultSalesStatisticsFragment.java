@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
@@ -94,7 +95,8 @@ public class ConsultSalesStatisticsFragment extends Fragment {
 
     private void setupDiscardModifyCategoryButton() {
         binding.goBackImageButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.popBackStack();
         });
     }
 
