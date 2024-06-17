@@ -7,61 +7,67 @@
     </data>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/gray_rounded_border"
-        android:layout_marginBottom="12dp"
-        android:padding="1dp">
-        <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.6"
-            android:paddingEnd="8dp"
-            android:paddingStart="16dp"
-            android:paddingVertical="12dp"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/titleCategoryTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                style="@style/TvTitleStyle"
-                android:textColor="@color/dark_primary"
-                android:layout_marginBottom="12dp"/>
-            <TextView
-                android:id="@+id/categoryDescriptionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                style="@style/TvParagraphStyle"
-                android:textColor="@color/dark_gray"
-                android:layout_marginBottom="10dp"/>
+            android:orientation="horizontal"
+            android:background="@drawable/gray_rounded_border"
+            android:layout_marginBottom="12dp"
+            android:padding="1dp">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp">
-                <HorizontalScrollView
+                android:layout_weight="0.6"
+                android:paddingEnd="8dp"
+                android:paddingStart="16dp"
+                android:paddingVertical="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleCategoryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    style="@style/TvTitleStyle"
+                    android:textColor="@color/dark_primary"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/categoryDescriptionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    style="@style/TvParagraphStyle"
+                    android:textColor="@color/dark_gray"
+                    android:layout_marginBottom="10dp" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="none">
-                    <LinearLayout
-                        android:id="@+id/categoryKeywordsLinearLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-                    </LinearLayout>
-                </HorizontalScrollView>
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/categoryKeywordsLinearLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"/>
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/editCategoryButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    style="@style/BtnTernaryStyle"
+                    android:text="@string/consultcategories_edit_action"
+                    android:textColor="@color/secondary" />
             </LinearLayout>
-            <Button
-                android:id="@+id/editCategoryButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                style="@style/BtnTernaryStyle"
-                android:text="@string/consultcategories_edit_action"
-                android:textColor="@color/secondary"/>
-        </LinearLayout>
     </LinearLayout>
 </layout>
