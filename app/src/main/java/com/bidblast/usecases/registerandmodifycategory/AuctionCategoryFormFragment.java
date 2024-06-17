@@ -156,7 +156,7 @@ public class AuctionCategoryFormFragment extends Fragment {
     private void setupSaveAuctionCategoryStatusListener() {
         viewModel.getSaveAuctionCategoryRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             if (requestStatus == RequestStatus.DONE) {
-                String successMessage = getString(R.string.savecategory_success_toast_message);
+                String successMessage = getString(R.string.savecategory_success_message);
                 Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override

@@ -2,13 +2,14 @@ package com.bidblast.global;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.bidblast.model.HypermediaFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarouselViewModel {
+public class CarouselViewModel extends ViewModel {
     private final MutableLiveData<List<HypermediaFile>> filesList =
         new MutableLiveData<>(new ArrayList<>());
 

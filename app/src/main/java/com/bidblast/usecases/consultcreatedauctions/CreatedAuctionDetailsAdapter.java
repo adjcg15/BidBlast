@@ -24,6 +24,7 @@ import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.model.User;
 import com.bidblast.usecases.consultcompletedauctions.CompletedAuctionDetailsAdapter;
+import com.bidblast.usecases.searchauction.AuctionDetailsAdapter;
 
 public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAuctionDetailsAdapter.CreatedAuctionViewHolder> {
     private Context context;
@@ -33,6 +34,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
     private static final String STATE_CLOSED = "CERRADA";
     private static final String STATE_CONCRETE = "CONCRETADA";
     private static final String STATE_FINISHED = "FINALIZADA";
+    private OnAuctionClickListener onAuctionClickListener;
 
     public static final DiffUtil.ItemCallback<Auction> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<Auction>() {
@@ -58,7 +60,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
         TemplateAuctionDetailsWithStateBinding binding =
                 TemplateAuctionDetailsWithStateBinding.inflate(LayoutInflater.from(parent.getContext()));
 
-        return new CreatedAuctionDetailsAdapter.CreatedAuctionViewHolder(binding);
+        return new CreatedAuctionViewHolder(binding);
     }
 
     @Override
@@ -77,7 +79,11 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
         });
     }
 
-    public static class CreatedAuctionViewHolder extends RecyclerView.ViewHolder {
+    public void setOnAuctionClickListener(OnAuctionClickListener onAuctionClickListener) {
+        this.onAuctionClickListener = onAuctionClickListener;
+    }
+
+    public class CreatedAuctionViewHolder extends RecyclerView.ViewHolder {
         private final TemplateAuctionDetailsWithStateBinding binding;
 
         public CreatedAuctionViewHolder(@NonNull TemplateAuctionDetailsWithStateBinding binding) {
@@ -89,6 +95,10 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             HypermediaFile auctionImage = auction.getMediaFiles().get(0);
 
             setTemplateElementsVisible();
+
+            binding.seeMadeOffersButton.setOnClickListener(v -> {
+                onAuctionClickListener.onSeeOffersOnAuctionButtonClick(auction.getId());
+            });
 
             binding.auctionMainImageImageView.setImageBitmap(ImageToolkit.parseBitmapFromBase64(auctionImage.getContent()));
 
@@ -121,7 +131,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.VISIBLE);
             binding.auctionLastOfferTitleTextView.setVisibility(View.VISIBLE);
             binding.auctionFinalAmountTextView.setVisibility(View.VISIBLE);
-            binding.viewMadeOffersButton.setVisibility(View.VISIBLE);
+            binding.seeMadeOffersButton.setVisibility(View.VISIBLE);
         }
 
         private void loadPublishedAuctionInformation(Auction auction) {
@@ -151,7 +161,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
                 );
                 binding.auctionLastOfferTitleTextView.setVisibility(View.GONE);
                 binding.auctionFinalAmountTextView.setVisibility(View.GONE);
-                binding.viewMadeOffersButton.setVisibility(View.GONE);
+                binding.seeMadeOffersButton.setVisibility(View.GONE);
             }
         }
 
@@ -160,7 +170,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionFirstTitleTextView.setVisibility(View.GONE);
             binding.auctionRejectedStateMessageTextView.setVisibility(View.GONE);
             binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.GONE);
-            binding.viewMadeOffersButton.setVisibility(View.GONE);
+            binding.seeMadeOffersButton.setVisibility(View.GONE);
             binding.auctionSecondTitleTextView.setText(auction.getTitle());
             binding.auctionLastOfferTitleTextView.setText(
                     R.string.consultcreatedauctions_auction_base_price_title
@@ -187,7 +197,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionMinimumBidTextView.setVisibility(View.GONE);
             binding.auctionLastOfferTitleTextView.setVisibility(View.GONE);
             binding.auctionFinalAmountTextView.setVisibility(View.GONE);
-            binding.viewMadeOffersButton.setVisibility(View.GONE);
+            binding.seeMadeOffersButton.setVisibility(View.GONE);
 
             binding.auctionSecondTitleTextView.setText(auction.getTitle());
             binding.auctionDescriptionTextView.setText(
@@ -211,7 +221,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionMinimumBidTextView.setVisibility(View.GONE);
             binding.auctionLastOfferTitleTextView.setVisibility(View.GONE);
             binding.auctionFinalAmountTextView.setVisibility(View.GONE);
-            binding.viewMadeOffersButton.setVisibility(View.GONE);
+            binding.seeMadeOffersButton.setVisibility(View.GONE);
             binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.GONE);
 
             binding.auctionFirstTitleTextView.setText(auction.getTitle());
@@ -236,7 +246,7 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
             binding.auctionMinimumBidTitleTextView.setVisibility(View.GONE);
             binding.auctionMinimumBidTextView.setVisibility(View.GONE);
             binding.auctionWithoutOffersStateMessageTextView.setVisibility(View.GONE);
-            binding.viewMadeOffersButton.setVisibility(View.GONE);
+            binding.seeMadeOffersButton.setVisibility(View.GONE);
 
             binding.auctionSecondTitleTextView.setText(auction.getTitle());
             HypermediaFile auctionImage = auction.getMediaFiles().get(0);
@@ -267,5 +277,9 @@ public class CreatedAuctionDetailsAdapter extends ListAdapter<Auction, CreatedAu
 
             binding.auctionFinalAmountTextView.setText(CurrencyToolkit.parseToMXN(lastOffer.getAmount()));
         }
+    }
+
+    interface OnAuctionClickListener {
+        void onSeeOffersOnAuctionButtonClick(int idAuction);
     }
 }
