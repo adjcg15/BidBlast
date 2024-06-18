@@ -7,114 +7,187 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.InputFilter;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.api.requests.auctions.AuctionCreateBody;
+import com.bidblast.databinding.FragmentPostItemForAuction2Binding;
+import com.bidblast.databinding.FragmentPostItemForAuctionBinding;
 import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.grpc.Server;
+
 public class CreateAuctionFragment2 extends Fragment {
     private static final int MAX_IMAGES = 7;
     private static final int MAX_IMAGE_SIZE_MB = 2;
     private static final int MAX_VIDEO_SIZE_MB = 5;
+    private static final String MIME_TYPE_VIDEO = "video/mp4";
 
     private CreateAuctionViewModel viewModel;
     private MediaPagerAdapter mediaPagerAdapter;
     private ActivityResultLauncher<Intent> selectMediaLauncher;
-    private View rootView;
     private ProgressBar progressBar;
-    private int itemStatus; // To store the passed itemStatus
+    private int itemStatus;
+
+    private EditText basePriceEditText;
+    private TextView basePriceErrorTextView;
+    private TextView selectMultimediaErrorTextView;
+    private TextView selectedBidOption;
+
+    private TextView oneHundredOfferTextView;
+    private TextView oneHundredFiftyOfferTextView;
+    private TextView twoHundredOfferTextView;
+    private TextView twoHundredfiftyOfferTextView;
+    private TextView threeHundredOfferTextView;
+
+    private FragmentPostItemForAuction2Binding binding;
+    private File selectedVideoFile;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         selectMediaLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null) {
-                            List<Uri> selectedUris = new ArrayList<>();
-                            if (data.getClipData() != null) {
-                                int count = data.getClipData().getItemCount();
-                                for (int i = 0; i < count; i++) {
-                                    Uri mediaUri = data.getClipData().getItemAt(i).getUri();
-                                    selectedUris.add(mediaUri);
-                                }
-                            } else if (data.getData() != null) {
-                                Uri mediaUri = data.getData();
-                                selectedUris.add(mediaUri);
-                            }
-                            handleSelectedMedia(selectedUris);
-                        }
-                    }
-                }
+                this::handleActivityResult
         );
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_post_item_for_auction2, container, false);
+        binding = FragmentPostItemForAuction2Binding.inflate(inflater, container, false);
+        initializeViews();
+        setupViewModel();
+        setupMediaPagerAdapter();
+        setupObservers();
+        retrieveArguments();
+        setupClickListeners();
+        return binding.getRoot();
+    }
 
+    private void initializeViews() {
+        progressBar = binding.progressBar;
+        basePriceEditText = binding.basePriceEditText;
+        basePriceErrorTextView = binding.basePriceErrorTextView;
+        selectMultimediaErrorTextView = binding.selectMultimediaErrorTextView;
+
+        oneHundredOfferTextView = binding.oneHundredOfferTextView;
+        oneHundredFiftyOfferTextView = binding.oneHundredFiftyOfferTextView;
+        twoHundredOfferTextView = binding.twoHundredOfferTextView;
+        twoHundredfiftyOfferTextView = binding.twoHundredfiftyOfferTextView;
+        threeHundredOfferTextView = binding.threeHundredOfferTextView;
+
+        setTextLimiter(basePriceEditText, 5);
+    }
+
+    private void setupViewModel() {
         viewModel = new ViewModelProvider(requireActivity()).get(CreateAuctionViewModel.class);
-        progressBar = rootView.findViewById(R.id.progressBar);
+    }
 
-        ViewPager2 viewPagerMedia = rootView.findViewById(R.id.viewPagerMedia);
-
+    private void setupMediaPagerAdapter() {
         List<Object> initialItems = new ArrayList<>();
         initialItems.add(R.drawable.multimedia_icon);
-
         mediaPagerAdapter = new MediaPagerAdapter(initialItems, requireContext());
-        viewPagerMedia.setAdapter(mediaPagerAdapter);
+        binding.viewPagerMedia.setAdapter(mediaPagerAdapter);
+    }
 
-        rootView.findViewById(R.id.addMediaButton).setOnClickListener(v -> openGalleryForMedia());
-
+    private void setupObservers() {
         viewModel.getSelectedImages().observe(getViewLifecycleOwner(), uris -> updateMediaAdapter());
         viewModel.getSelectedVideo().observe(getViewLifecycleOwner(), uri -> updateMediaAdapter());
+    }
 
+    private void retrieveArguments() {
         Bundle args = getArguments();
         if (args != null) {
             viewModel.setAuctionTitle(args.getString("auctionTitle"));
             viewModel.setItemDescription(args.getString("itemDescription"));
             viewModel.setOpeningDays(args.getInt("openingDays"));
-            itemStatus = args.getInt("itemStatus"); // Get the passed itemStatus
+            itemStatus = args.getInt("itemStatus");
         }
+    }
 
-        Button createAuctionButton = rootView.findViewById(R.id.createAuctionButton);
-        createAuctionButton.setOnClickListener(v -> createAuction());
+    private void setupClickListeners() {
+        binding.addMediaButton.setOnClickListener(v -> openGalleryForMedia());
+        binding.createAuctionButton.setOnClickListener(v -> createAuction());
 
-        return rootView;
+        oneHundredOfferTextView.setOnClickListener(v -> selectBidOption(oneHundredOfferTextView));
+        oneHundredFiftyOfferTextView.setOnClickListener(v -> selectBidOption(oneHundredFiftyOfferTextView));
+        twoHundredOfferTextView.setOnClickListener(v -> selectBidOption(twoHundredOfferTextView));
+        twoHundredfiftyOfferTextView.setOnClickListener(v -> selectBidOption(twoHundredfiftyOfferTextView));
+        threeHundredOfferTextView.setOnClickListener(v -> selectBidOption(threeHundredOfferTextView));
+    }
+
+    private void handleActivityResult(ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+            List<Uri> selectedUris = extractUrisFromIntent(result.getData());
+            handleSelectedMedia(selectedUris);
+        }
+    }
+
+    private List<Uri> extractUrisFromIntent(Intent data) {
+        List<Uri> selectedUris = new ArrayList<>();
+        if (data.getClipData() != null) {
+            int count = data.getClipData().getItemCount();
+            for (int i = 0; i < count; i++) {
+                selectedUris.add(data.getClipData().getItemAt(i).getUri());
+            }
+        } else if (data.getData() != null) {
+            selectedUris.add(data.getData());
+        }
+        return selectedUris;
+    }
+
+    private void setTextLimiter(EditText editText, int maxLength) {
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+    }
+
+    private void selectBidOption(TextView selectedView) {
+        if (selectedBidOption != null) {
+            selectedBidOption.setBackgroundResource(R.drawable.black_rounded_border);
+        }
+        selectedBidOption = selectedView;
+        selectedBidOption.setBackgroundResource(R.drawable.blue_rounded_border);
     }
 
     private void openGalleryForMedia() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        String[] mimeTypes = {"image/*", "video/*"};
+        String[] mimeTypes = {"image/jpeg", "image/png", "video/mp4"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         selectMediaLauncher.launch(intent);
@@ -125,60 +198,60 @@ public class CreateAuctionFragment2 extends Fragment {
         boolean videoSelected = viewModel.getSelectedVideo().getValue() != null;
 
         showProgressBar();
-
         for (Uri mediaUri : mediaUris) {
-            String mimeType = getActivity().getContentResolver().getType(mediaUri);
-            if (mimeType != null && mimeType.startsWith("image")) {
-                if (imageCount < MAX_IMAGES) {
-                    if (isValidImageSize(mediaUri)) {
-                        viewModel.addImage(mediaUri);
-                        imageCount++;
-                    } else {
-                        Toast.makeText(getContext(), "Cada imagen debe ser menor a 2MB", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Ya has seleccionado el máximo de 7 imágenes", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-            } else if (mimeType != null && mimeType.startsWith("video")) {
-                if (!videoSelected) {
-                    if (isValidVideoSize(mediaUri)) {
-                        viewModel.setSelectedVideo(mediaUri);
-                        videoSelected = true;
-                    } else {
-                        Toast.makeText(getContext(), "El video debe ser menor a 5MB", Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Ya has seleccionado un video", Toast.LENGTH_SHORT).show();
-                    break;
-                }
-            }
+            handleMediaUri(mediaUri, imageCount, videoSelected);
         }
-
         hideProgressBar();
         updateMediaAdapter();
     }
 
-    private boolean isValidImageSize(Uri imageUri) {
-        return isValidFileSize(imageUri, MAX_IMAGE_SIZE_MB);
+    private void handleMediaUri(Uri mediaUri, int imageCount, boolean videoSelected) {
+        String mimeType = getActivity().getContentResolver().getType(mediaUri);
+        if (mimeType != null && mimeType.startsWith("image")) {
+            handleImageUri(mediaUri, imageCount);
+        } else if (mimeType != null && mimeType.equals("video/mp4")) {
+            handleVideoUri(mediaUri, videoSelected);
+        }
     }
 
-    private boolean isValidVideoSize(Uri videoUri) {
-        return isValidFileSize(videoUri, MAX_VIDEO_SIZE_MB);
+    private void handleImageUri(Uri mediaUri, int imageCount) {
+        if (imageCount < MAX_IMAGES) {
+            if (isValidFileSize(mediaUri, MAX_IMAGE_SIZE_MB)) {
+                viewModel.addImage(mediaUri);
+            } else {
+                showToast("Cada imagen debe ser menor a 2MB");
+            }
+        } else {
+            showToast("Ya has seleccionado el máximo de 7 imágenes");
+        }
+    }
+
+    private void handleVideoUri(Uri mediaUri, boolean videoSelected) {
+        if (!videoSelected) {
+            if (isValidFileSize(mediaUri, MAX_VIDEO_SIZE_MB)) {
+                viewModel.setSelectedVideo(mediaUri);
+                selectedVideoFile = new File(getRealPathFromURI(mediaUri));
+            } else {
+                showToast("El video debe ser menor a 5MB");
+            }
+        } else {
+            showToast("Ya has seleccionado un video");
+        }
     }
 
     private boolean isValidFileSize(Uri fileUri, int maxSizeMb) {
-        Cursor returnCursor = getActivity().getContentResolver().query(fileUri, null, null, null, null);
-        int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
-        if (sizeIndex == -1) {
-            returnCursor.close();
-            return false;
+        try (Cursor returnCursor = getActivity().getContentResolver().query(fileUri, null, null, null, null)) {
+            if (returnCursor == null) return false;
+            int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+            if (sizeIndex == -1) return false;
+            returnCursor.moveToFirst();
+            long size = returnCursor.getLong(sizeIndex);
+            return size <= maxSizeMb * 1024 * 1024;
         }
-        returnCursor.moveToFirst();
-        long size = returnCursor.getLong(sizeIndex);
-        returnCursor.close();
-        return size <= maxSizeMb * 1024 * 1024;
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void showProgressBar() {
@@ -195,115 +268,120 @@ public class CreateAuctionFragment2 extends Fragment {
         if (videoUri != null) {
             items.add(new VideoItem(videoUri));
         }
-
         if (items.isEmpty()) {
             items.add(R.drawable.multimedia_icon);
         }
-
         mediaPagerAdapter.updateMedia(items);
 
-        if (viewModel.getSelectedImages().getValue().size() >= MAX_IMAGES && viewModel.getSelectedVideo().getValue() != null) {
-            rootView.findViewById(R.id.addMediaButton).setVisibility(View.GONE);
-        } else {
-            rootView.findViewById(R.id.addMediaButton).setVisibility(View.VISIBLE);
-        }
+        boolean maxMediaSelected = viewModel.getSelectedImages().getValue().size() >= MAX_IMAGES && videoUri != null;
+        binding.addMediaButton.setVisibility(maxMediaSelected ? View.GONE : View.VISIBLE);
     }
 
     private void createAuction() {
-        String title = viewModel.getAuctionTitle().getValue();
-        String description = viewModel.getItemDescription().getValue();
-        int openingDays = viewModel.getOpeningDays().getValue();
-        double basePrice = viewModel.getBasePrice().getValue() != null ? viewModel.getBasePrice().getValue() : 0.0;
-        double minimumBid = viewModel.getMinimumBid().getValue() != null ? viewModel.getMinimumBid().getValue() : 0.0;
-        List<Uri> images = viewModel.getSelectedImages().getValue();
-        Uri video = viewModel.getSelectedVideo().getValue();
-
-        if (title == null || title.isEmpty()) {
-            showAlert("El título es obligatorio");
-            return;
-        }
-
-        if (description == null || description.isEmpty()) {
-            showAlert("La descripción es obligatoria");
-            return;
-        }
-
-        if (openingDays <= 0) {
-            showAlert("Los días disponibles deben ser mayores a cero");
-            return;
-        }
-
-        if (images.isEmpty() && video == null) {
-            showAlert("Debes subir al menos una imagen o un video");
-            return;
-        }
-
+        if (!validateInputFields()) return;
         showProgressBar();
-
-        List<HypermediaFile> uploadedMediaFiles = new ArrayList<>();
-        for (Uri imageUri : images) {
-            uploadedMediaFiles.add(new HypermediaFile(getFileName(imageUri), convertFileToBase64(imageUri), "image/jpeg"));
-        }
-        if (video != null) {
-            uploadedMediaFiles.add(new HypermediaFile(getFileName(video), convertFileToBase64(video), "video/mp4"));
-        }
-
-        AuctionCreateBody auctionBody = new AuctionCreateBody(
-                title, description, basePrice, minimumBid, openingDays, itemStatus, uploadedMediaFiles
-        );
-
+        AuctionCreateBody auctionBody = createAuctionBody();
         AuctionsRepository auctionsRepository = new AuctionsRepository();
         auctionsRepository.createAuction(auctionBody, new IProcessStatusListener<Auction>() {
             @Override
             public void onSuccess(Auction auction) {
-                getActivity().runOnUiThread(() -> {
-                    hideProgressBar();
-                    sendVideos(auction.getId());
-                    showAlert("Subasta creada con éxito");
-                });
+                handleAuctionCreationSuccess(auction);
             }
 
             @Override
             public void onError(ProcessErrorCodes errorStatus) {
-                getActivity().runOnUiThread(() -> {
-                    hideProgressBar();
-                    showAlert("Error al crear la subasta. Intenta de nuevo.");
-                });
+                handleAuctionCreationError();
             }
         });
     }
 
+    private boolean validateInputFields() {
+        if (viewModel.getSelectedImages().getValue().isEmpty() && viewModel.getSelectedVideo().getValue() == null) {
+            selectMultimediaErrorTextView.setVisibility(View.VISIBLE);
+            return false;
+        }
+        selectMultimediaErrorTextView.setVisibility(View.GONE);
+
+        String basePriceStr = basePriceEditText.getText().toString().trim();
+        if (TextUtils.isEmpty(basePriceStr) || Double.parseDouble(basePriceStr) <= 0) {
+            basePriceErrorTextView.setVisibility(View.VISIBLE);
+            return false;
+        }
+        basePriceErrorTextView.setVisibility(View.GONE);
+        return true;
+    }
+
+    private AuctionCreateBody createAuctionBody() {
+        String title = viewModel.getAuctionTitle().getValue();
+        String description = viewModel.getItemDescription().getValue();
+        int openingDays = viewModel.getOpeningDays().getValue();
+        double basePrice = Double.parseDouble(basePriceEditText.getText().toString().trim());
+        Double minimumBid = selectedBidOption != null ? Double.parseDouble(selectedBidOption.getText().toString().replace("$", "")) : null;
+
+        List<HypermediaFile> uploadedMediaFiles = new ArrayList<>();
+        for (Uri imageUri : viewModel.getSelectedImages().getValue()) {
+            uploadedMediaFiles.add(new HypermediaFile(convertFileToBase64(imageUri), getFileName(imageUri), "image/jpg"));
+        }
+
+        return new AuctionCreateBody(title, description, basePrice, minimumBid, openingDays, itemStatus, uploadedMediaFiles);
+    }
+
+    private void handleAuctionCreationSuccess(Auction auction) {
+        getActivity().runOnUiThread(() -> {
+            hideProgressBar();
+            showAlert("Subasta creada con éxito");
+            if (selectedVideoFile != null) {
+                //sendVideoByGrpc(selectedVideoFile, auction.getId());
+            }
+        });
+    }
+
+    private void handleAuctionCreationError() {
+        getActivity().runOnUiThread(() -> {
+            hideProgressBar();
+            showAlert("Error al crear la subasta. Intenta de nuevo.");
+        });
+    }
+
     private String getFileName(Uri uri) {
-        String result = null;
-        if (uri.getScheme().equals("content")) {
-            try (Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (nameIndex != -1) {
-                        result = cursor.getString(nameIndex);
-                    }
+        try (Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (nameIndex != -1) {
+                    return cursor.getString(nameIndex);
                 }
             }
         }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
-        }
-        return result;
+        String path = uri.getPath();
+        int cut = path != null ? path.lastIndexOf('/') : -1;
+        return cut != -1 ? path.substring(cut + 1) : null;
     }
 
     private String convertFileToBase64(Uri uri) {
-        try (InputStream inputStream = getContext().getContentResolver().openInputStream(uri)) {
-            byte[] bytes = new byte[inputStream.available()];
-            inputStream.read(bytes);
-            return Base64.encodeToString(bytes, Base64.NO_WRAP);
+        try (InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, bytesRead);
+            }
+            return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Video.Media.DATA};
+        try (Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                return cursor.getString(column_index);
+            }
+        }
+        return null;
     }
 
     private void showAlert(String message) {
@@ -312,9 +390,5 @@ public class CreateAuctionFragment2 extends Fragment {
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
-    }
-
-    private void sendVideos(int auctionId) {
-        // Implementa la lógica para enviar el video al servidor usando gRPC
     }
 }
