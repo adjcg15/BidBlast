@@ -171,4 +171,6 @@
     <string name="signup_password_rules">• Al menos una letra mayúscula\n• Al menos un número\n• Al menos un carácter especial\n• Extensión mínima de 8 caracteres\n</string>
     <string name="signup_password_mismatch_title">Contraseña con formato inválido</string>
     <string name="signup_password_rules_error_message">La contraseña no cumple con las reglas establecidas</string>
+    <string name="postitem_base_price_error">Ingrese el precio base de la subasta</string>
+    <string name="postitem_minium_bid">Puja mínima</string>
 </resources>

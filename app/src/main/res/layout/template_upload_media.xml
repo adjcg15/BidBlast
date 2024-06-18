@@ -7,6 +7,7 @@
         android:id="@+id/mediaImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:scaleType="centerCrop" />
 
     <ImageView
@@ -15,5 +16,6 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:visibility="gone"
+        android:layout_gravity="center"
         android:src="@drawable/video" />
 </FrameLayout>
