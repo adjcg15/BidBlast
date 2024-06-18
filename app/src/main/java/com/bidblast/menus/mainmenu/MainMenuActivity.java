@@ -11,7 +11,7 @@ import com.bidblast.R;
 import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.databinding.ActivityMainMenuBinding;
 import com.bidblast.usecases.consultcreatedauctions.ConsultCreatedAuctionsFragment;
-import com.bidblast.usecases.postitemforauction.PostItemFragment;
+import com.bidblast.usecases.createauction.CreateAuctionFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -43,7 +43,7 @@ public class MainMenuActivity extends AppCompatActivity {
             } else if (itemId == salesMenuItemId) {
                 showFragment(new ConsultCreatedAuctionsFragment());
             } else if (itemId == newAuctionMenuItemId) {
-                showFragment(new PostItemFragment());
+                showFragment(new CreateAuctionFragment());
             }
 
             return true;
