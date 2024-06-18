@@ -175,94 +175,6 @@ public class BidOnAuctionFragment extends Fragment {
 
     }
 
-    private void loadVideoOnSurfaceView(int videoId) {
-        mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-            //TODO Manejo de mensaje cuando hay error en el stream
-            return true;
-        });
-
-        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
-
-        client = new Client(new Handler(msg -> {
-            if (msg.what == 1) {
-                List<byte[]> videoFragments = (List<byte[]>) msg.obj;
-                for (byte[] videoChunk : videoFragments) {
-                    addVideoChunk(videoChunk);
-                }
-            }
-            return true;
-        }));
-
-        client.streamVideo(videoId);
-
-        try {
-            tempFile = File.createTempFile("video", ".avi", requireContext().getCacheDir());
-            bufferedOutputStream = new BufferedOutputStream(Files.newOutputStream(tempFile.toPath()));
-        } catch (IOException e) {
-            Log.e(TAG, "Error creating temp file", e);
-        }
-
-        SurfaceHolder surfaceHolder = surfaceView.getHolder();
-        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(@NonNull SurfaceHolder holder) {
-                mediaPlayer.setDisplay(holder);
-            }
-
-            @Override
-            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
-            }
-
-            @Override
-            public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-            }
-        });
-    }
-
-    private void addVideoChunk(byte[] videoChunk) {
-        if (videoChunk != null && videoChunk.length > 0) {
-            try {
-                bufferedOutputStream.flush();
-                bufferedOutputStream.write(videoChunk);
-                if (!mediaPlayer.isPlaying() && mediaPlayer.getCurrentPosition() == 0) {
-                    mediaPlayer.reset();
-                    mediaPlayer.setDataSource(tempFile.getAbsolutePath());
-                    mediaPlayer.prepareAsync();
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "Error writing video chunk to file", e);
-            }
-        } else {
-            Log.e(TAG, "Received empty video chunk or null");
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        deleteVideoInCache();
-    }
-
-    private void deleteVideoInCache() {
-        if (mediaPlayer != null) {
-            mediaPlayer.reset();
-        }
-        if (Client.getChannelStatus() && client != null) {
-            client.shutdown();
-            client = null;
-        }
-        if (bufferedOutputStream != null) {
-            try {
-                bufferedOutputStream.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Error closing BufferedOutputStream", e);
-            }
-        }
-        if (tempFile != null && tempFile.exists()) {
-            tempFile.delete();
-        }
-    }
-
     private void setupGoBackButton() {
         binding.goBackImageView.setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
@@ -305,9 +217,6 @@ public class BidOnAuctionFragment extends Fragment {
     }
 
     private void setupSelectedCarouselItemValueListener() {
-        //Cada vez que una imagen o video se selecciona en el carrusel, el view model es avisado,
-        //por lo que aquí directamente se maneja lo que se desee hacer con ese nuevo elemento seleccionado.
-        //En este caso, solo mostrarlo en la vista principal
         carouselViewModel.getSelectedFile().observe(getViewLifecycleOwner(), selectedFile -> {
             if(selectedFile != null) {
                 String hypermediaType = selectedFile.getMimeType();
@@ -317,16 +226,114 @@ public class BidOnAuctionFragment extends Fragment {
                         ImageToolkit.parseBitmapFromBase64(selectedFile.getContent())
                     );
                     binding.showedFileImageView.setVisibility(View.VISIBLE);
-                    // Siempre que se seleccione una imagen, se debe eliminar el video en caso de haberse
-                    // solicitado antes
                     deleteVideoInCache();
                     binding.playerSurfaceView.setVisibility(View.GONE);
                 } else if (hypermediaType.startsWith("video")) {
                     binding.showedFileImageView.setVisibility(View.GONE);
-                    binding.playerSurfaceView.setVisibility(View.VISIBLE);
-                    loadVideoOnSurfaceView(61);
+                    loadVideoOnSurfaceView(selectedFile.getId());
+                    binding.progressBarVideo.setVisibility(View.VISIBLE);
                 }
             }
         });
+    }
+
+    private void loadVideoOnSurfaceView(int videoId) {
+        mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+            //TODO Manejo de mensaje cuando hay error en el stream
+            return true;
+        });
+
+        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
+        mediaPlayer.setOnCompletionListener(mp -> {
+            mediaPlayer.reset();
+            try {
+                mediaPlayer.setDataSource(tempFile.getAbsolutePath());
+                mediaPlayer.prepareAsync();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                Log.e(TAG, "Error setting data source or preparing MediaPlayer", e);
+            }
+        });
+
+        client = new Client(new Handler(msg -> {
+            if (msg.what == 1) {
+                List<byte[]> videoFragments = (List<byte[]>) msg.obj;
+                for (byte[] videoChunk : videoFragments) {
+                    addVideoChunk(videoChunk);
+                }
+            }
+            return true;
+        }));
+
+        client.streamVideo(videoId);
+
+        try {
+            tempFile = File.createTempFile("video", ".mp4", requireContext().getCacheDir());
+            bufferedOutputStream = new BufferedOutputStream(Files.newOutputStream(tempFile.toPath()));
+        } catch (IOException e) {
+            Log.e(TAG, "Error creating temp file", e);
+        }
+
+        SurfaceHolder surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(@NonNull SurfaceHolder holder) {
+                mediaPlayer.setDisplay(holder);
+            }
+
+            @Override
+            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+            }
+
+            @Override
+            public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+            }
+        });
+    }
+
+    private void addVideoChunk(byte[] videoChunk) {
+        if (videoChunk != null && videoChunk.length > 0) {
+            try {
+                binding.progressBarVideo.setVisibility(View.GONE);
+                binding.playerSurfaceView.setVisibility(View.VISIBLE);
+                bufferedOutputStream.flush();
+                bufferedOutputStream.write(videoChunk);
+                if (!mediaPlayer.isPlaying() && mediaPlayer.getCurrentPosition() == 0) {
+                    mediaPlayer.reset();
+                    mediaPlayer.setDataSource(tempFile.getAbsolutePath());
+                    mediaPlayer.prepareAsync();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Error writing video chunk to file", e);
+            }
+        } else {
+            Log.e(TAG, "Received empty video chunk or null");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        deleteVideoInCache();
+    }
+
+    private void deleteVideoInCache() {
+        if (mediaPlayer != null) {
+            mediaPlayer.reset();
+        }
+        if (Client.getChannelStatus() && client != null) {
+            client.shutdown();
+            client = null;
+        }
+        if (bufferedOutputStream != null) {
+            try {
+                bufferedOutputStream.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Error closing BufferedOutputStream", e);
+            }
+        }
+        if (tempFile != null && tempFile.exists()) {
+            tempFile.delete();
+        }
     }
 }
