@@ -1,5 +1,7 @@
 package com.bidblast.usecases.consultoffersonauction;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -12,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
@@ -31,6 +35,8 @@ import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.repositories.businesserrors.SaveAuctionCategoryCodes;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -99,6 +105,7 @@ public class OffersOnAuctionFragment extends Fragment {
         setupSelectedCarouselItemValueListener();
         setupAuctionStatusListener();
         setupOffersListStatusListener();
+        setupBlockUserStatusListener();
         setupStillOffersLeftToLoadListener();
         setupRecyclerViewScrollListener();
 
@@ -115,7 +122,41 @@ public class OffersOnAuctionFragment extends Fragment {
     }
 
     private void handleBlockUserFragment(int idProfile) {
-        //TODO
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Confirmación");
+        builder.setMessage("¿Estás seguro de que deseas bloquear al comprador?");
+        builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (offersOnAuctionViewModel.getBlockUserRequestStatus().getValue() != RequestStatus.LOADING) {
+                    offersOnAuctionViewModel.blockUser(idProfile, idAuction);
+                };
+            }
+        });
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void setupBlockUserStatusListener() {
+        offersOnAuctionViewModel.getBlockUserRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
+            if (requestStatus == RequestStatus.DONE) {
+                String successMessage = getString(R.string.consultoffers_block_user_success_message);
+                Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
+                offersOnAuctionViewModel.clearOffersList();
+                offerDetailsAdapter = new OfferDetailsAdapter();
+                loadOffers();
+            }
+
+            if (requestStatus == RequestStatus.ERROR) {
+                Snackbar.make(binding.getRoot(), "No se pudo bloquear al comprador", Snackbar.LENGTH_SHORT).show();
+                /*SaveAuctionCategoryCodes errorCode = offersOnAuctionViewModel.get().getValue();
+
+                if(errorCode != null) {
+                    showSaveAuctionCategoryError(errorCode);
+                }*/
+            }
+        });
     }
 
     private void setupAuctionStatusListener() {
@@ -258,9 +299,13 @@ public class OffersOnAuctionFragment extends Fragment {
 
     private void setupGoBackButton() {
         binding.goBackImageView.setOnClickListener(v -> {
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.popBackStack();
+            goToPreviousWindow();
         });
+    }
+
+    private void goToPreviousWindow() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        fragmentManager.popBackStack();
     }
 
     private void setupCarouselItemsListener() {
@@ -332,7 +377,13 @@ public class OffersOnAuctionFragment extends Fragment {
 
     private void setupOffersListListener() {
         offersOnAuctionViewModel.getOffersList().observe(getViewLifecycleOwner(), offersList -> {
-            offerDetailsAdapter.submitList(offersList);
+            if (offersList != null) {
+                offerDetailsAdapter.submitList(offersList);
+            } else {
+                String successMessage = "Ya no hay ofertas, será redirigido a la ventana anterior";
+                Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()).postDelayed(this::goToPreviousWindow, 4000);
+            }
         });
     }
 

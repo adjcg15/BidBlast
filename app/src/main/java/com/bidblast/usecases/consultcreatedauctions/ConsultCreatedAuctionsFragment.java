@@ -42,15 +42,10 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ConsultCreatedAuctionsViewModel.class);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentConsultCreatedAuctionsBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(ConsultCreatedAuctionsViewModel.class);
         createdAuctionDetailsAdapter = new CreatedAuctionDetailsAdapter(getContext());
         createdAuctionDetailsAdapter.setOnAuctionClickListener(this::handleOpenOffersOnAuctionFragment);
         binding.createdAuctionsRecyclerView.setAdapter(createdAuctionDetailsAdapter);

@@ -128,16 +128,19 @@ public class AuctionCategoryFormFragment extends Fragment {
 
     private void setupCancelSaveCategoryButton() {
         binding.cancelSaveCategoryButton.setOnClickListener(v -> {
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.popBackStack();
+            goToPreviousWindow();
         });
     }
 
     private void setupDiscardSaveCategoryButton() {
         binding.discardModifyAuctionCategoryButton.setOnClickListener(v -> {
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.popBackStack();
+            goToPreviousWindow();
         });
+    }
+
+    private void goToPreviousWindow() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        fragmentManager.popBackStack();
     }
 
     private boolean validateFields(){
@@ -159,12 +162,7 @@ public class AuctionCategoryFormFragment extends Fragment {
             if (requestStatus == RequestStatus.DONE) {
                 String successMessage = getString(R.string.savecategory_success_message);
                 Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        requireActivity().getSupportFragmentManager().popBackStack();
-                    }
-                }, 4000);
+                new Handler(Looper.getMainLooper()).postDelayed(this::goToPreviousWindow, 4000);
             }
 
             if (requestStatus == RequestStatus.ERROR) {
