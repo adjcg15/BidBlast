@@ -97,6 +97,7 @@ public class BidOnAuctionFragment extends Fragment {
         setupFirstDefaultOfferClick();
         setupSecondDefaultOfferClick();
         setupThirdDefaultOfferClick();
+        setupCustomBidClick();
 
         return binding.getRoot();
     }
@@ -105,8 +106,39 @@ public class BidOnAuctionFragment extends Fragment {
         bidOnAuctionViewModel.recoverAuction(idAuction);
     }
 
+    private void setupCustomBidClick() {
+        binding.customBidButton.setOnClickListener(v -> {
+            unselectDefaultOfferButtons();
+            startCustomOffer();
+        });
+    }
+
+    private void unselectDefaultOfferButtons() {
+        binding.firstDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        binding.firstDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
+        binding.secondDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        binding.secondDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
+        binding.thirdDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        binding.thirdDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
+    }
+
+    private void startCustomOffer() {
+        bidOnAuctionViewModel.startCustomOffer();
+        binding.customBidButton.setVisibility(View.GONE);
+        binding.customBidEditText.setVisibility(View.VISIBLE);
+    }
+
+    private void startDefaultOffer() {
+        binding.customBidEditText.setText("");
+        binding.customBidEditText.setVisibility(View.GONE);
+        binding.customBidButton.setVisibility(View.VISIBLE);
+        bidOnAuctionViewModel.startDefaultOffer();
+    }
+
     private void setupFirstDefaultOfferClick() {
         binding.firstDefaultOfferTextView.setOnClickListener(v -> {
+            startDefaultOffer();
+
             binding.firstDefaultOfferTextView.setBackgroundResource(R.drawable.filled_black_rounded_border);
             binding.firstDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.white));
             binding.secondDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
@@ -120,6 +152,8 @@ public class BidOnAuctionFragment extends Fragment {
 
     private void setupSecondDefaultOfferClick() {
         binding.secondDefaultOfferTextView.setOnClickListener(v -> {
+            startDefaultOffer();
+
             binding.firstDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
             binding.firstDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
             binding.secondDefaultOfferTextView.setBackgroundResource(R.drawable.filled_black_rounded_border);
@@ -133,6 +167,8 @@ public class BidOnAuctionFragment extends Fragment {
 
     private void setupThirdDefaultOfferClick() {
         binding.thirdDefaultOfferTextView.setOnClickListener(v -> {
+            startDefaultOffer();
+
             binding.firstDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
             binding.firstDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
             binding.secondDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);

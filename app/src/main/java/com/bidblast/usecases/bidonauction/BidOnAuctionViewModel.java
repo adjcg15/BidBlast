@@ -16,6 +16,7 @@ public class BidOnAuctionViewModel extends ViewModel {
     private final MutableLiveData<ProcessErrorCodes> auctionErrorCode = new MutableLiveData<>();
     private final MutableLiveData<Float> defaultBaseOffer = new MutableLiveData<>();
     private final MutableLiveData<Float> currentOffer = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isCreatingCustomOffer = new MutableLiveData<>(false);
 
     public LiveData<Auction> getAuction() { return auction; }
 
@@ -37,6 +38,18 @@ public class BidOnAuctionViewModel extends ViewModel {
 
     public void setCurrentOffer(float currentOffer) {
         this.currentOffer.setValue(currentOffer);
+    }
+
+    public LiveData<Boolean> getIsCreatingCustomOffer() { return isCreatingCustomOffer; }
+
+    public void startCustomOffer() {
+        this.currentOffer.setValue(0f);
+        this.isCreatingCustomOffer.setValue(true);
+    }
+
+    public void startDefaultOffer() {
+        this.currentOffer.setValue(0f);
+        this.isCreatingCustomOffer.setValue(false);
     }
 
     public void recoverAuction(int idAuction) {
