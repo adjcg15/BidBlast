@@ -6,117 +6,316 @@
     <data>
 
     </data>
-
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".usecases.evaluateauction.EvaluateAuctionFragment">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/progressBarLinerLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/dark_primary"
-                android:padding="12dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/goBackImageView"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/go_back_icon"
-                    android:importantForAccessibility="no" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Evaluar subasta"
-                    style="@style/TvTitleStyle"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="8dp"/>
-            </LinearLayout>
-            <Spinner
-                android:id="@+id/itemStatusSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:layout_margin="12dp"
-                style="@style/SpinnerGenericStyle"/>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/playerConstraintlayout"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="12dp"
-                android:visibility="gone"
-                android:background="@drawable/carousel_item_background"
-                android:clipChildren="true"
-                android:padding="1dp">
+                android:layout_height="731dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ProgressBar
-                    android:id="@+id/progressBarVideo"
-                    android:visibility="gone"
                     style="?android:attr/progressBarStyleLarge"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-                <ImageView
-                    android:id="@+id/showedFileImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_launcher_background"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_max="350dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"/>
-
-                <com.google.android.exoplayer2.ui.PlayerView
-                    android:id="@+id/playerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:resize_mode="fill"
-                    android:visibility="gone"/>
-
-                <SurfaceView
-                    android:id="@+id/playerSurfaceView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <HorizontalScrollView
-                android:id="@+id/hypermediaFilesHorizontalScrollView"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <!-- Main Content -->
+            <LinearLayout
+                android:id="@+id/mainContentLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:visibility="gone">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/carouselFilesList"
-                    android:layout_width="wrap_content"
+                <!-- Menu bar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:background="@color/dark_primary"
+                    android:padding="12dp"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/goBackImageView"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/go_back_icon"
+                        android:importantForAccessibility="no" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Evaluar artículo"
+                        style="@style/TvTitleStyle"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="8dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingHorizontal="12dp"
-                    tools:itemCount="7"
-                    tools:listitem="@layout/template_carousel_item"/>
-            </HorizontalScrollView>
+                    android:paddingTop="30dp"
+                    android:orientation="vertical">
+                    <Spinner
+                        android:id="@+id/auctionItemsSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/SpinnerGenericStyle"
+                        android:layout_marginBottom="4dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="1dp"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/playerConstraintlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:layout_margin="12dp"
+                        android:background="@drawable/carousel_item_background"
+                        android:clipChildren="true"
+                        android:padding="1dp">
+
+                        <ProgressBar
+                            android:id="@+id/progressBarVideo"
+                            android:visibility="gone"
+                            style="?android:attr/progressBarStyleLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/showedFileImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_launcher_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_max="350dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="gone"/>
+
+                        <com.google.android.exoplayer2.ui.PlayerView
+                            android:id="@+id/playerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:resize_mode="fill"
+                            android:visibility="gone"/>
+
+                        <SurfaceView
+                            android:id="@+id/playerSurfaceView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="gone"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <HorizontalScrollView
+                        android:id="@+id/hypermediaFilesHorizontalScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/carouselFilesList"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp"
+                            tools:itemCount="7"
+                            tools:listitem="@layout/template_carousel_item"/>
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="12dp"
+                    android:paddingTop="40dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/auctionTitleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Apple iPhone 15 (256 GB) - Azul"
+                        style="@style/TvTitleStyle"/>
+
+                    <TextView
+                        android:id="@+id/auctionPriceLabelTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Última oferta"
+                        style="@style/TvSubtitleStyle"
+                        android:textColor="@color/dark_gray"
+                        android:layout_marginTop="16dp"/>
+
+                    <TextView
+                        android:id="@+id/auctionPriceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$15,700.00MXN"
+                        style="@style/TvTitleStyle"
+                        android:textColor="@color/primary"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Días de apertura de subasta:"
+                            style="@style/TvParagraphStyle"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginEnd="8dp"/>
+                        <TextView
+                            android:id="@+id/auctionOpenningDaysTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5"
+                            android:textColor="@color/dark_gray"
+                            style="@style/TvSubtitleStyle"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Estado del artículo:"
+                            style="@style/TvParagraphStyle"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginEnd="8dp"/>
+                        <TextView
+                            android:id="@+id/auctionItemStateTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nuevo"
+                            android:textColor="@color/dark_gray"
+                            style="@style/TvSubtitleStyle"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Puja mínima establecida:"
+                            style="@style/TvParagraphStyle"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginEnd="8dp"/>
+                        <TextView
+                            android:id="@+id/actionMiniumBidTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$15,600.00MXN"
+                            android:textColor="@color/dark_gray"
+                            style="@style/TvSubtitleStyle"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Categoría:"
+                            style="@style/TvSubtitleStyle"
+                            android:textColor="@color/dark_gray"/>
+                        <Button
+                            android:id="@+id/cancelCreateAuctionButton"
+                            style="@style/BtnTernaryStyle"
+                            android:layout_width="179dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginLeft="110dp"
+                            android:text="Nueva categoría"
+                            android:textColor="@color/secondary" />
+                    </LinearLayout>
+
+                    <Spinner
+                        android:id="@+id/auctionCategorySpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/SpinnerGenericStyle"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Acerca del artículo"
+                        style="@style/TvSubtitleStyle"
+                        android:textColor="@color/dark_gray"
+                        android:layout_marginTop="16dp"/>
+                    <TextView
+                        android:id="@+id/auctionDescriptionTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Genial para todas tus fotos y música. Ha estado conmigo un año, así que tiene algunos rasguños leves, pero funciona perfectamente. Me encantaría quedármelo, pero necesito el dinero para algo más. Si estás interesado en tener un iPhone chulo sin tener que pagar el precio completo de uno nuevo, ¡aquí tienes tu oportunidad!"
+                        style="@style/TvParagraphStyle"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"/>
+
+                    <Button
+                        android:id="@+id/aproveAuctionButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        style="@style/BtnPrimaryStyle"
+                        android:text="Aprobar"/>
+
+                    <Button
+                        android:id="@+id/denyAuctionButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/secondary_button_background"
+                        android:textColor="@color/dark_primary"
+                        android:text="Denegar"
+                        android:layout_marginBottom="10dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Error Layout -->
             <LinearLayout
                 android:id="@+id/errorLoadingAuctionLinearLayout"
                 android:layout_width="match_parent"
@@ -148,38 +347,7 @@
                     android:layout_marginTop="8dp"
                     android:textAlignment="center"/>
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/progressBarLinerLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:gravity="center">
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="?android:attr/progressBarStyleLarge" />
-            </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
-            android:layout_marginLeft="12dp"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/titleAuctionTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Pantalla LG Uhd Ai Thinq 50"
-                style="@style/TvTitleStyle"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Precio base"
-                style="@style/TvSubtitleStyle"/>
         </LinearLayout>
-        </LinearLayout>
-    </FrameLayout>
+    </ScrollView>
 </layout>
+
