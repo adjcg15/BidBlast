@@ -14,6 +14,8 @@ public class BidOnAuctionViewModel extends ViewModel {
     private final MutableLiveData<Auction> auction = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> auctionRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<ProcessErrorCodes> auctionErrorCode = new MutableLiveData<>();
+    private final MutableLiveData<Float> defaultBaseOffer = new MutableLiveData<>();
+    private final MutableLiveData<Float> currentOffer = new MutableLiveData<>();
 
     public LiveData<Auction> getAuction() { return auction; }
 
@@ -23,6 +25,18 @@ public class BidOnAuctionViewModel extends ViewModel {
 
     public LiveData<RequestStatus> getAuctionRequestStatus() {
         return auctionRequestStatus;
+    }
+
+    public LiveData<Float> getDefaultBaseOffer() { return defaultBaseOffer; }
+
+    public void setDefaultBaseOffer(float defaultBaseOffer) {
+        this.defaultBaseOffer.setValue(defaultBaseOffer);
+    }
+
+    public LiveData<Float> getCurrentOffer() { return currentOffer; }
+
+    public void setCurrentOffer(float currentOffer) {
+        this.currentOffer.setValue(currentOffer);
     }
 
     public void recoverAuction(int idAuction) {

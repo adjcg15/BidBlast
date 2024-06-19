@@ -189,13 +189,14 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp">
+                            android:layout_marginTop="20dp">
                             <TextView
                                 android:id="@+id/auctionMinimumBidMessageTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/bidonauction_minimum_bid"
-                                style="@style/TvParagraphStyle"/>
+                                style="@style/TvParagraphStyle"
+                                android:paddingRight="5dp"/>
                             <TextView
                                 android:id="@+id/auctionMinimumBidTextView"
                                 android:layout_width="wrap_content"
@@ -213,7 +214,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
                                 <TextView
-                                    android:id="@+id/oneHundredOfferTextView"
+                                    android:id="@+id/firstDefaultOfferTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$100"
@@ -223,7 +224,7 @@
                                     android:textSize="16sp"
                                     android:background="@drawable/black_rounded_border" />
                                 <TextView
-                                    android:id="@+id/twoHundredOfferTextView"
+                                    android:id="@+id/secondDefaultOfferTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$200"
@@ -233,7 +234,7 @@
                                     android:textSize="16sp"
                                     android:background="@drawable/black_rounded_border" />
                                 <TextView
-                                    android:id="@+id/threeHundredOfferTextView"
+                                    android:id="@+id/thirdDefaultOfferTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$300"
