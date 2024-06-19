@@ -25,6 +25,7 @@ import com.bidblast.databinding.FragmentOffersOnAuctionBinding;
 import com.bidblast.global.CarouselItemAdapter;
 import com.bidblast.global.CarouselViewModel;
 import com.bidblast.grpc.Client;
+import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
@@ -96,7 +97,7 @@ public class OffersOnAuctionFragment extends Fragment {
         setupCarouselItemsListener();
         setupOffersListListener();
         setupSelectedCarouselItemValueListener();
-        auctionStatusListener();
+        setupAuctionStatusListener();
         setupOffersListStatusListener();
         setupStillOffersLeftToLoadListener();
         setupRecyclerViewScrollListener();
@@ -117,37 +118,27 @@ public class OffersOnAuctionFragment extends Fragment {
         //TODO
     }
 
-    private void showMediaFilesSection() {
-        binding.playerConstraintlayout.setVisibility(View.VISIBLE);
-        binding.hypermediaFilesHorizontalScrollView.setVisibility(View.VISIBLE);
-    }
-
-    private void auctionStatusListener() {
+    private void setupAuctionStatusListener() {
         offersOnAuctionViewModel.getAuctionRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             if (requestStatus == RequestStatus.DONE) {
                 binding.progressBarLinerLayout.setVisibility(View.GONE);
-                showMediaFilesSection();
+                binding.mainViewScrollView.setVisibility(View.VISIBLE);
                 auction = offersOnAuctionViewModel.getAuction().getValue();
-                loadHypermediaFilesOnCarousel();
+                loadHypermediaFilesOnCarouselAndAuctionInformation();
             }
             if (requestStatus == RequestStatus.ERROR) {
                 binding.progressBarLinerLayout.setVisibility(View.GONE);
                 ProcessErrorCodes errorCode = offersOnAuctionViewModel.getAuctionErrorCode().getValue();
 
                 if(errorCode != null) {
-                    showAuctionImageError();
+                    binding.mainViewScrollView.setVisibility(View.GONE);
+                    binding.errorLoadingOffersLinearLayout.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
-    private void showAuctionImageError() {
-        binding.playerConstraintlayout.setVisibility(View.GONE);
-        binding.hypermediaFilesHorizontalScrollView.setVisibility(View.GONE);
-        binding.errorLoadingAuctionLinearLayout.setVisibility(View.VISIBLE);
-    }
-
-    private void loadHypermediaFilesOnCarousel() {
+    private void loadHypermediaFilesOnCarouselAndAuctionInformation() {
         for (HypermediaFile file : auction.getMediaFiles()) {
             if (file.getContent() == null || file.getContent().isEmpty()) {
                 String content = ImageToolkit.convertDrawableToBase64(requireContext(), R.drawable.video);
@@ -155,6 +146,14 @@ public class OffersOnAuctionFragment extends Fragment {
             }
         }
         carouselViewModel.setFilesList(auction.getMediaFiles());
+        binding.auctionTitleTextView.setText(auction.getTitle());
+        String timeLeft = DateToolkit.parseToFullDateWithHour(auction.getClosesAt());
+        binding.auctionClosingDateTextView.setText(String.format(
+                binding.getRoot().getContext().getString(
+                        R.string.consultcreatedauctions_available_date_message
+                ),
+                timeLeft
+        ));
     }
 
     private void loadVideoOnSurfaceView(int videoId) {

@@ -3,6 +3,7 @@ package com.bidblast.usecases.registerandmodifycategory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
@@ -127,15 +128,15 @@ public class AuctionCategoryFormFragment extends Fragment {
 
     private void setupCancelSaveCategoryButton() {
         binding.cancelSaveCategoryButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-            requireActivity().finish();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.popBackStack();
         });
     }
 
     private void setupDiscardSaveCategoryButton() {
         binding.discardModifyAuctionCategoryButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-            requireActivity().finish();
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.popBackStack();
         });
     }
 

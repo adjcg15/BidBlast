@@ -52,7 +52,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentConsultCreatedAuctionsBinding.inflate(inflater, container, false);
         createdAuctionDetailsAdapter = new CreatedAuctionDetailsAdapter(getContext());
-        createdAuctionDetailsAdapter.setOnAuctionClickListener(this::handleOpenBidOnAuctionFragment);
+        createdAuctionDetailsAdapter.setOnAuctionClickListener(this::handleOpenOffersOnAuctionFragment);
         binding.createdAuctionsRecyclerView.setAdapter(createdAuctionDetailsAdapter);
 
         setupCreatedAuctionsListStatusListener();
@@ -89,7 +89,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
         viewModel.recoverAuctions(searchQuery, TOTAL_AUCTIONS_TO_LOAD);
     }
 
-    private void handleOpenBidOnAuctionFragment(int idAuction) {
+    private void handleOpenOffersOnAuctionFragment(int idAuction) {
         OffersOnAuctionFragment offersOnAuctionFragment = OffersOnAuctionFragment.newInstance(idAuction);
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
