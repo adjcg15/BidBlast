@@ -100,4 +100,8 @@ public class AuctionCategory implements Parcelable {
         dest.writeString(description);
         dest.writeString(keywords);
     }
+    @NonNull
+    public String toString() {
+        return title;
+    }
 }
