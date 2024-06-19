@@ -10,10 +10,7 @@ import android.os.Bundle;
 import com.bidblast.R;
 import com.bidblast.databinding.ActivityModeratorMenuBinding;
 import com.bidblast.usecases.consultaauctioncategories.ConsultAuctionCategoriesFragment;
-import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
-import com.bidblast.usecases.consultcreatedauctions.ConsultCreatedAuctionsFragment;
-import com.bidblast.usecases.registerandmodifycategory.AuctionCategoryFormFragment;
-import com.bidblast.usecases.searchauction.SearchAuctionFragment;
+import com.bidblast.usecases.evaluateauction.EvaluateAuctionFragment;
 
 public class ModeratorMenuActivity extends AppCompatActivity {
     ActivityModeratorMenuBinding binding;
@@ -39,7 +36,7 @@ public class ModeratorMenuActivity extends AppCompatActivity {
             if (itemId == categoriesMenuItemId) {
                 showFragment(new ConsultAuctionCategoriesFragment());
             } else if (itemId == auctionsMenuItemId) {
-                //TODO: show auctions fragment
+                showFragment(new EvaluateAuctionFragment());
             } else if (itemId == statisticsMenuItemId) {
                 //TODO: show statistics fragment
             }
