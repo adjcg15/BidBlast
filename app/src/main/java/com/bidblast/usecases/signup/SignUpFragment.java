@@ -341,9 +341,13 @@ public class SignUpFragment extends Fragment {
     }
 
     private void updateUser(String fullName, String email, String phoneNumber, String password, String confirmPassword) {
-        if (password.equals(confirmPassword) || password.isEmpty()) {
-            User updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumber, viewModel.getAvatarBase64().getValue());
+        User updatedUser;
+        if (!password.isEmpty() && password.equals(confirmPassword)) {
+            updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumber, viewModel.getAvatarBase64().getValue());
             viewModel.updateUser(requireContext(), updatedUser, password);
+        } else if (password.isEmpty() && confirmPassword.isEmpty()) {
+            updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumber, viewModel.getAvatarBase64().getValue());
+            viewModel.updateUser(requireContext(), updatedUser, null);
         } else {
             showPasswordMismatchError();
         }
@@ -357,15 +361,23 @@ public class SignUpFragment extends Fragment {
 
         viewModel.validateFullName(fullName);
         viewModel.validateEmail(email);
-        viewModel.validatePassword(password);
-        viewModel.validateConfirmPassword(password, confirmPassword);
-        viewModel.validatePasswordRules(password);
+        if (isEdition) {
+            if (!password.isEmpty() || !confirmPassword.isEmpty()) {
+                viewModel.validatePassword(password);
+                viewModel.validateConfirmPassword(password, confirmPassword);
+                viewModel.validatePasswordRules(password);
+            }
+        } else {
+            viewModel.validatePassword(password);
+            viewModel.validateConfirmPassword(password, confirmPassword);
+            viewModel.validatePasswordRules(password);
+        }
 
         boolean isPasswordValid = Boolean.TRUE.equals(viewModel.isValidPassword().getValue());
         boolean isPasswordRulesValid = Boolean.TRUE.equals(viewModel.isValidPasswordRules().getValue());
         boolean isConfirmPasswordValid = Boolean.TRUE.equals(viewModel.isValidConfirmPassword().getValue());
 
-        if (!isPasswordValid) {
+        if (!isPasswordValid && (!password.isEmpty() || !confirmPassword.isEmpty())) {
             binding.passwordError.setVisibility(View.VISIBLE);
             binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_error_background);
         } else {
@@ -374,7 +386,7 @@ public class SignUpFragment extends Fragment {
             binding.passwordRulesError.setVisibility(View.GONE);
         }
 
-        if (!isPasswordRulesValid) {
+        if (!isPasswordRulesValid && (!password.isEmpty() || !confirmPassword.isEmpty())) {
             binding.passwordRulesError.setVisibility(View.VISIBLE);
         } else {
             binding.passwordRulesError.setVisibility(View.GONE);
@@ -390,9 +402,7 @@ public class SignUpFragment extends Fragment {
 
         return Boolean.TRUE.equals(viewModel.isValidFullName().getValue())
                 && Boolean.TRUE.equals(viewModel.isValidEmail().getValue())
-                && isPasswordValid
-                && isConfirmPasswordValid
-                && isPasswordRulesValid;
+                && (isEdition ? true : isPasswordValid && isConfirmPasswordValid && isPasswordRulesValid);
     }
 
     private void setupFieldsValidations() {
@@ -446,7 +456,7 @@ public class SignUpFragment extends Fragment {
                         break;
                     case DONE:
                         hideLoading();
-                        showConfirmationDialog();
+                        showConfirmationDialog(isEdition);
                         break;
                     case ERROR:
                         hideLoading();
@@ -504,14 +514,18 @@ public class SignUpFragment extends Fragment {
                 .show();
     }
 
-    private void showConfirmationDialog() {
+    private void showConfirmationDialog(boolean isUpdate) {
+        String title = isUpdate ? "Actualización exitosa" : "Registro exitoso";
+        String message = isUpdate ? "Tu información ha sido actualizada exitosamente. Inicia sesión nuevamente" : "Tu cuenta ha sido creada exitosamente.";
+
         new AlertDialog.Builder(requireContext())
-                .setTitle("Registro exitoso")
-                .setMessage("Tu cuenta ha sido creada exitosamente.")
+                .setTitle(title)
+                .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> navigateToLogin())
                 .setCancelable(false)
                 .show();
     }
+
 
     private void setupConfirmPasswordToggle() {
         ImageView confirmPasswordToggle = binding.confirmPasswordToggle;

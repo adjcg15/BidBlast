@@ -137,17 +137,19 @@ public class SignUpViewModel extends ViewModel {
         validateFullName(user.getFullName());
         validateEmail(user.getEmail());
 
-        if (!password.isEmpty()) {
+        boolean isPasswordValid = true;
+        if (password != null && !password.isEmpty()) {
             validatePassword(password);
+            isPasswordValid = Boolean.TRUE.equals(isValidPassword().getValue());
         }
 
         if (Boolean.TRUE.equals(isValidFullName().getValue()) &&
                 Boolean.TRUE.equals(isValidEmail().getValue()) &&
-                (password.isEmpty() || Boolean.TRUE.equals(isValidPassword().getValue()))) {
+                isPasswordValid) {
 
             signUpRequestStatus.setValue(RequestStatus.LOADING);
 
-            UserRegisterBody registerBody = new UserRegisterBody(user.getFullName(), user.getEmail(), user.getPhoneNumber(), user.getAvatar(), password.isEmpty() ? null : password);
+            UserRegisterBody registerBody = new UserRegisterBody(user.getFullName(), user.getEmail(), user.getPhoneNumber(), user.getAvatar(), password);
             new AuthenticationRepository().updateUser(registerBody, new IEmptyProcessStatusListener() {
                 @Override
                 public void onSuccess() {
@@ -166,4 +168,5 @@ public class SignUpViewModel extends ViewModel {
             signUpRequestStatus.setValue(RequestStatus.ERROR);
         }
     }
+
 }
