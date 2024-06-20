@@ -22,16 +22,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bidblast.R;
-import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentEvaluateAuctionBinding;
 import com.bidblast.global.CarouselItemAdapter;
 import com.bidblast.global.CarouselViewModel;
 import com.bidblast.grpc.Client;
 import com.bidblast.lib.ImageToolkit;
+import com.bidblast.menus.moderatormenu.ModeratorMenuActivity;
 import com.bidblast.model.Auction;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.model.HypermediaFile;
@@ -59,9 +58,6 @@ public class EvaluateAuctionFragment extends Fragment {
     private File tempFile;
     private BufferedOutputStream bufferedOutputStream;
     private Auction auction;
-    private List<HypermediaFile> hypermediaFiles;
-
-    public EvaluateAuctionFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +72,6 @@ public class EvaluateAuctionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEvaluateAuctionBinding.inflate(inflater, container, false);
-        mediaPlayer = new MediaPlayer();
 
         carouselAdapter = new CarouselItemAdapter(carouselViewModel);
         binding.carouselFilesList.setAdapter(carouselAdapter);
@@ -87,6 +82,9 @@ public class EvaluateAuctionFragment extends Fragment {
         setupSelectedCarouselItemValueListener();
         setupAuctionSpinnerListener();
         setupApproveButtonListener();
+        setupDenyButtonListener();
+        setupSaveCommentsButtonListener();
+        setupCancelCommentsButtonListener();
 
         loadAuctionCategories();
         loadAllAuctions();
@@ -95,9 +93,113 @@ public class EvaluateAuctionFragment extends Fragment {
     }
 
     private void setupApproveButtonListener() {
-        binding.aproveAuctionButton.setOnClickListener(v -> {
-            approveAuction();
+        binding.aproveAuctionButton.setOnClickListener(v -> approveAuction());
+    }
+
+    private void setupDenyButtonListener() {
+        binding.denyAuctionButton.setOnClickListener(v -> showDenyCommentsSection());
+    }
+
+    private void setupSaveCommentsButtonListener() {
+        binding.saveCommentsButton.setOnClickListener(v -> {
+            String comments = binding.itemCommentsEditText.getText().toString().trim();
+            if (comments.isEmpty()) {
+                binding.evaluateCommentErrorTextView.setVisibility(View.VISIBLE);
+            } else {
+                binding.evaluateCommentErrorTextView.setVisibility(View.GONE);
+                rejectAuction(comments);
+            }
         });
+    }
+
+    private void setupCancelCommentsButtonListener() {
+        binding.cancelComments.setOnClickListener(v -> {
+            binding.commentsSection.setVisibility(View.GONE);
+            binding.cancelComments.setVisibility(View.GONE);
+            binding.saveCommentsButton.setVisibility(View.GONE);
+            binding.evaluateCommentErrorTextView.setVisibility(View.GONE);
+
+            binding.auctionItemsSpinner.setVisibility(View.VISIBLE);
+            binding.auctionCategorySpinner.setVisibility(View.VISIBLE);
+            binding.auctionPriceLabelTextView.setVisibility(View.VISIBLE);
+            binding.auctionPriceTextView.setVisibility(View.VISIBLE);
+            binding.auctionAvailableDaysTextView.setVisibility(View.VISIBLE);
+            binding.auctionOpenningDaysTextView.setVisibility(View.VISIBLE);
+            binding.auctionStateTextView.setVisibility(View.VISIBLE);
+            binding.auctionItemStateTextView.setVisibility(View.VISIBLE);
+            binding.auctionDescriptionTitleTextView.setVisibility(View.VISIBLE);
+            binding.auctionDescriptionTextView.setVisibility(View.VISIBLE);
+            binding.aproveAuctionButton.setVisibility(View.VISIBLE);
+            binding.denyAuctionButton.setVisibility(View.VISIBLE);
+            binding.actionMiniumBidDescriptionTextView.setVisibility(View.VISIBLE);
+            binding.actionMiniumBidTextView.setVisibility(View.VISIBLE);
+            binding.auctionCategoryLabelTextView.setVisibility(View.VISIBLE);
+            binding.createAuctionButton.setVisibility(View.VISIBLE);
+        });
+    }
+
+    private void showDenyCommentsSection() {
+        binding.auctionItemsSpinner.setVisibility(View.GONE);
+        binding.auctionCategorySpinner.setVisibility(View.GONE);
+        binding.auctionPriceLabelTextView.setVisibility(View.GONE);
+        binding.auctionPriceTextView.setVisibility(View.GONE);
+        binding.auctionAvailableDaysTextView.setVisibility(View.GONE);
+        binding.auctionOpenningDaysTextView.setVisibility(View.GONE);
+        binding.auctionStateTextView.setVisibility(View.GONE);
+        binding.auctionItemStateTextView.setVisibility(View.GONE);
+        binding.auctionDescriptionTitleTextView.setVisibility(View.GONE);
+        binding.auctionDescriptionTextView.setVisibility(View.GONE);
+        binding.aproveAuctionButton.setVisibility(View.GONE);
+        binding.denyAuctionButton.setVisibility(View.GONE);
+        binding.actionMiniumBidDescriptionTextView.setVisibility(View.GONE);
+        binding.actionMiniumBidTextView.setVisibility(View.GONE);
+        binding.auctionCategoryLabelTextView.setVisibility(View.GONE);
+        binding.createAuctionButton.setVisibility(View.GONE);
+
+        binding.commentsSection.setVisibility(View.VISIBLE);
+        binding.cancelComments.setVisibility(View.VISIBLE);
+        binding.saveCommentsButton.setVisibility(View.VISIBLE);
+    }
+
+    private void rejectAuction(String comments) {
+        Auction selectedAuction = (Auction) binding.auctionItemsSpinner.getSelectedItem();
+        if (selectedAuction != null) {
+            new AuctionsRepository().rejectAuction(
+                    selectedAuction.getId(),
+                    comments,
+                    new IEmptyProcessStatusListener() {
+                        @Override
+                        public void onSuccess() {
+                            getActivity().runOnUiThread(() -> {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                                builder.setTitle("Subasta rechazada");
+                                builder.setMessage("La subasta ha sido rechazada con éxito.");
+                                builder.setPositiveButton("OK", (dialog, which) -> navigateToConsultAuctionCategories());
+                                builder.show();
+                            });
+                        }
+
+                        @Override
+                        public void onError(ProcessErrorCodes errorCode) {
+                            getActivity().runOnUiThread(() -> {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                                builder.setTitle("Error al rechazar subasta");
+                                builder.setMessage("No se pudo rechazar la subasta. Intente de nuevo más tarde.");
+                                builder.setPositiveButton("OK", null);
+                                builder.show();
+                            });
+                        }
+                    }
+            );
+        } else {
+            getActivity().runOnUiThread(() -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Advertencia");
+                builder.setMessage("Por favor seleccione una subasta y ingrese comentarios.");
+                builder.setPositiveButton("OK", null);
+                builder.show();
+            });
+        }
     }
 
     private void approveAuction() {
@@ -115,9 +217,7 @@ public class EvaluateAuctionFragment extends Fragment {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                                 builder.setTitle("Subasta aprobada");
                                 builder.setMessage("La subasta ha sido aprobada con éxito.");
-                                builder.setPositiveButton("OK", (dialog, which) -> {
-                                    navigateToFirstFragment();
-                                });
+                                builder.setPositiveButton("OK", (dialog, which) -> navigateToConsultAuctionCategories());
                                 builder.show();
                             });
                         }
@@ -247,9 +347,7 @@ public class EvaluateAuctionFragment extends Fragment {
     }
 
     private void setupCarouselItemsListener() {
-        carouselViewModel.getFilesList().observe(getViewLifecycleOwner(), filesList -> {
-            carouselAdapter.submitList(filesList);
-        });
+        carouselViewModel.getFilesList().observe(getViewLifecycleOwner(), filesList -> carouselAdapter.submitList(filesList));
     }
 
     private void setupSelectedCarouselItemValueListener() {
@@ -257,11 +355,9 @@ public class EvaluateAuctionFragment extends Fragment {
             if (selectedFile != null && selectedFile.getMimeType() != null) {
                 String hypermediaType = selectedFile.getMimeType();
                 if (hypermediaType.startsWith("image")) {
-                    binding.showedFileImageView.setImageBitmap(
-                            ImageToolkit.parseBitmapFromBase64(selectedFile.getContent())
-                    );
+                    binding.showedFileImageView.setImageBitmap(ImageToolkit.parseBitmapFromBase64(selectedFile.getContent()));
                     binding.showedFileImageView.setVisibility(View.VISIBLE);
-                    deleteVideoInCache();
+                    cleanupMediaPlayer();
                     binding.playerSurfaceView.setVisibility(View.GONE);
                 } else if (hypermediaType.startsWith("video")) {
                     binding.showedFileImageView.setVisibility(View.GONE);
@@ -292,6 +388,9 @@ public class EvaluateAuctionFragment extends Fragment {
     }
 
     private void loadVideoOnSurfaceView(int videoId) {
+        cleanupMediaPlayer();
+        mediaPlayer = new MediaPlayer();
+
         mediaPlayer.setOnErrorListener((mp, what, extra) -> true);
         mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnCompletionListener(mp -> {
@@ -365,10 +464,16 @@ public class EvaluateAuctionFragment extends Fragment {
         deleteVideoInCache();
     }
 
-    private void deleteVideoInCache() {
+    private void cleanupMediaPlayer() {
         if (mediaPlayer != null) {
             mediaPlayer.reset();
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
+    }
+
+    private void deleteVideoInCache() {
+        cleanupMediaPlayer();
         if (Client.getChannelStatus() && client != null) {
             client.shutdown();
             client = null;
@@ -393,13 +498,16 @@ public class EvaluateAuctionFragment extends Fragment {
         binding.errorLoadingAuctionLinearLayout.setVisibility(View.VISIBLE);
         binding.mainContentLayout.setVisibility(View.GONE);
         binding.progressBarLinerLayout.setVisibility(View.GONE);
-        ((ImageView)binding.errorLoadingAuctionLinearLayout.findViewById(R.id.errorLoadingImageTextView)).setImageResource(R.drawable.empty_items_generic);
+        ((ImageView) binding.errorLoadingAuctionLinearLayout.findViewById(R.id.errorLoadingImageTextView)).setImageResource(R.drawable.empty_items_generic);
         ((TextView) binding.errorLoadingAuctionLinearLayout.findViewById(R.id.errorLoadingTextView)).setText("No hay subastas para aprobar");
-        ((TextView) binding.errorLoadingDescriptionTextView.findViewById(R.id.errorLoadingDescriptionTextView)).setText("No se encontraron subastas para aprobar. Intente de nuevo más tarde.");
+        ((TextView) binding.errorLoadingAuctionLinearLayout.findViewById(R.id.errorLoadingDescriptionTextView)).setText("No se encontraron subastas para aprobar. Intente de nuevo más tarde.");
     }
 
-    private void navigateToFirstFragment() {
-        FragmentManager fragmentManager = getParentFragmentManager();
-        fragmentManager.popBackStack();
+    private void navigateToConsultAuctionCategories() {
+        if (getActivity() instanceof ModeratorMenuActivity) {
+            ModeratorMenuActivity activity = (ModeratorMenuActivity) getActivity();
+            activity.showFragment(new ConsultAuctionCategoriesFragment());
+            activity.selectCategoriesMenuItem();
+        }
     }
 }
