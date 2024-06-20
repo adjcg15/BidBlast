@@ -8,6 +8,7 @@
     <string name="global_cancel">Cancelar</string>
     <string name="global_yes">Sí</string>
     <string name="global_no">No</string>
+    <string name="global_sign_out_confirmation_message">¿Está seguro que desea cerrar sesión e ir a la ventana de inicio de sesión?</string>
 
     <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
     <string name="login_welcome_description">Sigue participando en las subastas más interesantes del momento.</string>
