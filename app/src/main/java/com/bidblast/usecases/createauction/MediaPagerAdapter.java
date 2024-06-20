@@ -78,7 +78,7 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Me
         }
 
         public void bind(VideoItem videoItem) {
-            imageView.setImageURI(videoItem.getUri());
+            imageView.setImageResource(R.drawable.default_video_thumbnail);
             videoOverlay.setVisibility(View.VISIBLE);
         }
     }
