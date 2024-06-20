@@ -1,4 +1,4 @@
-package com.bidblast.usecases.consultaauctioncategories;
+package com.bidblast.usecases.consultauctioncategories;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

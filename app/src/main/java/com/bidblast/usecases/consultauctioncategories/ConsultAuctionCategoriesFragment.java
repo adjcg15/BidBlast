@@ -1,4 +1,4 @@
-package com.bidblast.usecases.consultaauctioncategories;
+package com.bidblast.usecases.consultauctioncategories;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,27 +7,23 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentConsultCategoriesBinding;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.usecases.login.LoginActivity;
 
-import com.bidblast.usecases.consultoffersonauction.OffersOnAuctionFragment;
 import com.bidblast.usecases.registerandmodifycategory.AuctionCategoryFormFragment;
 
 public class ConsultAuctionCategoriesFragment extends Fragment {
