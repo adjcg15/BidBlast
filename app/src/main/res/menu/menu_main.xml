@@ -30,4 +30,11 @@
         android:layout_height="wrap_content"
         android:icon="@drawable/plus_menu_icon"
         android:textSize="12sp"/>
+    <item
+        android:id="@+id/profileMenuItem"
+        android:title="@string/mainmenu_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/profile_menu_icon"
+        android:textSize="12sp"/>
 </menu>
