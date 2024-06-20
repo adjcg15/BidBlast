@@ -24,16 +24,16 @@ import com.bidblast.global.CarouselItemAdapter;
 import com.bidblast.lib.CurrencyToolkit;
 import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.ImageToolkit;
+import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
@@ -94,10 +94,12 @@ public class BidOnAuctionFragment extends Fragment {
         setupCarouselItemsListener();
         setupSelectedCarouselItemValueListener();
         setupAuctionRequestListener();
+        setupOfferRequestListener();
         setupFirstDefaultOfferClick();
         setupSecondDefaultOfferClick();
         setupThirdDefaultOfferClick();
         setupCustomBidClick();
+        setupMakeOfferClick();
 
         return binding.getRoot();
     }
@@ -146,7 +148,7 @@ public class BidOnAuctionFragment extends Fragment {
             binding.thirdDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
             binding.thirdDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
 
-            bidOnAuctionViewModel.setCurrentOffer(bidOnAuctionViewModel.getDefaultBaseOffer().getValue());
+            bidOnAuctionViewModel.setCurrentBid(bidOnAuctionViewModel.getDefaultBaseBid().getValue());
         });
     }
 
@@ -161,7 +163,7 @@ public class BidOnAuctionFragment extends Fragment {
             binding.thirdDefaultOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
             binding.thirdDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.black));
 
-            bidOnAuctionViewModel.setCurrentOffer(bidOnAuctionViewModel.getDefaultBaseOffer().getValue() * 2);
+            bidOnAuctionViewModel.setCurrentBid(bidOnAuctionViewModel.getDefaultBaseBid().getValue() * 2);
         });
     }
 
@@ -176,8 +178,60 @@ public class BidOnAuctionFragment extends Fragment {
             binding.thirdDefaultOfferTextView.setBackgroundResource(R.drawable.filled_black_rounded_border);
             binding.thirdDefaultOfferTextView.setTextColor(binding.getRoot().getContext().getColor(R.color.white));
 
-            bidOnAuctionViewModel.setCurrentOffer(bidOnAuctionViewModel.getDefaultBaseOffer().getValue() * 3);
+            bidOnAuctionViewModel.setCurrentBid(bidOnAuctionViewModel.getDefaultBaseBid().getValue() * 3);
         });
+    }
+
+    private void setupMakeOfferClick() {
+        binding.makeOfferButton.setOnClickListener(v -> {
+            boolean isCustomOffer = bidOnAuctionViewModel.getIsCreatingCustomOffer().getValue();
+            float offerAmount = bidOnAuctionViewModel.getCurrentBid().getValue();
+
+            boolean isValidOffer = offerAmount != 0;
+            if(isCustomOffer) {
+                isValidOffer = validateCustomBid();
+            }
+
+            cleanOfferErrorMessage();
+            if(!isValidOffer) {
+                showInvalidOfferErrorMessage();
+            } else {
+                float offer = isCustomOffer
+                    ? Float.parseFloat(binding.customBidEditText.getText().toString())
+                    : offerAmount;
+                bidOnAuctionViewModel.setCurrentBid(offer);
+
+                if(bidOnAuctionViewModel.getOfferRequestStatus().getValue() != RequestStatus.LOADING) {
+                    bidOnAuctionViewModel.makeOffer();
+                }
+            }
+        });
+    }
+
+    private void cleanOfferErrorMessage() {
+        binding.customBidEditText.setBackgroundResource(R.drawable.basic_input_background);
+        binding.customBidErrorTextView.setVisibility(View.GONE);
+    }
+
+    private void showInvalidOfferErrorMessage() {
+        String errorMessage = getString(R.string.bidonauction_empty_bid_error);
+        boolean isCustomOffer = bidOnAuctionViewModel.getIsCreatingCustomOffer().getValue();
+
+        if(isCustomOffer) {
+            errorMessage = getString(R.string.bidonauction_custom_bid_error);
+        }
+
+        binding.customBidErrorTextView.setText(errorMessage);
+        binding.customBidErrorTextView.setVisibility(View.VISIBLE);
+        binding.customBidEditText.setBackgroundResource(R.drawable.basic_input_error_background);
+    }
+
+    private boolean validateCustomBid() {
+        String rawBid = binding.customBidEditText.getText().toString();
+        float minimumBid = auction.getMinimumBid();
+
+        return ValidationToolkit.isPositiveFloat(rawBid)
+            && Float.parseFloat(rawBid) >= minimumBid;
     }
 
     private void setupAuctionRequestListener() {
@@ -198,6 +252,52 @@ public class BidOnAuctionFragment extends Fragment {
                 showDefaultOfferButtons();
             }
         });
+    }
+
+    private void setupOfferRequestListener() {
+        bidOnAuctionViewModel.getOfferRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
+            binding.makeOfferButton.setText(getString(R.string.bidonauction_make_offer));
+
+            if(requestStatus == RequestStatus.LOADING) {
+                binding.makeOfferButton.setText(getString(R.string.bidonauction_loading_offer));
+            }
+
+            if(requestStatus == RequestStatus.DONE) {
+                showSuccessOfferCreationMessage();
+            }
+
+            if(requestStatus == RequestStatus.ERROR) {
+                showErrorCreatingOfferMessage();
+            }
+        });
+    }
+
+    private void showSuccessOfferCreationMessage() {
+        String message = getString(R.string.bidonauction_success_offer);
+        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void showErrorCreatingOfferMessage() {
+        String errorMessage = "";
+
+        switch(bidOnAuctionViewModel.getOfferRequestError().getValue()) {
+            case OFFER_OVERCOMED:
+                errorMessage = getString(R.string.bidonauction_offer_overcomed);
+                break;
+            case AUCTION_FINISHED:
+                errorMessage = getString(R.string.bidonauction_auction_finished);
+                break;
+            case AUCTION_BLOCKED:
+                errorMessage = getString(R.string.bidonauction_auction_blocked);
+                break;
+            case EARLY_OFFER:
+                errorMessage = getString(R.string.bidonauction_early_offer);
+                break;
+            default:
+                errorMessage = getString(R.string.bidonauction_error_creating_offer);
+        }
+
+        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
     private void showMainView() {
@@ -254,7 +354,7 @@ public class BidOnAuctionFragment extends Fragment {
             binding.firstDefaultOfferTextView.setText(String.format(Locale.getDefault(), "%.1f", baseOffer));
             binding.secondDefaultOfferTextView.setText(String.format(Locale.getDefault(), "%.1f", baseOffer * 2));
             binding.thirdDefaultOfferTextView.setText(String.format(Locale.getDefault(), "%.1f", baseOffer * 3));
-            bidOnAuctionViewModel.setDefaultBaseOffer(baseOffer);
+            bidOnAuctionViewModel.setDefaultBaseBid(baseOffer);
         }
     }
 

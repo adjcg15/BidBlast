@@ -260,7 +260,7 @@
                                 style="@style/EdTxtGenericStyle"
                                 android:visibility="gone"
                                 android:importantForAutofill="no"
-                                android:inputType="number" />
+                                android:inputType="numberDecimal" />
                         </LinearLayout>
                         <TextView
                             android:id="@+id/customBidErrorTextView"

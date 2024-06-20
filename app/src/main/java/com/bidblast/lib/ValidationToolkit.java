@@ -43,4 +43,19 @@ public class ValidationToolkit {
 
         return  areValidKeywords;
     }
+
+    public static boolean isPositiveFloat(String text) {
+        boolean isFloat = false;
+
+        if (text != null) {
+            String floatPattern = "^([0-9]+([.][0-9])?|[.][0-9])$";
+
+            Pattern pattern = Pattern.compile(floatPattern);
+            Matcher matcher = pattern.matcher(text);
+
+            isFloat = matcher.matches();
+        }
+
+        return isFloat;
+    }
 }
