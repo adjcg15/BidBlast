@@ -1,6 +1,7 @@
 package com.bidblast.usecases.registerandmodifycategory;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentAuctionCategoryFormBinding;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.repositories.businesserrors.SaveAuctionCategoryCodes;
+import com.bidblast.usecases.login.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 public class AuctionCategoryFormFragment extends Fragment {
@@ -104,9 +106,8 @@ public class AuctionCategoryFormFragment extends Fragment {
         binding.saveCategoryButton.setOnClickListener(v -> {
             if (validateFields()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle("Confirmación de guardado");
-                builder.setMessage("¿Estás seguro de que guardar la información de la categoría?");
-                builder.setPositiveButton("Sí", (dialog, which) -> {
+                builder.setMessage(R.string.savecategory_confirmation_message);
+                builder.setPositiveButton(R.string.global_yes, (dialog, which) -> {
                     if (auctionCategory != null) {
                         if(viewModel.getSaveAuctionCategoryRequestStatus().getValue() != RequestStatus.LOADING) {
                             AuctionCategory auctionCategory = new AuctionCategory();
@@ -128,7 +129,7 @@ public class AuctionCategoryFormFragment extends Fragment {
                         }
                     }
                 });
-                builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+                builder.setNegativeButton(R.string.global_no, (dialog, which) -> dialog.dismiss());
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
@@ -178,10 +179,24 @@ public class AuctionCategoryFormFragment extends Fragment {
                 SaveAuctionCategoryCodes errorCode = viewModel.getSaveAuctionCategoryErrorCode().getValue();
 
                 if(errorCode != null) {
-                    showSaveAuctionCategoryError(errorCode);
+                    if (errorCode == SaveAuctionCategoryCodes.UNAUTHORIZED) {
+                        finishUserSession();
+                    } else {
+                        showSaveAuctionCategoryError(errorCode);
+                    }
                 }
             }
         });
+    }
+
+    private void finishUserSession() {
+        if(getActivity() != null) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("showSessionFinishedToast", true);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private void showSaveAuctionCategoryError(SaveAuctionCategoryCodes errorCode) {

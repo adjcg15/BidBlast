@@ -17,6 +17,7 @@ public class ConsultCompletedAuctionsViewModel extends ViewModel {
     private final MutableLiveData<List<Auction>> auctionsList = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<RequestStatus> auctionsListRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<Boolean> stillAuctionsLeftToLoad = new MutableLiveData<>(true);
+    private final MutableLiveData<ProcessErrorCodes> consultCompletedAuctionsErrorCode = new MutableLiveData<>();
     public LiveData<Boolean> getStillAuctionsLeftToLoad() { return stillAuctionsLeftToLoad; }
 
 
@@ -27,6 +28,10 @@ public class ConsultCompletedAuctionsViewModel extends ViewModel {
     public void cleanAuctionsList() {
         stillAuctionsLeftToLoad.setValue(true);
         auctionsList.setValue(new ArrayList<>());
+    }
+
+    public LiveData<ProcessErrorCodes> getConsultCompletedAuctionsErrorCode() {
+        return consultCompletedAuctionsErrorCode;
     }
 
     public void recoverAuctions(String searchQuery, int limit) {
@@ -54,6 +59,7 @@ public class ConsultCompletedAuctionsViewModel extends ViewModel {
 
                     @Override
                     public void onError(ProcessErrorCodes errorCode) {
+                        consultCompletedAuctionsErrorCode.setValue(errorCode);
                         auctionsListRequestStatus.setValue(RequestStatus.ERROR);
                     }
                 }

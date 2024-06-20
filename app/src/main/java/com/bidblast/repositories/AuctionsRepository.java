@@ -24,7 +24,12 @@ import com.bidblast.model.AuctionState;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.model.User;
+import com.bidblast.repositories.businesserrors.BlockUserCodes;
+import com.bidblast.repositories.businesserrors.CreateOfferCodes;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -208,7 +213,11 @@ public class AuctionsRepository {
 
                         statusListener.onSuccess(auctionsList);
                     } else {
-                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                        if(response.code() == 401 || response.code() == 403) {
+                            statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                        } else {
+                            statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                        }
                     }
                 } else {
                     statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
@@ -292,7 +301,11 @@ public class AuctionsRepository {
 
                         statusListener.onSuccess(auctionsList);
                     } else {
-                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                        if(response.code() == 401 || response.code() == 403) {
+                            statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                        } else {
+                            statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                        }
                     }
                 } else {
                     statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
@@ -344,7 +357,11 @@ public class AuctionsRepository {
 
                         statusListener.onSuccess(offersList);
                     } else {
-                        statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                        if(response.code() == 401 || response.code() == 403) {
+                            statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                        } else {
+                            statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                        }
                     }
                 } else {
                     statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
@@ -361,7 +378,7 @@ public class AuctionsRepository {
     public void blockUserInAnAuctionAndDeleteHisOffers(
             int idAuction,
             int idProfile,
-            IEmptyProcessStatusListener statusListener) {
+            IEmptyProcessWithBusinessErrorListener<BlockUserCodes> statusListener) {
         IAuctionsService auctionsService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
         auctionsService.blockUserInAnAuctionAndDeleteHisOffers(authHeader, idAuction, new BlockedProfileBody(idProfile)).enqueue(new Callback<Void> () {
@@ -370,13 +387,48 @@ public class AuctionsRepository {
                 if (response.isSuccessful()) {
                     statusListener.onSuccess();
                 } else {
-                    statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                    if(response.code() == 401 || response.code() == 403) {
+                        statusListener.onError(BlockUserCodes.UNAUTHORIZED);
+                    } else if (response.code() == 400 && response.errorBody() != null) {
+                        try {
+                            String errorBodyString = response.errorBody().string();
+                            JsonObject jsonErrorBody = new Gson().fromJson(errorBodyString, JsonObject.class);
+
+                            if(jsonErrorBody.has("apiErrorCode")) {
+                                String apiErrorCode = jsonErrorBody.get("apiErrorCode").getAsString();
+
+                                switch(apiErrorCode) {
+                                    case "CRBU-400001":
+                                        statusListener.onError(BlockUserCodes.AUCTION_NOT_FOUND);
+                                        break;
+                                    case "CRBU-400002":
+                                        statusListener.onError(BlockUserCodes.USER_NOT_FOUND);
+                                        break;
+                                    case "CRBU-400003":
+                                        statusListener.onError(BlockUserCodes.USER_ALREADY_BLOCKED);
+                                        break;
+                                    case "CRBU-400004":
+                                        statusListener.onError(BlockUserCodes.USER_BID_ON_AUCTION_NOT_FOUND);
+                                        break;
+                                    default:
+                                        statusListener.onError(BlockUserCodes.UNKNOWN);
+                                        break;
+                                }
+                            } else {
+                                statusListener.onError(BlockUserCodes.VALIDATION_ERROR);
+                            }
+                        } catch (IOException ex) {
+                            statusListener.onError(BlockUserCodes.UNKNOWN);
+                        }
+                    } else {
+                        statusListener.onError(BlockUserCodes.UNKNOWN);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
-                statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                statusListener.onError(BlockUserCodes.SERVER_ERROR);
             }
         });
     }
@@ -491,7 +543,11 @@ public class AuctionsRepository {
                         }
                         statusListener.onSuccess(auctionsList);
                     } else {
-                        statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                        if(response.code() == 401 || response.code() == 403) {
+                            statusListener.onError(ProcessErrorCodes.AUTH_ERROR);
+                        } else {
+                            statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                        }
                     }
                 } else {
                     statusListener.onError(ProcessErrorCodes.AUTH_ERROR);

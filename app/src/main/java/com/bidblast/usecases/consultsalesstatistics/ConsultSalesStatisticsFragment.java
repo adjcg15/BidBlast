@@ -3,6 +3,7 @@ package com.bidblast.usecases.consultsalesstatistics;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -25,6 +26,8 @@ import com.bidblast.lib.CurrencyToolkit;
 import com.bidblast.lib.DateToolkit;
 import com.bidblast.model.Auction;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.repositories.businesserrors.SaveAuctionCategoryCodes;
+import com.bidblast.usecases.login.LoginActivity;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -245,12 +248,25 @@ public class ConsultSalesStatisticsFragment extends Fragment {
 
             if (requestStatus == RequestStatus.ERROR) {
                 ProcessErrorCodes errorCode = viewModel.getSalesAuctionsListErrorCode().getValue();
-
                 if(errorCode != null) {
-                    showSalesAuctionsImageError();
+                    if (errorCode == ProcessErrorCodes.AUTH_ERROR) {
+                        finishUserSession();
+                    } else {
+                        showSalesAuctionsImageError();
+                    }
                 }
             }
         });
+    }
+
+    private void finishUserSession() {
+        if(getActivity() != null) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("showSessionFinishedToast", true);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private void collapseStatisticsSections() {
@@ -272,7 +288,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         }
 
         binding.profitsEarnedTextView.setText(CurrencyToolkit.parseToMXN(profitsEarned));
-        BarDataSet dataSet = new BarDataSet(entries, "Subastas vendidas");
+        BarDataSet dataSet = new BarDataSet(entries, getString(R.string.consultsalesstatistics_sales_auctions_title));
         dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
         BarData barData = new BarData(dataSet);
 
@@ -303,7 +319,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
         barChart.setLayoutParams(params);
         barChart.setData(barData);
         barChart.setFitBars(true);
-        barChart.getDescription().setText("Precio de productos");
+        barChart.getDescription().setText(getString(R.string.consultsalesstatistics_item_price_title));
         barChart.getDescription().setTextSize(16f);
         barChart.getDescription().setTextColor(Color.BLACK);
         barChart.animateY(2000);

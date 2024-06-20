@@ -2,6 +2,7 @@ package com.bidblast.usecases.consultoffersonauction;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -33,6 +34,9 @@ import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.repositories.businesserrors.BlockUserCodes;
+import com.bidblast.repositories.businesserrors.SaveAuctionCategoryCodes;
+import com.bidblast.usecases.login.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedOutputStream;
@@ -40,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 
 public class OffersOnAuctionFragment extends Fragment {
     private FragmentOffersOnAuctionBinding binding;
@@ -118,14 +123,13 @@ public class OffersOnAuctionFragment extends Fragment {
 
     private void handleBlockUserFragment(int idProfile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Confirmación de bloqueo");
-        builder.setMessage("¿Estás seguro de que deseas bloquear al comprador?");
-        builder.setPositiveButton("Sí", (dialog, which) -> {
+        builder.setMessage(R.string.consultoffers_block_user_confirmation_message);
+        builder.setPositiveButton(R.string.global_yes, (dialog, which) -> {
             if (offersOnAuctionViewModel.getBlockUserRequestStatus().getValue() != RequestStatus.LOADING) {
                 offersOnAuctionViewModel.blockUser(idProfile, idAuction);
             };
         });
-        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton(R.string.global_no, (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -140,12 +144,31 @@ public class OffersOnAuctionFragment extends Fragment {
             }
 
             if (requestStatus == RequestStatus.ERROR) {
-                offersOnAuctionViewModel.clearOffersList();
-                loadOffers();
-                String errorMessage = getString(R.string.consultoffers_block_user_error_message);
-                Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
+                BlockUserCodes errorCode = offersOnAuctionViewModel.getBlockUserErrorCode().getValue();
+
+                if(errorCode != null) {
+                    if (errorCode == BlockUserCodes.UNAUTHORIZED) {
+                        finishUserSession();
+                    } else {
+                        offersOnAuctionViewModel.clearOffersList();
+                        loadOffers();
+                        showBlockUserError(errorCode);
+                    }
+                }
             }
         });
+    }
+
+    private void showBlockUserError(BlockUserCodes errorCode) {
+        String errorMessage = "";
+
+        if (Objects.requireNonNull(errorCode) == BlockUserCodes.USER_ALREADY_BLOCKED) {
+            errorMessage = getString(R.string.consultoffers_user_already_blocked_message);
+        } else {
+            errorMessage = getString(R.string.consultoffers_block_user_error_message);
+        }
+
+        Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 
     private void setupAuctionStatusListener() {
@@ -158,12 +181,8 @@ public class OffersOnAuctionFragment extends Fragment {
             }
             if (requestStatus == RequestStatus.ERROR) {
                 binding.progressBarLinerLayout.setVisibility(View.GONE);
-                ProcessErrorCodes errorCode = offersOnAuctionViewModel.getAuctionErrorCode().getValue();
-
-                if(errorCode != null) {
-                    binding.mainViewScrollView.setVisibility(View.GONE);
-                    binding.errorLoadingOffersLinearLayout.setVisibility(View.VISIBLE);
-                }
+                binding.mainViewScrollView.setVisibility(View.GONE);
+                binding.errorLoadingOffersLinearLayout.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -347,12 +366,29 @@ public class OffersOnAuctionFragment extends Fragment {
                         binding.allOffersLoadedTextView.setVisibility(View.GONE);
                     }
                 } else if (requestStatus == RequestStatus.ERROR) {
-                    binding.errorLoadingOffersLinearLayout.setVisibility(View.VISIBLE);
-                    binding.offersListRecyclerView.setVisibility(View.GONE);
-                    binding.allOffersLoadedTextView.setVisibility(View.GONE);
+                    ProcessErrorCodes errorCode = offersOnAuctionViewModel.getOfferListRequestErrorCode().getValue();
+                    if(errorCode != null) {
+                        if (errorCode == ProcessErrorCodes.AUTH_ERROR) {
+                            finishUserSession();
+                        } else {
+                            binding.errorLoadingOffersLinearLayout.setVisibility(View.VISIBLE);
+                            binding.offersListRecyclerView.setVisibility(View.GONE);
+                            binding.allOffersLoadedTextView.setVisibility(View.GONE);
+                        }
+                    }
                 }
             }
         });
+    }
+
+    private void finishUserSession() {
+        if(getActivity() != null) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("showSessionFinishedToast", true);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private void setupStillOffersLeftToLoadListener() {

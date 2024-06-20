@@ -62,6 +62,7 @@
     <string name="savecategory_title_already_exists_toast_message">Ya existe ese título registrado, ingrese otro</string>
     <string name="savecategory_not_found_toast_message">No se encontró la categoría</string>
     <string name="savecategory_success_message">Información de la categoría guardada con éxito</string>
+    <string name="savecategory_confirmation_message">¿Estás seguro de guardar la información de la categoría?</string>
 
     <string name="getAuction_title">Ofertas en la subasta</string>
     <string name="getAuction_error_loading_title">¡Estamos teniendo problemas para cargar la subasta!</string>
@@ -74,7 +75,9 @@
     <string name="consultoffers_empty_offers_text">Por el momento no tienes ofertas en la subasta, las nuevas ofertas aparecerán aquí</string>
     <string name="consultoffers_block_customer">Bloquear comprador</string>
     <string name="consultoffers_last_offers_title">Últimas ofertas</string>
+    <string name="consultoffers_block_user_confirmation_message">¿Estás seguro de que deseas bloquear al comprador?</string>
     <string name="consultoffers_block_user_success_message">Comprador bloqueado con éxito</string>
+    <string name="consultoffers_user_already_blocked_message">El usuario ya fue bloqueado anteriormente</string>
     <string name="consultoffers_block_user_error_message">No se pudo bloquear al comprador, inténtelo de nuevo más tarde</string>
 
     <string name="consultcompletedauctions_searchbar_hint">Buscar en compras</string>
@@ -115,6 +118,8 @@
     <string name="consultsalesstatistics_featured_sales_day">Día de ventas destacado</string>
     <string name="consultsalesstatistics_first_featured_day_message">¡Muchas felicidades! en este día lograste concretar</string>
     <string name="consultsalesstatistics_second_featured_day_message">subasta(s), generando un total de:</string>
+    <string name="consultsalesstatistics_item_price_title">Precio de productos</string>
+    <string name="consultsalesstatistics_sales_auctions_title">Subastas vendidas</string>
     <string name="consultsalesstatistics_message_bidblast">¡Sigue subastando en <font color="#FF5C00"><b>Bid</b></font><font color="#454545"><b>Blast</b></font>!</string>
     <string name="consultsalesstatistics_first_date_action">Fecha inicio</string>
     <string name="consultsalesstatistics_second_date_action">Fecha fin</string>

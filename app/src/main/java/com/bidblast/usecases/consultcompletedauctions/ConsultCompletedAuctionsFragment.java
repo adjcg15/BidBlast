@@ -1,5 +1,6 @@
 package com.bidblast.usecases.consultcompletedauctions;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import com.bidblast.api.RequestStatus;
 import com.bidblast.databinding.FragmentConsultCompletedAuctionsBinding;
 import com.bidblast.lib.Session;
 import com.bidblast.model.Auction;
+import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.usecases.login.LoginActivity;
 
 import java.util.List;
 
@@ -114,12 +117,29 @@ public class ConsultCompletedAuctionsFragment extends Fragment {
                         binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
                     }
                 } else if (requestStatus == RequestStatus.ERROR) {
-                    binding.errorLoadingCompletedAuctionsLinearLayout.setVisibility(View.VISIBLE);
-                    binding.completedAuctionsListRecyclerView.setVisibility(View.GONE);
-                    binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
+                    ProcessErrorCodes errorCode = viewModel.getConsultCompletedAuctionsErrorCode().getValue();
+                    if(errorCode != null) {
+                        if (errorCode == ProcessErrorCodes.AUTH_ERROR) {
+                            finishUserSession();
+                        } else {
+                            binding.errorLoadingCompletedAuctionsLinearLayout.setVisibility(View.VISIBLE);
+                            binding.completedAuctionsListRecyclerView.setVisibility(View.GONE);
+                            binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
+                        }
+                    }
                 }
             }
         });
+    }
+
+    private void finishUserSession() {
+        if(getActivity() != null) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("showSessionFinishedToast", true);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private void setupStillCompletedAuctionsLeftToLoadListener() {
