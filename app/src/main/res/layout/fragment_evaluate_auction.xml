@@ -6,316 +6,59 @@
     <data>
 
     </data>
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".usecases.evaluateauction.EvaluateAuctionFragment">
 
+        <!-- Menu bar -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dark_primary"
+            android:padding="12dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/goBackImageView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/go_back_icon"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:id="@+id/auctionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Evaluar artículo"
+                style="@style/TvTitleStyle"
+                android:textColor="@color/white"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/progressBarLinerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="731dp"
+            android:gravity="center"
             android:orientation="vertical">
-            <LinearLayout
-                android:id="@+id/progressBarLinerLayout"
-                android:layout_width="match_parent"
-                android:layout_height="731dp"
-                android:gravity="center"
-                android:orientation="vertical">
 
-                <ProgressBar
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <!-- Main Content -->
-            <LinearLayout
-                android:id="@+id/mainContentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <!-- Menu bar -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/dark_primary"
-                    android:padding="12dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/goBackImageView"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/go_back_icon"
-                        android:importantForAccessibility="no" />
+        <!-- Progress bar and error message container -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Evaluar artículo"
-                        style="@style/TvTitleStyle"
-                        android:textColor="@color/white"
-                        android:layout_marginStart="8dp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="12dp"
-                    android:paddingTop="30dp"
-                    android:orientation="vertical">
-                    <Spinner
-                        android:id="@+id/auctionItemsSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/SpinnerGenericStyle"
-                        android:layout_marginBottom="4dp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="1dp"
-                    android:orientation="vertical">
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/playerConstraintlayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="350dp"
-                        android:layout_margin="12dp"
-                        android:background="@drawable/carousel_item_background"
-                        android:clipChildren="true"
-                        android:padding="1dp">
-
-                        <ProgressBar
-                            android:id="@+id/progressBarVideo"
-                            android:visibility="gone"
-                            style="?android:attr/progressBarStyleLarge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <ImageView
-                            android:id="@+id/showedFileImageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:importantForAccessibility="no"
-                            android:scaleType="fitCenter"
-                            android:src="@drawable/ic_launcher_background"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHeight_max="350dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:visibility="gone"/>
-
-                        <com.google.android.exoplayer2.ui.PlayerView
-                            android:id="@+id/playerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:resize_mode="fill"
-                            android:visibility="gone"/>
-
-                        <SurfaceView
-                            android:id="@+id/playerSurfaceView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:visibility="gone"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <HorizontalScrollView
-                        android:id="@+id/hypermediaFilesHorizontalScrollView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/carouselFilesList"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="12dp"
-                            tools:itemCount="7"
-                            tools:listitem="@layout/template_carousel_item"/>
-                    </HorizontalScrollView>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="12dp"
-                    android:paddingTop="40dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/auctionTitleTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Apple iPhone 15 (256 GB) - Azul"
-                        style="@style/TvTitleStyle"/>
-
-                    <TextView
-                        android:id="@+id/auctionPriceLabelTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Última oferta"
-                        style="@style/TvSubtitleStyle"
-                        android:textColor="@color/dark_gray"
-                        android:layout_marginTop="16dp"/>
-
-                    <TextView
-                        android:id="@+id/auctionPriceTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="$15,700.00MXN"
-                        style="@style/TvTitleStyle"
-                        android:textColor="@color/primary"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="16dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Días de apertura de subasta:"
-                            style="@style/TvParagraphStyle"
-                            android:textColor="@color/dark_gray"
-                            android:layout_marginEnd="8dp"/>
-                        <TextView
-                            android:id="@+id/auctionOpenningDaysTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="5"
-                            android:textColor="@color/dark_gray"
-                            style="@style/TvSubtitleStyle"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="4dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Estado del artículo:"
-                            style="@style/TvParagraphStyle"
-                            android:textColor="@color/dark_gray"
-                            android:layout_marginEnd="8dp"/>
-                        <TextView
-                            android:id="@+id/auctionItemStateTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nuevo"
-                            android:textColor="@color/dark_gray"
-                            style="@style/TvSubtitleStyle"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="4dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Puja mínima establecida:"
-                            style="@style/TvParagraphStyle"
-                            android:textColor="@color/dark_gray"
-                            android:layout_marginEnd="8dp"/>
-                        <TextView
-                            android:id="@+id/actionMiniumBidTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="$15,600.00MXN"
-                            android:textColor="@color/dark_gray"
-                            style="@style/TvSubtitleStyle"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Categoría:"
-                            style="@style/TvSubtitleStyle"
-                            android:textColor="@color/dark_gray"/>
-                        <Button
-                            android:id="@+id/cancelCreateAuctionButton"
-                            style="@style/BtnTernaryStyle"
-                            android:layout_width="179dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:layout_marginLeft="110dp"
-                            android:text="Nueva categoría"
-                            android:textColor="@color/secondary" />
-                    </LinearLayout>
-
-                    <Spinner
-                        android:id="@+id/auctionCategorySpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/SpinnerGenericStyle"
-                        android:layout_marginBottom="4dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Acerca del artículo"
-                        style="@style/TvSubtitleStyle"
-                        android:textColor="@color/dark_gray"
-                        android:layout_marginTop="16dp"/>
-                    <TextView
-                        android:id="@+id/auctionDescriptionTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Genial para todas tus fotos y música. Ha estado conmigo un año, así que tiene algunos rasguños leves, pero funciona perfectamente. Me encantaría quedármelo, pero necesito el dinero para algo más. Si estás interesado en tener un iPhone chulo sin tener que pagar el precio completo de uno nuevo, ¡aquí tienes tu oportunidad!"
-                        style="@style/TvParagraphStyle"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"/>
-
-                    <Button
-                        android:id="@+id/aproveAuctionButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        style="@style/BtnPrimaryStyle"
-                        android:text="Aprobar"/>
-
-                    <Button
-                        android:id="@+id/denyAuctionButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/secondary_button_background"
-                        android:textColor="@color/dark_primary"
-                        android:text="Denegar"
-                        android:layout_marginBottom="10dp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Error Layout -->
+            <!-- Error message -->
             <LinearLayout
                 android:id="@+id/errorLoadingAuctionLinearLayout"
                 android:layout_width="match_parent"
@@ -325,29 +68,381 @@
                 android:paddingTop="200dp"
                 android:visibility="gone">
                 <ImageView
+                    android:id="@+id/errorLoadingImageTextView"
                     android:layout_width="220dp"
                     android:layout_height="137dp"
                     android:src="@drawable/error_loading_generic"
                     android:layout_gravity="center"
                     android:importantForAccessibility="no"/>
                 <TextView
+                    android:id="@+id/errorLoadingTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/getAuction_error_loading_title"
+                    android:text="@string/auction_evaluate_no_auctions"
                     style="@style/TvSubtitleStyle"
                     android:layout_gravity="center"
                     android:textAlignment="center"
                     android:layout_marginTop="8dp"/>
                 <TextView
+                    android:id="@+id/errorLoadingDescriptionTextView"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/getAuction_error_loading_text"
+                    android:text="@string/auction_evaluate_no_auctions_description"
                     style="@style/TvParagraphStyle"
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
                     android:textAlignment="center"/>
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-</layout>
 
+            <!-- Main Content -->
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/mainContentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <!-- Spinner for Auction Items -->
+                    <LinearLayout
+                        android:id="@+id/auctionItemsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:paddingTop="30dp"
+                        android:orientation="vertical">
+                        <Spinner
+                            android:id="@+id/auctionItemsSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/SpinnerGenericStyle"
+                            android:layout_marginBottom="4dp"/>
+                    </LinearLayout>
+
+                    <!-- Media Carousel -->
+                    <LinearLayout
+                        android:id="@+id/mediaCarouselContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="1dp"
+                        android:orientation="vertical">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/playerConstraintlayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="350dp"
+                            android:layout_margin="12dp"
+                            android:background="@drawable/carousel_item_background"
+                            android:clipChildren="true"
+                            android:padding="1dp">
+
+                            <ProgressBar
+                                android:id="@+id/progressBarVideo"
+                                android:visibility="gone"
+                                style="?android:attr/progressBarStyleLarge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <ImageView
+                                android:id="@+id/showedFileImageView"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:adjustViewBounds="true"
+                                android:importantForAccessibility="no"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_launcher_background"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHeight_max="350dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                android:visibility="gone"/>
+
+                            <com.google.android.exoplayer2.ui.PlayerView
+                                android:id="@+id/playerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:resize_mode="fill"
+                                android:visibility="gone"/>
+
+                            <SurfaceView
+                                android:id="@+id/playerSurfaceView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                android:visibility="gone"/>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <HorizontalScrollView
+                            android:id="@+id/hypermediaFilesHorizontalScrollView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/carouselFilesList"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="12dp"
+                                tools:itemCount="7"
+                                tools:listitem="@layout/template_carousel_item"/>
+                        </HorizontalScrollView>
+                    </LinearLayout>
+
+                    <!-- Auction Details -->
+                    <LinearLayout
+                        android:id="@+id/auctionDetailsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:paddingTop="40dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/auctionTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Apple iPhone 15 (256 GB) - Azul"
+                            style="@style/TvTitleStyle"/>
+
+                        <TextView
+                            android:id="@+id/auctionPriceLabelTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/auction_evaluate_last_offer"
+                            style="@style/TvSubtitleStyle"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginTop="16dp"/>
+
+                        <TextView
+                            android:id="@+id/auctionPriceTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$15,700.00MXN"
+                            style="@style/TvTitleStyle"
+                            android:textColor="@color/primary"/>
+
+                        <LinearLayout
+                            android:id="@+id/auctionAvailableDaysContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="16dp">
+                            <TextView
+                                android:id="@+id/auctionAvailableDaysTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auction_evaluate_available_days"
+                                style="@style/TvParagraphStyle"
+                                android:textColor="@color/dark_gray"
+                                android:layout_marginEnd="8dp"/>
+                            <TextView
+                                android:id="@+id/auctionOpenningDaysTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="5"
+                                android:textColor="@color/dark_gray"
+                                style="@style/TvSubtitleStyle"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/auctionStateContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp">
+                            <TextView
+                                android:id="@+id/auctionStateTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auction_evaluate_auction_state"
+                                style="@style/TvParagraphStyle"
+                                android:textColor="@color/dark_gray"
+                                android:layout_marginEnd="8dp"/>
+                            <TextView
+                                android:id="@+id/auctionItemStateTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nuevo"
+                                android:textColor="@color/dark_gray"
+                                style="@style/TvSubtitleStyle"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/actionMiniumBidContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp">
+                            <TextView
+                                android:id="@+id/actionMiniumBidDescriptionTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Puja mínima establecida:"
+                                style="@style/TvParagraphStyle"
+                                android:textColor="@color/dark_gray"
+                                android:layout_marginEnd="8dp"/>
+                            <TextView
+                                android:id="@+id/actionMiniumBidTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$15,600.00MXN"
+                                android:textColor="@color/dark_gray"
+                                style="@style/TvSubtitleStyle"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/commentsSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:text="@string/auction_evaluate_observations"
+                                style="@style/TvBlackTagDecoratorStyle"/>
+
+                            <EditText
+                                android:id="@+id/itemCommentsEditText"
+                                style="@style/EdTxtGenericStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="132dp"
+                                android:layout_marginBottom="4dp"
+                                android:gravity="top|start"
+                                android:importantForAutofill="no"
+                                android:inputType="textMultiLine"
+                                android:minLines="3"
+                                android:overScrollMode="always"
+                                android:scrollbars="vertical" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/evaluateCommentErrorTextView"
+                            android:layout_marginTop="0dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/TvErrorField"
+                            android:text="@string/auction_evaluate_observations_error_text"
+                            android:visibility="gone"/>
+                        <LinearLayout
+                            android:id="@+id/commentButtonsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center">
+                            <Button
+                                android:id="@+id/cancelComments"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/secondary_button_background"
+                                android:textColor="@color/dark_primary"
+                                android:text="@string/auction_evaluate_cancel"
+                                android:visibility="gone"/>
+                            <Button
+                                android:id="@+id/saveCommentsButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                style="@style/BtnPrimaryStyle"
+                                android:text="@string/auction_evaluate_acept"
+                                android:visibility="gone"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/auctionCategoryContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:id="@+id/auctionCategoryLabelTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auction_evaluate_category"
+                                style="@style/TvSubtitleStyle"
+                                android:textColor="@color/dark_gray"/>
+                            <Button
+                                android:id="@+id/createAuctionButton"
+                                style="@style/BtnTernaryStyle"
+                                android:layout_width="179dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_marginLeft="110dp"
+                                android:text="@string/auction_evaluate_new_category"
+                                android:textColor="@color/secondary" />
+                        </LinearLayout>
+
+                        <Spinner
+                            android:id="@+id/auctionCategorySpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/SpinnerGenericStyle"
+                            android:layout_marginBottom="4dp"/>
+
+                        <!-- Auction Description -->
+                        <TextView
+                            android:id="@+id/auctionDescriptionTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/auction_evaluate_description"
+                            style="@style/TvSubtitleStyle"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginTop="16dp"/>
+                        <TextView
+                            android:id="@+id/auctionDescriptionTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Genial para todas tus fotos y música. Ha estado conmigo un año, así que tiene algunos rasguños leves, pero funciona perfectamente. Me encantaría quedármelo, pero necesito el dinero para algo más. Si estás interesado en tener un iPhone chulo sin tener que pagar el precio completo de uno nuevo, ¡aquí tienes tu oportunidad!"
+                            style="@style/TvParagraphStyle"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center">
+                            <Button
+                                android:id="@+id/denyAuctionButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@drawable/secondary_button_background"
+                                android:textColor="@color/dark_primary"
+                                android:text="@string/auction_evaluate_deny"/>
+                            <Button
+                                android:id="@+id/aproveAuctionButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                style="@style/BtnPrimaryStyle"
+                                android:text="@string/auction_evaluate_aprove"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </FrameLayout>
+    </LinearLayout>
+</layout>
