@@ -8,7 +8,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/mainViewFragmentLayout">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -28,15 +29,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="12dp"
-                        android:layout_marginTop="0dp"
                         android:visibility="gone">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/go_back_icon" />
-
                         <TextView
                             style="@style/TvTitleStyle"
                             android:layout_width="wrap_content"

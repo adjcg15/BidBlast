@@ -27,12 +27,6 @@
                 android:padding="12dp"
                 android:background="@color/dark_primary">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/go_back_icon"
-                    android:importantForAccessibility="no" />
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
