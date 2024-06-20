@@ -26,11 +26,8 @@ public class EvaluateAuctionViewModel extends ViewModel {
     private final MutableLiveData<List<AuctionCategory>> auctionCategoriesLiveData = new MutableLiveData<>();
     private final AuctionsRepository auctionsRepository = new AuctionsRepository();
     private final AuctionCategoriesRepository auctionCategoriesRepository = new AuctionCategoriesRepository();
+    private final MutableLiveData<Boolean> auctionErrorLiveData = new MutableLiveData<>();
     private static final String TAG = "EvaluateAuctionViewModel";
-
-    public LiveData<List<Auction>> getAuctionsLiveData() {
-        return auctionsLiveData;
-    }
 
     public LiveData<RequestStatus> getAuctionRequestStatus() {
         return auctionRequestStatus;
@@ -46,6 +43,13 @@ public class EvaluateAuctionViewModel extends ViewModel {
 
     public LiveData<List<AuctionCategory>> getAuctionCategories() {
         return auctionCategoriesLiveData;
+    }
+    public LiveData<List<Auction>> getAuctionsLiveData() {
+        return auctionsLiveData;
+    }
+
+    public LiveData<Boolean> getAuctionErrorLiveData() {
+        return auctionErrorLiveData;
     }
     public void recoverAuctionCategories() {
         Log.d(TAG, "Recovering auction categories");
@@ -64,17 +68,15 @@ public class EvaluateAuctionViewModel extends ViewModel {
     }
 
     public void recoverAllAuctions() {
-        Log.d(TAG, "Recovering all auctions");
         auctionsRepository.getPublishedAuctions(new IProcessStatusListener<List<Auction>>() {
             @Override
             public void onSuccess(List<Auction> auctions) {
-                auctionsLiveData.postValue(auctions);
-                Log.d(TAG, "All auctions recovered: " + auctions.toString());
+                auctionsLiveData.setValue(auctions);
             }
 
             @Override
             public void onError(ProcessErrorCodes errorCode) {
-                Log.d(TAG, "Error recovering all auctions: " + errorCode.toString());
+                auctionErrorLiveData.setValue(true);
             }
         });
     }
