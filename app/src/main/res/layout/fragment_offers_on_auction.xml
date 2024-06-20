@@ -40,108 +40,151 @@
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/playerConstraintlayout"
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:layout_margin="12dp"
-                android:visibility="gone"
-                android:background="@drawable/carousel_item_background"
-                android:clipChildren="true"
-                android:padding="1dp">
-
-                <ProgressBar
-                    android:id="@+id/progressBarVideo"
-                    android:visibility="gone"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-                <ImageView
-                    android:id="@+id/showedFileImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:importantForAccessibility="no"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_launcher_background"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHeight_max="350dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"/>
-
-                <com.google.android.exoplayer2.ui.PlayerView
-                    android:id="@+id/playerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:resize_mode="fill"
-                    android:visibility="gone"/>
-
-                <SurfaceView
-                    android:id="@+id/playerSurfaceView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <HorizontalScrollView
-                android:id="@+id/hypermediaFilesHorizontalScrollView"
+            <ScrollView
+                android:id="@+id/mainViewScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/carouselFilesList"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="12dp"
-                    tools:itemCount="7"
-                    tools:listitem="@layout/template_carousel_item"/>
-            </HorizontalScrollView>
-            <LinearLayout
-                android:id="@+id/errorLoadingAuctionLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:orientation="vertical"
-                android:paddingTop="200dp"
-                android:visibility="gone">
-                <ImageView
-                    android:layout_width="220dp"
-                    android:layout_height="137dp"
-                    android:src="@drawable/error_loading_generic"
-                    android:layout_gravity="center"
-                    android:importantForAccessibility="no"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/getAuction_error_loading_title"
-                    style="@style/TvSubtitleStyle"
-                    android:layout_gravity="center"
-                    android:textAlignment="center"
-                    android:layout_marginTop="8dp"/>
-                <TextView
-                    android:layout_width="280dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/getAuction_error_loading_text"
-                    style="@style/TvParagraphStyle"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:textAlignment="center"/>
-            </LinearLayout>
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/playerConstraintlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:layout_margin="12dp"
+                        android:background="@drawable/carousel_item_background"
+                        android:clipChildren="true"
+                        android:padding="1dp">
+                        <ProgressBar
+                            android:id="@+id/progressBarVideo"
+                            android:visibility="gone"
+                            style="?android:attr/progressBarStyleLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                        <ImageView
+                            android:id="@+id/showedFileImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:importantForAccessibility="no"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_launcher_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_max="350dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="gone"/>
+                        <com.google.android.exoplayer2.ui.PlayerView
+                            android:id="@+id/playerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:resize_mode="fill"
+                            android:visibility="gone"/>
+                        <SurfaceView
+                            android:id="@+id/playerSurfaceView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="gone"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <HorizontalScrollView
+                        android:id="@+id/hypermediaFilesHorizontalScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/carouselFilesList"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp"
+                            tools:itemCount="7"
+                            tools:listitem="@layout/template_carousel_item"/>
+                    </HorizontalScrollView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:paddingTop="12dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/auctionTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Apple iPhone 15 (256 GB) - Azul"
+                            style="@style/TvTitleStyle"/>
+                        <TextView
+                            android:id="@+id/auctionClosingDateTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cierra el 17 de Junio de 2024 a las 13:09"
+                            style="@style/TvParagraphStyle"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:text="@string/consultoffers_last_offers_title"
+                            style="@style/TvSubtitleStyle"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginTop="16dp"/>
+                    </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:id="@+id/offersListRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/template_offer_details"
+                        android:layout_margin="12dp"/>
+                    <LinearLayout
+                        android:id="@+id/emptyOffersMessageLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:paddingTop="80dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <ImageView
+                            android:layout_width="195dp"
+                            android:layout_height="214dp"
+                            android:src="@drawable/empty_items_generic"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"/>
+                        <TextView
+                            android:id="@+id/emptyOffersTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/consultoffers_empty_offers_title"
+                            style="@style/TvSubtitleStyle"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"/>
+                        <TextView
+                            android:id="@+id/emptyOffersTextTextView"
+                            android:layout_width="280dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/consultoffers_empty_offers_text"
+                            style="@style/TvParagraphStyle"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:textAlignment="center"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
             <LinearLayout
                 android:id="@+id/progressBarLinerLayout"
                 android:layout_width="match_parent"
@@ -154,15 +197,6 @@
                     android:layout_height="wrap_content"
                     style="?android:attr/progressBarStyleLarge" />
             </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:id="@+id/offersListRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                tools:itemCount="1"
-                tools:listitem="@layout/template_offer_details"
-                android:layout_margin="12dp"/>
             <TextView
                 android:id="@+id/allOffersLoadedTextView"
                 android:layout_width="match_parent"
@@ -184,38 +218,6 @@
                 android:textColor="@color/dark_primary"
                 android:visibility="gone"
                 android:paddingVertical="4dp"/>
-            <LinearLayout
-                android:id="@+id/emptyOffersMessageLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingTop="80dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <ImageView
-                    android:layout_width="195dp"
-                    android:layout_height="214dp"
-                    android:src="@drawable/empty_items_generic"
-                    android:layout_gravity="center"
-                    android:importantForAccessibility="no"/>
-                <TextView
-                    android:id="@+id/emptyOffersTitleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consultoffers_empty_offers_title"
-                    style="@style/TvSubtitleStyle"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"/>
-                <TextView
-                    android:id="@+id/emptyOffersTextTextView"
-                    android:layout_width="280dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consultoffers_empty_offers_text"
-                    style="@style/TvParagraphStyle"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:textAlignment="center"/>
-            </LinearLayout>
             <LinearLayout
                 android:id="@+id/errorLoadingOffersLinearLayout"
                 android:layout_width="match_parent"

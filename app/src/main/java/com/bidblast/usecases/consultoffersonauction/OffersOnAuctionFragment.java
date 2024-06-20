@@ -1,17 +1,19 @@
 package com.bidblast.usecases.consultoffersonauction;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -25,19 +27,19 @@ import com.bidblast.databinding.FragmentOffersOnAuctionBinding;
 import com.bidblast.global.CarouselItemAdapter;
 import com.bidblast.global.CarouselViewModel;
 import com.bidblast.grpc.Client;
+import com.bidblast.lib.DateToolkit;
 import com.bidblast.lib.ImageToolkit;
 import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class OffersOnAuctionFragment extends Fragment {
     private FragmentOffersOnAuctionBinding binding;
@@ -96,8 +98,9 @@ public class OffersOnAuctionFragment extends Fragment {
         setupCarouselItemsListener();
         setupOffersListListener();
         setupSelectedCarouselItemValueListener();
-        auctionStatusListener();
+        setupAuctionStatusListener();
         setupOffersListStatusListener();
+        setupBlockUserStatusListener();
         setupStillOffersLeftToLoadListener();
         setupRecyclerViewScrollListener();
 
@@ -114,40 +117,58 @@ public class OffersOnAuctionFragment extends Fragment {
     }
 
     private void handleBlockUserFragment(int idProfile) {
-        //TODO
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Confirmación de bloqueo");
+        builder.setMessage("¿Estás seguro de que deseas bloquear al comprador?");
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            if (offersOnAuctionViewModel.getBlockUserRequestStatus().getValue() != RequestStatus.LOADING) {
+                offersOnAuctionViewModel.blockUser(idProfile, idAuction);
+            };
+        });
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
-    private void showMediaFilesSection() {
-        binding.playerConstraintlayout.setVisibility(View.VISIBLE);
-        binding.hypermediaFilesHorizontalScrollView.setVisibility(View.VISIBLE);
+    private void setupBlockUserStatusListener() {
+        offersOnAuctionViewModel.getBlockUserRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
+            if (requestStatus == RequestStatus.DONE) {
+                String successMessage = getString(R.string.consultoffers_block_user_success_message);
+                Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
+                offersOnAuctionViewModel.clearOffersList();
+                loadOffers();
+            }
+
+            if (requestStatus == RequestStatus.ERROR) {
+                offersOnAuctionViewModel.clearOffersList();
+                loadOffers();
+                String errorMessage = getString(R.string.consultoffers_block_user_error_message);
+                Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void auctionStatusListener() {
+    private void setupAuctionStatusListener() {
         offersOnAuctionViewModel.getAuctionRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             if (requestStatus == RequestStatus.DONE) {
                 binding.progressBarLinerLayout.setVisibility(View.GONE);
-                showMediaFilesSection();
+                binding.mainViewScrollView.setVisibility(View.VISIBLE);
                 auction = offersOnAuctionViewModel.getAuction().getValue();
-                loadHypermediaFilesOnCarousel();
+                loadHypermediaFilesOnCarouselAndAuctionInformation();
             }
             if (requestStatus == RequestStatus.ERROR) {
                 binding.progressBarLinerLayout.setVisibility(View.GONE);
                 ProcessErrorCodes errorCode = offersOnAuctionViewModel.getAuctionErrorCode().getValue();
 
                 if(errorCode != null) {
-                    showAuctionImageError();
+                    binding.mainViewScrollView.setVisibility(View.GONE);
+                    binding.errorLoadingOffersLinearLayout.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
-    private void showAuctionImageError() {
-        binding.playerConstraintlayout.setVisibility(View.GONE);
-        binding.hypermediaFilesHorizontalScrollView.setVisibility(View.GONE);
-        binding.errorLoadingAuctionLinearLayout.setVisibility(View.VISIBLE);
-    }
-
-    private void loadHypermediaFilesOnCarousel() {
+    private void loadHypermediaFilesOnCarouselAndAuctionInformation() {
         for (HypermediaFile file : auction.getMediaFiles()) {
             if (file.getContent() == null || file.getContent().isEmpty()) {
                 String content = ImageToolkit.convertDrawableToBase64(requireContext(), R.drawable.video);
@@ -155,15 +176,24 @@ public class OffersOnAuctionFragment extends Fragment {
             }
         }
         carouselViewModel.setFilesList(auction.getMediaFiles());
+        binding.auctionTitleTextView.setText(auction.getTitle());
+        String timeLeft = DateToolkit.parseToFullDateWithHour(auction.getClosesAt());
+        binding.auctionClosingDateTextView.setText(String.format(
+                binding.getRoot().getContext().getString(
+                        R.string.consultcreatedauctions_available_date_message
+                ),
+                timeLeft
+        ));
     }
 
     private void loadVideoOnSurfaceView(int videoId) {
+        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-            //TODO Manejo de mensaje cuando hay error en el stream
+            binding.progressBarVideo.setVisibility(View.VISIBLE);
+            deleteVideoInCache();
+            loadVideoOnSurfaceView(videoId);
             return true;
         });
-
-        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnCompletionListener(mp -> {
             mediaPlayer.reset();
             try {
@@ -259,9 +289,13 @@ public class OffersOnAuctionFragment extends Fragment {
 
     private void setupGoBackButton() {
         binding.goBackImageView.setOnClickListener(v -> {
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.popBackStack();
+            goToPreviousWindow();
         });
+    }
+
+    private void goToPreviousWindow() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        fragmentManager.popBackStack();
     }
 
     private void setupCarouselItemsListener() {

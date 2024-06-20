@@ -6,13 +6,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.bidblast.R;
+import com.bidblast.lib.Session;
 import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.databinding.ActivityMainMenuBinding;
 import com.bidblast.usecases.consultcreatedauctions.ConsultCreatedAuctionsFragment;
 import com.bidblast.usecases.createauction.CreateAuctionFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
+
+import java.util.List;
 
 public class MainMenuActivity extends AppCompatActivity {
     ActivityMainMenuBinding binding;
@@ -22,6 +27,20 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        int salesMenuItemId = R.id.salesMenuItem;
+
+        String AUCTIONEER_ROLE = "AUCTIONEER";
+        List<String> userRoles = Session.getInstance().getUser().getRoles();
+        if (!userRoles.contains(AUCTIONEER_ROLE)) {
+            View salesMenuItem = findViewById(salesMenuItemId);
+            if (salesMenuItem != null) {
+                ViewGroup parent = (ViewGroup) salesMenuItem.getParent();
+                if (parent != null) {
+                    parent.removeView(salesMenuItem);
+                }
+            }
+        }
 
         showFragment(new SearchAuctionFragment());
         setupMenuNavigation();
