@@ -2,6 +2,7 @@ package com.bidblast.usecases.bidonauction;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -30,6 +31,7 @@ import com.bidblast.lib.ValidationToolkit;
 import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.usecases.login.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedOutputStream;
@@ -408,7 +410,13 @@ public class BidOnAuctionFragment extends Fragment {
     }
 
     private void finishUserSession() {
-
+        if(getActivity() != null) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("showSessionFinishedToast", true);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private void setupGoBackButton() {

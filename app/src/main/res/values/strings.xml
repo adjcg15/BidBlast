@@ -19,6 +19,7 @@
     <string name="login_password_error">Debe ingresar una contraseña</string>
     <string name="login_error_toast_message">No fue posible iniciar sesión, intente más tarde</string>
     <string name="login_invalid_credentials_toast_message">Revise sus credenciales y vuelva a intentarlo</string>
+    <string name="login_session_finished_toast_message">Su sesión ha caducado, por favor inicie sesión nuevamente</string>
 
     <string name="searchauction_searchbar_hint">Buscar subasta</string>
     <string name="searchauction_search_button_action">Buscar</string>
