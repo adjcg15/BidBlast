@@ -6,6 +6,8 @@
     <string name="global_full_name">Nombre completo <font color="#FF5C00">*</font></string>
     <string name="global_field_restrictions">Los campos marcados con un <font color="#FF5C00">*</font> son obligatorios</string>
     <string name="global_cancel">Cancelar</string>
+    <string name="global_yes">Sí</string>
+    <string name="global_no">No</string>
 
     <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
     <string name="login_welcome_description">Sigue participando en las subastas más interesantes del momento.</string>
@@ -17,6 +19,7 @@
     <string name="login_password_error">Debe ingresar una contraseña</string>
     <string name="login_error_toast_message">No fue posible iniciar sesión, intente más tarde</string>
     <string name="login_invalid_credentials_toast_message">Revise sus credenciales y vuelva a intentarlo</string>
+    <string name="login_session_finished_toast_message">Su sesión ha caducado, por favor inicie sesión nuevamente</string>
 
     <string name="searchauction_searchbar_hint">Buscar subasta</string>
     <string name="searchauction_search_button_action">Buscar</string>
@@ -141,9 +144,23 @@
     <string name="postitem_media">Fotos y videos <font color="#FF5C00">*</font></string>
 
     <string name="bidonauction_title">Artículo en subasta</string>
-    <string name="bidonauction_custom_bid_error">Debe ser un número y superar la puja mínima</string>
+    <string name="bidonauction_empty_bid_error">Debe seleccionar un valor de puja</string>
+    <string name="bidonauction_custom_bid_error">Debe ser un número con máximo un decimal y superar la puja mínima</string>
     <string name="bidonauction_bid_hint">Puja personalizada</string>
     <string name="bidonauction_make_offer">Hacer oferta</string>
+    <string name="bidonauction_loading_offer">Creando oferta...</string>
+    <string name="bidonauction_last_offer">Última oferta</string>
+    <string name="bidonauction_base_price">Precio base</string>
+    <string name="bidonauction_closes_at">Cierra el: </string>
+    <string name="bidonauction_minimum_bid">El vendedor estableció una puja mínima de </string>
+    <string name="bidonauction_not_minimum_bid">El vendedor NO estableció una puja mínima</string>
+    <string name="bidonauction_success_offer">Su oferta se ha creado de forma exitosa</string>
+    <string name="bidonauction_offer_overcomed">Parece que hay una oferta nueva más alta que la suya, recargue para consultar</string>
+    <string name="bidonauction_auction_finished">La subasta ha cerrado, no puede realizar más ofertas</string>
+    <string name="bidonauction_auction_blocked">Ha sido bloqueado en esta subasta, por lo que no puede realizar más ofertas</string>
+    <string name="bidonauction_early_offer">Debe esperar 10 minutos desde su última oferta para realizar una nueva</string>
+    <string name="bidonauction_error_creating_offer">Ocurrió un error al crear la oferta, intente más tarde</string>
+    <string name="bidonauction_confirm_offer_creation">¿Está seguro que desea realizar una oferta por %s? Su puja en esta oferta es de %s respecto al último precio de la subasta.</string>
 
     <string name="mainmenu_auctions">Subastas</string>
     <string name="mainmenu_purchases">Compras</string>

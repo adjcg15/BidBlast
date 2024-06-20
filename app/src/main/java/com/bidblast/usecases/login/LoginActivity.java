@@ -29,6 +29,12 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Intent intent = getIntent();
+        boolean showSessionFinishedToast = intent.getBooleanExtra("showSessionFinishedToast", false);
+        if (showSessionFinishedToast) {
+            Snackbar.make(binding.getRoot(), getString(R.string.login_session_finished_toast_message), Snackbar.LENGTH_SHORT).show();
+        }
+
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         setupLoginButtonClick();

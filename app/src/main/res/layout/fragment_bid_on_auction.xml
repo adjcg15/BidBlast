@@ -146,7 +146,7 @@
                             android:id="@+id/auctionPriceLabelTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Última oferta"
+                            android:text="@string/bidonauction_last_offer"
                             style="@style/TvSubtitleStyle"
                             android:textColor="@color/dark_gray"
                             android:layout_marginTop="16dp"/>
@@ -157,12 +157,20 @@
                             android:text="$15,700.00MXN"
                             style="@style/TvTitleStyle"
                             android:textColor="@color/primary"/>
-                        <TextView
-                            android:id="@+id/auctionClosingDateTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cierra el 17 de Junio de 2024 a las 13:09"
-                            style="@style/TvParagraphStyle"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bidonauction_closes_at"/>
+                            <TextView
+                                android:id="@+id/auctionClosingDateTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TvParagraphStyle"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -181,13 +189,14 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp">
+                            android:layout_marginTop="20dp">
                             <TextView
                                 android:id="@+id/auctionMinimumBidMessageTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="El vendedor estableció una puja mínima de "
-                                style="@style/TvParagraphStyle"/>
+                                android:text="@string/bidonauction_minimum_bid"
+                                style="@style/TvParagraphStyle"
+                                android:paddingRight="5dp"/>
                             <TextView
                                 android:id="@+id/auctionMinimumBidTextView"
                                 android:layout_width="wrap_content"
@@ -205,7 +214,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
                                 <TextView
-                                    android:id="@+id/oneHundredOfferTextView"
+                                    android:id="@+id/firstDefaultOfferTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$100"
@@ -215,7 +224,7 @@
                                     android:textSize="16sp"
                                     android:background="@drawable/black_rounded_border" />
                                 <TextView
-                                    android:id="@+id/twoHundredOfferTextView"
+                                    android:id="@+id/secondDefaultOfferTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$200"
@@ -225,7 +234,7 @@
                                     android:textSize="16sp"
                                     android:background="@drawable/black_rounded_border" />
                                 <TextView
-                                    android:id="@+id/threeHundredOfferTextView"
+                                    android:id="@+id/thirdDefaultOfferTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$300"
@@ -240,14 +249,18 @@
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
                                 android:src="@drawable/plus_white_icon"
-                                android:background="@drawable/orange_icon_button_background"/>
+                                android:background="@drawable/orange_icon_button_background"
+                                android:contentDescription="@string/bidonauction_bid_hint" />
                             <EditText
                                 android:id="@+id/customBidEditText"
-                                android:layout_width="200dp"
+                                android:maxWidth="200dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/bidonauction_bid_hint"
                                 style="@style/EdTxtGenericStyle"
-                                android:visibility="gone"/>
+                                android:visibility="gone"
+                                android:importantForAutofill="no"
+                                android:inputType="numberDecimal" />
                         </LinearLayout>
                         <TextView
                             android:id="@+id/customBidErrorTextView"
