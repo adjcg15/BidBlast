@@ -1,5 +1,7 @@
 package com.bidblast.usecases.bidonauction;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -197,15 +199,56 @@ public class BidOnAuctionFragment extends Fragment {
                 showInvalidOfferErrorMessage();
             } else {
                 float offer = isCustomOffer
-                    ? Float.parseFloat(binding.customBidEditText.getText().toString())
-                    : offerAmount;
+                        ? Float.parseFloat(binding.customBidEditText.getText().toString())
+                        : offerAmount;
                 bidOnAuctionViewModel.setCurrentBid(offer);
 
-                if(bidOnAuctionViewModel.getOfferRequestStatus().getValue() != RequestStatus.LOADING) {
-                    bidOnAuctionViewModel.makeOffer();
-                }
+                showOfferCreationConfirmationDialog();
             }
         });
+    }
+
+    private void showOfferCreationConfirmationDialog() {
+        if (getActivity() != null) {
+            Auction auction = bidOnAuctionViewModel.getAuction().getValue();
+            float currentBid = bidOnAuctionViewModel.getCurrentBid().getValue();
+
+            float lastAuctionPrice = auction.getLastOffer() != null
+                ? auction.getLastOffer().getAmount()
+                : auction.getBasePrice();
+            float newOffer = lastAuctionPrice + currentBid;
+            String confirmationMessage = String.format(
+                getString(R.string.bidonauction_confirm_offer_creation),
+                CurrencyToolkit.parseToMXN(newOffer),
+                CurrencyToolkit.parseToMXN(currentBid)
+            );
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(confirmationMessage);
+
+            builder.setPositiveButton(getString(R.string.global_yes), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startOfferCreation();
+                }
+            });
+
+            builder.setNegativeButton(getString(R.string.global_no), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    private void startOfferCreation() {
+        if(bidOnAuctionViewModel.getOfferRequestStatus().getValue() != RequestStatus.LOADING) {
+            bidOnAuctionViewModel.makeOffer();
+        }
     }
 
     private void cleanOfferErrorMessage() {

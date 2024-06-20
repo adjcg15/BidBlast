@@ -6,6 +6,8 @@
     <string name="global_full_name">Nombre completo <font color="#FF5C00">*</font></string>
     <string name="global_field_restrictions">Los campos marcados con un <font color="#FF5C00">*</font> son obligatorios</string>
     <string name="global_cancel">Cancelar</string>
+    <string name="global_yes">Sí</string>
+    <string name="global_no">No</string>
 
     <string name="login_welcome_back">¡Bienvenido de nuevo!</string>
     <string name="login_welcome_description">Sigue participando en las subastas más interesantes del momento.</string>
@@ -157,6 +159,7 @@
     <string name="bidonauction_auction_blocked">Ha sido bloqueado en esta subasta, por lo que no puede realizar más ofertas</string>
     <string name="bidonauction_early_offer">Debe esperar 10 minutos desde su última oferta para realizar una nueva</string>
     <string name="bidonauction_error_creating_offer">Ocurrió un error al crear la oferta, intente más tarde</string>
+    <string name="bidonauction_confirm_offer_creation">¿Está seguro que desea realizar una oferta por %s? Su puja en esta oferta es de %s respecto al último precio de la subasta.</string>
 
     <string name="mainmenu_auctions">Subastas</string>
     <string name="mainmenu_purchases">Compras</string>
