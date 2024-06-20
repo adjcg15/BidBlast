@@ -24,7 +24,10 @@ import com.bidblast.model.AuctionState;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.model.User;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -527,6 +530,7 @@ public class AuctionsRepository {
                             auction.setBasePrice(auctionRes.getBasePrice());
                             auction.setMinimumBid(auctionRes.getMinimumBid());
                             auction.setItemCondition(auctionRes.getItemCondition());
+                            auction.setDaysAvailable(auctionRes.getDaysAvailable());
 
                             List<AuctionMediaFileJSONResponse> mediaFilesRes = auctionRes.getMediaFiles();
                             if (mediaFilesRes != null) {
@@ -573,7 +577,6 @@ public class AuctionsRepository {
             }
         });
     }
-
     public void approveAuction(int idAuction, int idAuctionCategory, IEmptyProcessStatusListener statusListener) {
         IAuctionsService reviewService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
