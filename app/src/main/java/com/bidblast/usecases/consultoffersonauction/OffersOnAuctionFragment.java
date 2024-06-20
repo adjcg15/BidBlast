@@ -187,19 +187,13 @@ public class OffersOnAuctionFragment extends Fragment {
     }
 
     private void loadVideoOnSurfaceView(int videoId) {
+        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-            mediaPlayer.reset();
-            try {
-                mediaPlayer.setDataSource(tempFile.getAbsolutePath());
-                mediaPlayer.prepareAsync();
-                mediaPlayer.start();
-            } catch (IOException e) {
-                Log.e(TAG, "Error setting data source or preparing MediaPlayer", e);
-            }
+            binding.progressBarVideo.setVisibility(View.VISIBLE);
+            deleteVideoInCache();
+            loadVideoOnSurfaceView(videoId);
             return true;
         });
-
-        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnCompletionListener(mp -> {
             mediaPlayer.reset();
             try {

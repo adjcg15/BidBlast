@@ -18,7 +18,7 @@ import java.util.List;
 public class Client {
     private static ManagedChannel channel = null;
     private final VideoServiceGrpc.VideoServiceStub videoServiceStub;
-    private static final String GRPC_URL = "192.168.100.2";
+    private static final String GRPC_URL = "192.168.100.164";
     private static final int GRPC_PORT = 3001;
     private final Handler handler;
 

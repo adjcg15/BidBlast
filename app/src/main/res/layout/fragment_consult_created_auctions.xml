@@ -22,12 +22,6 @@
                 android:padding="12dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
-                <ImageButton
-                    android:id="@+id/goToLoginImageButton"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@color/transparent"
-                    android:src="@drawable/go_back_icon" />
                 <EditText
                     android:id="@+id/searchBarEditText"
                     android:layout_height="wrap_content"
