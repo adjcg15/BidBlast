@@ -28,7 +28,7 @@
             android:screenOrientation="portrait"
             android:exported="false" />
         <activity
-            android:name=".usecases.consultaauctioncategories.ConsultCategoriesActivity"
+            android:name=".usecases.consultauctioncategories.ConsultCategoriesActivity"
             android:exported="false" />
         <activity
             android:name=".usecases.login.LoginActivity"
@@ -40,9 +40,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".usecases.signup.SignUpActivity"
-            android:exported="false" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
