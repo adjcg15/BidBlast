@@ -65,8 +65,10 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             intent = new Intent(this, MainMenuActivity.class);
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         startActivity(intent);
+        this.finish();
     }
 
     private boolean validateFields() {

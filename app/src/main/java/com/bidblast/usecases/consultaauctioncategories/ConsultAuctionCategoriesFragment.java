@@ -1,5 +1,8 @@
 package com.bidblast.usecases.consultaauctioncategories;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +24,8 @@ import android.widget.Toast;
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentConsultCategoriesBinding;
 import com.bidblast.model.AuctionCategory;
+import com.bidblast.usecases.login.LoginActivity;
+
 public class ConsultAuctionCategoriesFragment extends Fragment {
 
     private FragmentConsultCategoriesBinding binding;
@@ -44,6 +49,8 @@ public class ConsultAuctionCategoriesFragment extends Fragment {
         searchButton = binding.searchCategoryButton;
 
         observeViewModel();
+        setupSignOutImageButton();
+
         viewModel.loadAuctionCategories();
         searchButton.setOnClickListener(v -> {
             String query = searchCategoryBarEditText.getText().toString().trim();
@@ -55,6 +62,41 @@ public class ConsultAuctionCategoriesFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void setupSignOutImageButton() {
+        binding.signOutImageView.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getString(R.string.global_sign_out_confirmation_message));
+
+                builder.setPositiveButton(getString(R.string.global_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishUserSession();
+                    }
+                });
+
+                builder.setNegativeButton(getString(R.string.global_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+    }
+
+    private void finishUserSession() {
+        if(getActivity() != null) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            getActivity().finish();
+        }
     }
 
     private void observeViewModel() {
