@@ -38,36 +38,12 @@ public class CreateAuctionViewModel extends ViewModel {
         itemDescription.setValue(description);
     }
 
-    public LiveData<Integer> getItemStatus() {
-        return itemStatus;
-    }
-
-    public void setItemStatus(Integer status) {
-        itemStatus.setValue(status);
-    }
-
     public LiveData<Integer> getOpeningDays() {
         return openingDays;
     }
 
     public void setOpeningDays(Integer days) {
         openingDays.setValue(days);
-    }
-
-    public LiveData<Double> getBasePrice() {
-        return basePrice;
-    }
-
-    public void setBasePrice(Double price) {
-        basePrice.setValue(price);
-    }
-
-    public LiveData<Double> getMinimumBid() {
-        return minimumBid;
-    }
-
-    public void setMinimumBid(Double bid) {
-        minimumBid.setValue(bid);
     }
 
     public LiveData<List<Uri>> getSelectedImages() {
@@ -79,13 +55,6 @@ public class CreateAuctionViewModel extends ViewModel {
         images.add(imageUri);
         selectedImages.setValue(images);
     }
-
-    public void removeImage(Uri imageUri) {
-        List<Uri> images = new ArrayList<>(selectedImages.getValue());
-        images.remove(imageUri);
-        selectedImages.setValue(images);
-    }
-
     public LiveData<Uri> getSelectedVideo() {
         return selectedVideo;
     }
@@ -93,12 +62,14 @@ public class CreateAuctionViewModel extends ViewModel {
     public void setSelectedVideo(Uri videoUri) {
         selectedVideo.setValue(videoUri);
     }
-
-    public LiveData<List<AuctionState>> getAuctionStates() {
-        return auctionStates;
-    }
-
-    public void setAuctionStates(List<AuctionState> states) {
-        auctionStates.setValue(states);
+    public void clearData() {
+        auctionTitle.setValue("");
+        itemDescription.setValue("");
+        itemStatus.setValue(null);
+        openingDays.setValue(null);
+        basePrice.setValue(null);
+        minimumBid.setValue(null);
+        selectedImages.setValue(new ArrayList<>());
+        selectedVideo.setValue(null);
     }
 }

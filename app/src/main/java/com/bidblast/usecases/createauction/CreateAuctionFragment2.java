@@ -48,7 +48,6 @@ import com.bidblast.model.HypermediaFile;
 import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
-import com.bidblast.usecases.consultauctioncategories.ConsultAuctionCategoriesFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 import java.io.ByteArrayOutputStream;
@@ -162,6 +161,8 @@ public class CreateAuctionFragment2 extends Fragment {
         twoHundredOfferTextView.setOnClickListener(v -> selectBidOption(twoHundredOfferTextView));
         twoHundredfiftyOfferTextView.setOnClickListener(v -> selectBidOption(twoHundredfiftyOfferTextView));
         threeHundredOfferTextView.setOnClickListener(v -> selectBidOption(threeHundredOfferTextView));
+
+        binding.cancelCreateAuctionButton.setOnClickListener(v -> navigateToMainMenu());
     }
 
     private void handleActivityResult(ActivityResult result) {
@@ -237,6 +238,7 @@ public class CreateAuctionFragment2 extends Fragment {
             showToast("Ya has seleccionado el máximo de 7 imágenes");
         }
     }
+
     private void handleVideoUri(Uri mediaUri, boolean videoSelected) {
         if (!videoSelected) {
             if (isValidFileSize(mediaUri, MAX_VIDEO_SIZE_MB)) {
@@ -254,6 +256,7 @@ public class CreateAuctionFragment2 extends Fragment {
             showToast("Ya has seleccionado un video");
         }
     }
+
     private File getFileFromUri(Uri uri) {
         File file = null;
         try {
@@ -266,7 +269,7 @@ public class CreateAuctionFragment2 extends Fragment {
     }
 
     private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Video.Media.DATA };
+        String[] proj = {MediaStore.Video.Media.DATA};
         Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null);
         if (cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
@@ -277,6 +280,7 @@ public class CreateAuctionFragment2 extends Fragment {
         }
         return null;
     }
+
     private File copyUriToFile(Uri uri) throws IOException {
         File tempFile = File.createTempFile("temp", null, getActivity().getCacheDir());
         try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
@@ -289,6 +293,7 @@ public class CreateAuctionFragment2 extends Fragment {
         }
         return tempFile;
     }
+
     private void sendVideoByGrpc(File videoFile, int auctionId) {
         Server videoService = new Server();
         try {
@@ -312,9 +317,11 @@ public class CreateAuctionFragment2 extends Fragment {
             return size <= maxSizeMb * 1024 * 1024;
         }
     }
+
     private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
+
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -434,6 +441,7 @@ public class CreateAuctionFragment2 extends Fragment {
             return null;
         }
     }
+
     private void showAlert(String message) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Información")
@@ -441,14 +449,32 @@ public class CreateAuctionFragment2 extends Fragment {
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
+
     private void navigateToMainMenu() {
+        clearFields();
         if (getActivity() instanceof MainMenuActivity) {
             MainMenuActivity activity = (MainMenuActivity) getActivity();
-            activity.showFragment(new ConsultAuctionCategoriesFragment());
+            activity.showFragment(new SearchAuctionFragment());
             activity.selectSearchAuctionMenuItem();
         }
     }
+
     private void setupListeners() {
         binding.cancelCreateAuctionButton.setOnClickListener(v -> navigateToMainMenu());
     }
+
+    private void clearFields() {
+        viewModel.clearData();
+        basePriceEditText.setText("");
+        basePriceErrorTextView.setVisibility(View.GONE);
+        selectMultimediaErrorTextView.setVisibility(View.GONE);
+        selectedBidOption = null;
+        oneHundredOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        oneHundredFiftyOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        twoHundredOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        twoHundredfiftyOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        threeHundredOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
+        updateMediaAdapter(); // Esto actualizará la vista para mostrar solo el icono de multimedia.
+    }
 }
+

@@ -1,6 +1,5 @@
 package com.bidblast.usecases.createauction;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -18,19 +17,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bidblast.R;
-import com.bidblast.databinding.FragmentConsultCategoriesBinding;
 import com.bidblast.databinding.FragmentPostItemForAuctionBinding;
 import com.bidblast.menus.mainmenu.MainMenuActivity;
 import com.bidblast.model.AuctionState;
 import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
-import com.bidblast.usecases.consultauctioncategories.ConsultAuctionCategoriesFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 import java.util.ArrayList;
@@ -188,7 +183,7 @@ public class CreateAuctionFragment extends Fragment {
     private void navigateToMainMenu() {
         if (getActivity() instanceof MainMenuActivity) {
             MainMenuActivity activity = (MainMenuActivity) getActivity();
-            activity.showFragment(new ConsultAuctionCategoriesFragment());
+            activity.showFragment(new SearchAuctionFragment());
             activity.selectSearchAuctionMenuItem();
         }
     }
