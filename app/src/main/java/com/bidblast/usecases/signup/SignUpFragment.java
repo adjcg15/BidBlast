@@ -2,11 +2,21 @@ package com.bidblast.usecases.signup;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,46 +24,53 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
-import com.bidblast.databinding.ActivitySignUpBinding;
+import com.bidblast.databinding.FragmentSignUpBinding;
+import com.bidblast.lib.ImageToolkit;
+import com.bidblast.model.User;
 import com.bidblast.repositories.ProcessErrorCodes;
 import com.bidblast.usecases.login.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SignUpActivity extends AppCompatActivity {
-    private ActivitySignUpBinding binding;
+public class SignUpFragment extends Fragment {
+    private FragmentSignUpBinding binding;
     private SignUpViewModel viewModel;
     private static final int PERMISSION_REQUEST_READ_MEDIA_IMAGES = 100;
     private boolean isPasswordVisible = false;
+    private boolean isEdition = false;
+    private User userToEdit;
+    private static final String ARG_USER = "user";
+    private static final String ARG_IS_EDITION = "is_edition";
+
+    public static SignUpFragment newInstance(User user, boolean isEdition) {
+        SignUpFragment fragment = new SignUpFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_USER, user);
+        args.putBoolean(ARG_IS_EDITION, isEdition);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     openGallery();
                 } else {
-                    Toast.makeText(this, "Permiso denegado para acceder a la galería", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Permiso denegado para acceder a la galería", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -65,17 +82,17 @@ public class SignUpActivity extends AppCompatActivity {
                     if (selectedImageUri != null) {
                         Log.d("GalleryLauncher", "URI de la imagen seleccionada: " + selectedImageUri.toString());
                         UCrop.Options options = new UCrop.Options();
-                        UCrop uCrop = UCrop.of(selectedImageUri, Uri.fromFile(new File(getCacheDir(), "cropped_image")));
+                        UCrop uCrop = UCrop.of(selectedImageUri, Uri.fromFile(new File(requireContext().getCacheDir(), "cropped_image")));
                         uCrop.withOptions(options);
-                        uCrop.start(this);
+                        uCrop.start(requireContext(), this);
                     }
                 }
             });
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP && data != null) {
+        if (resultCode == Activity.RESULT_OK && requestCode == UCrop.REQUEST_CROP && data != null) {
             Uri croppedUri = UCrop.getOutput(data);
             if (croppedUri != null) {
                 if (isValidImageSize(croppedUri)) {
@@ -83,7 +100,7 @@ public class SignUpActivity extends AppCompatActivity {
                     binding.imageSelected.setImageURI(croppedUri);
                     viewModel.setAvatarBase64(base64Image);
                 } else {
-                    Toast.makeText(this, "La imagen seleccionada es demasiado grande", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "La imagen seleccionada es demasiado grande", Toast.LENGTH_SHORT).show();
                 }
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
@@ -96,7 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private String convertImageToBase64(Uri imageUri) {
         try {
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
             if (inputStream != null) {
                 byte[] buffer = new byte[inputStream.available()];
                 inputStream.read(buffer);
@@ -111,7 +128,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean isValidImageSize(Uri imageUri) {
         try {
-            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
             if (inputStream != null) {
                 int fileSize = inputStream.available();
                 double fileSizeInMB = fileSize / (1024 * 1024.0);
@@ -124,14 +141,25 @@ public class SignUpActivity extends AppCompatActivity {
         return false;
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivitySignUpBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentSignUpBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(SignUpViewModel.class);
 
+        if (getArguments() != null) {
+            isEdition = getArguments().getBoolean(ARG_IS_EDITION, false);
+            userToEdit = getArguments().getParcelable(ARG_USER);
+            loadUserInformationOnView();
+        }
+
+        setupHeaderView();
         setupSignUpButtonClick();
         setupFieldsValidations();
         setupSignUpStatusListener();
@@ -141,9 +169,41 @@ public class SignUpActivity extends AppCompatActivity {
         setupPasswordRules();
         setupGoBackListener();
     }
+
+    private void setupHeaderView() {
+        if (isEdition) {
+            binding.headerDefault.setVisibility(View.GONE);
+            binding.headerEdit.setVisibility(View.VISIBLE);
+        } else {
+            binding.headerDefault.setVisibility(View.VISIBLE);
+            binding.headerEdit.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadUserInformationOnView() {
+        if (userToEdit != null) {
+            Log.d("SignUpFragment", "User ID: " + userToEdit.getId());
+            Log.d("SignUpFragment", "Full Name: " + userToEdit.getFullName());
+            Log.d("SignUpFragment", "Email: " + userToEdit.getEmail());
+            Log.d("SignUpFragment", "Phone Number: " + userToEdit.getPhoneNumber());
+            Log.d("SignUpFragment", "Avatar: " + userToEdit.getAvatar());
+
+            binding.fullNameEditText.setText(userToEdit.getFullName());
+            binding.emailEditText.setText(userToEdit.getEmail());
+            binding.phoneNumberEditText.setText(userToEdit.getPhoneNumber());
+
+            if (userToEdit.getAvatar() != null) {
+                binding.imageSelected.setImageBitmap(ImageToolkit.parseBitmapFromBase64(userToEdit.getAvatar()));
+                viewModel.setAvatarBase64(userToEdit.getAvatar());
+            }
+
+            binding.signUpButton.setText("Guardar cambios");
+        }
+    }
+
     private void setupPasswordToggle() {
-        ImageView passwordToggle = findViewById(R.id.passwordToggle);
-        EditText passwordEditText = findViewById(R.id.passwordEditText);
+        ImageView passwordToggle = binding.passwordToggle;
+        EditText passwordEditText = binding.passwordEditText;
 
         passwordToggle.setOnClickListener(v -> {
             if (isPasswordVisible) {
@@ -157,9 +217,10 @@ public class SignUpActivity extends AppCompatActivity {
             passwordEditText.setSelection(passwordEditText.length());
         });
     }
+
     private void setupPasswordRules() {
-        EditText passwordEditText = findViewById(R.id.passwordEditText);
-        TextView passwordRules = findViewById(R.id.passwordRules);
+        EditText passwordEditText = binding.passwordEditText;
+        TextView passwordRules = binding.passwordRules;
 
         passwordEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -183,6 +244,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
     }
+
     private void updatePasswordRules(String password, TextView passwordRules) {
         String rules = getString(R.string.signup_password_rules);
 
@@ -212,28 +274,17 @@ public class SignUpActivity extends AppCompatActivity {
 
         passwordRules.setText(rules);
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_READ_MEDIA_IMAGES) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery();
-            } else {
-                Toast.makeText(this, "Permiso denegado para acceder a la galería", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     private void setupSelectPhotoButtonClick() {
         binding.selectPhotoButton.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
                     showPermissionExplanationDialog(Manifest.permission.READ_MEDIA_IMAGES);
                 } else {
                     openGallery();
                 }
             } else {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     showPermissionExplanationDialog(Manifest.permission.READ_EXTERNAL_STORAGE);
                 } else {
                     openGallery();
@@ -243,13 +294,13 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void showPermissionExplanationDialog(String permission) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(requireContext())
                 .setTitle("BidBlast quiere acceder a tu galería")
                 .setMessage("BidBlast usa el acceso a tu galería para realizar acciones como poder seleccionar tu foto de perfil")
                 .setPositiveButton("Permitir", (dialog, which) -> requestPermissionLauncher.launch(permission))
                 .setNegativeButton("No permitir", (dialog, which) -> {
                     dialog.dismiss();
-                    Toast.makeText(this, "Permiso denegado para acceder a la galería", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Permiso denegado para acceder a la galería", Toast.LENGTH_SHORT).show();
                 })
                 .create()
                 .show();
@@ -260,6 +311,7 @@ public class SignUpActivity extends AppCompatActivity {
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         galleryLauncher.launch(intent);
     }
+
     private void setupSignUpButtonClick() {
         binding.signUpButton.setOnClickListener(v -> {
             if (validateFields()) {
@@ -270,15 +322,33 @@ public class SignUpActivity extends AppCompatActivity {
                     String password = binding.passwordEditText.getText().toString().trim();
                     String confirmPassword = binding.confirmPasswordEditText.getText().toString().trim();
 
-                    if (password.equals(confirmPassword)) {
-                        viewModel.register(this, fullName, email, phoneNumber, password, confirmPassword);
+                    if (isEdition) {
+                        updateUser(fullName, email, phoneNumber, password, confirmPassword);
                     } else {
-                        showPasswordMismatchError();
+                        registerUser(fullName, email, phoneNumber, password, confirmPassword);
                     }
                 }
             }
         });
     }
+
+    private void registerUser(String fullName, String email, String phoneNumber, String password, String confirmPassword) {
+        if (password.equals(confirmPassword)) {
+            viewModel.register(requireContext(), fullName, email, phoneNumber, password, confirmPassword);
+        } else {
+            showPasswordMismatchError();
+        }
+    }
+
+    private void updateUser(String fullName, String email, String phoneNumber, String password, String confirmPassword) {
+        if (password.equals(confirmPassword) || password.isEmpty()) {
+            User updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumber, viewModel.getAvatarBase64().getValue());
+            viewModel.updateUser(requireContext(), updatedUser, password);
+        } else {
+            showPasswordMismatchError();
+        }
+    }
+
     private boolean validateFields() {
         String fullName = binding.fullNameEditText.getText().toString().trim();
         String email = binding.emailEditText.getText().toString().trim();
@@ -324,8 +394,9 @@ public class SignUpActivity extends AppCompatActivity {
                 && isConfirmPasswordValid
                 && isPasswordRulesValid;
     }
+
     private void setupFieldsValidations() {
-        viewModel.isValidFullName().observe(this, isValidFullName -> {
+        viewModel.isValidFullName().observe(getViewLifecycleOwner(), isValidFullName -> {
             if (isValidFullName) {
                 binding.fullNameError.setVisibility(View.GONE);
                 binding.fullNameEditText.setBackgroundResource(R.drawable.basic_input_background);
@@ -334,7 +405,7 @@ public class SignUpActivity extends AppCompatActivity {
                 binding.fullNameEditText.setBackgroundResource(R.drawable.basic_input_error_background);
             }
         });
-        viewModel.isValidEmail().observe(this, isValidEmail -> {
+        viewModel.isValidEmail().observe(getViewLifecycleOwner(), isValidEmail -> {
             if (isValidEmail) {
                 binding.emailError.setVisibility(View.GONE);
                 binding.emailEditText.setBackgroundResource(R.drawable.basic_input_background);
@@ -344,7 +415,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.isValidPassword().observe(this, isValidPassword -> {
+        viewModel.isValidPassword().observe(getViewLifecycleOwner(), isValidPassword -> {
             if (isValidPassword) {
                 binding.passwordError.setVisibility(View.GONE);
                 binding.passwordEditText.setBackgroundResource(R.drawable.basic_input_background);
@@ -355,7 +426,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.isValidConfirmPassword().observe(this, isValidConfirmPassword -> {
+        viewModel.isValidConfirmPassword().observe(getViewLifecycleOwner(), isValidConfirmPassword -> {
             if (isValidConfirmPassword) {
                 binding.unverifiedPassword.setVisibility(View.GONE);
                 binding.confirmPasswordEditText.setBackgroundResource(R.drawable.basic_input_background);
@@ -367,7 +438,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setupSignUpStatusListener() {
-        viewModel.getSignUpRequestStatus().observe(this, requestStatus -> {
+        viewModel.getSignUpRequestStatus().observe(getViewLifecycleOwner(), requestStatus -> {
             if (requestStatus != null) {
                 switch (requestStatus) {
                     case LOADING:
@@ -420,29 +491,31 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void navigateToLogin() {
-        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
-        finish();
+        requireActivity().finish();
     }
 
     private void showPasswordMismatchError() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.signup_password_mismatch_title)
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.signup_password_mismatch_title)
                 .setMessage(R.string.signup_password_mismatch_error)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
+
     private void showConfirmationDialog() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(requireContext())
                 .setTitle("Registro exitoso")
                 .setMessage("Tu cuenta ha sido creada exitosamente.")
                 .setPositiveButton("OK", (dialog, which) -> navigateToLogin())
                 .setCancelable(false)
                 .show();
     }
+
     private void setupConfirmPasswordToggle() {
-        ImageView confirmPasswordToggle = findViewById(R.id.confirmPasswordToggle);
-        EditText confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
+        ImageView confirmPasswordToggle = binding.confirmPasswordToggle;
+        EditText confirmPasswordEditText = binding.confirmPasswordEditText;
 
         confirmPasswordToggle.setOnClickListener(v -> {
             if (isPasswordVisible) {
@@ -456,10 +529,9 @@ public class SignUpActivity extends AppCompatActivity {
             confirmPasswordEditText.setSelection(confirmPasswordEditText.length());
         });
     }
+
     private void setupGoBackListener() {
-        ImageView goBackImageView = findViewById(R.id.goBackImageView);
+        ImageView goBackImageView = binding.goBackImageView;
         goBackImageView.setOnClickListener(v -> navigateToLogin());
     }
 }
-
-
