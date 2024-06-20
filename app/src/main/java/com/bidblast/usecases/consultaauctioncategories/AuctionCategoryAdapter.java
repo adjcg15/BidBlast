@@ -16,9 +16,13 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bidblast.R;
+import com.bidblast.databinding.TemplateCategoryDetailsBinding;
 import com.bidblast.model.AuctionCategory;
+import com.bidblast.usecases.consultcreatedauctions.CreatedAuctionDetailsAdapter;
+
 public class AuctionCategoryAdapter extends ListAdapter<AuctionCategory, AuctionCategoryAdapter.AuctionCategoryViewHolder> {
     private Context context;
+    private AuctionCategoryAdapter.OnCategoryClickListener onCategoryClickListener;
 
     public static final DiffUtil.ItemCallback<AuctionCategory> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<AuctionCategory>() {
@@ -52,6 +56,10 @@ public class AuctionCategoryAdapter extends ListAdapter<AuctionCategory, Auction
         holder.bind(category);
     }
 
+    public void setOnAuctionClickListener(AuctionCategoryAdapter.OnCategoryClickListener onModifyCategoryClickListener) {
+        this.onCategoryClickListener = onModifyCategoryClickListener;
+    }
+
     public class AuctionCategoryViewHolder extends RecyclerView.ViewHolder {
         private TextView titleTextView;
         private TextView descriptionTextView;
@@ -69,6 +77,10 @@ public class AuctionCategoryAdapter extends ListAdapter<AuctionCategory, Auction
         public void bind(AuctionCategory category) {
             titleTextView.setText(category.getTitle());
             descriptionTextView.setText(category.getDescription());
+
+            editCategoryButton.setOnClickListener(v -> {
+                onCategoryClickListener.onModifyCategoryButtonClick(category);
+            });
 
             keywordsLayout.removeAllViews();
             for (String keyword : category.getKeywords().split(",")) {
@@ -88,5 +100,7 @@ public class AuctionCategoryAdapter extends ListAdapter<AuctionCategory, Auction
             }
         }
     }
+    interface OnCategoryClickListener {
+        void onModifyCategoryButtonClick(AuctionCategory category);
+    }
 }
-

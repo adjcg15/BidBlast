@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,9 @@ import com.bidblast.R;
 import com.bidblast.databinding.FragmentConsultCategoriesBinding;
 import com.bidblast.model.AuctionCategory;
 import com.bidblast.usecases.login.LoginActivity;
+
+import com.bidblast.usecases.consultoffersonauction.OffersOnAuctionFragment;
+import com.bidblast.usecases.registerandmodifycategory.AuctionCategoryFormFragment;
 
 public class ConsultAuctionCategoriesFragment extends Fragment {
 
@@ -43,6 +47,7 @@ public class ConsultAuctionCategoriesFragment extends Fragment {
 
         binding.eqRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AuctionCategoryAdapter(getContext());
+        adapter.setOnAuctionClickListener(this::handleOpenModifyOnAuctionFragment);
         binding.eqRecycler.setAdapter(adapter);
 
         searchCategoryBarEditText = binding.searchCategoryBarEditText;
@@ -50,7 +55,7 @@ public class ConsultAuctionCategoriesFragment extends Fragment {
 
         observeViewModel();
         setupSignOutImageButton();
-
+        setupCreateNewCategoryButton();
         viewModel.loadAuctionCategories();
         searchButton.setOnClickListener(v -> {
             String query = searchCategoryBarEditText.getText().toString().trim();
@@ -97,6 +102,28 @@ public class ConsultAuctionCategoriesFragment extends Fragment {
             startActivity(intent);
             getActivity().finish();
         }
+    }
+
+    private void handleOpenModifyOnAuctionFragment(AuctionCategory category) {
+        AuctionCategoryFormFragment auctionCategoryFormFragment = AuctionCategoryFormFragment.newInstance(category);
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.mainViewFragmentLayout, auctionCategoryFormFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void setupCreateNewCategoryButton() {
+        binding.createNewCategoryButton.setOnClickListener(v -> {
+            AuctionCategoryFormFragment auctionCategoryFormFragment = AuctionCategoryFormFragment.newInstance(null);
+            FragmentManager fragmentManager = getParentFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.mainViewFragmentLayout, auctionCategoryFormFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
     }
 
     private void observeViewModel() {

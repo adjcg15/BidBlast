@@ -423,6 +423,7 @@ public class ConsultSalesStatisticsFragment extends Fragment {
     }
 
     private void showSalesAuctionsImageError() {
+        collapseDatesRangeSection();
         collapseStatisticsSections();
         binding.errorLoadingSalesAuctionsLinearLayout.setVisibility(View.VISIBLE);
     }
