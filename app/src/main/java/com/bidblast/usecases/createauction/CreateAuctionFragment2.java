@@ -1,8 +1,10 @@
 package com.bidblast.usecases.createauction;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,9 +14,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.loader.content.CursorLoader;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.provider.MediaStore;
@@ -36,21 +41,26 @@ import com.bidblast.R;
 import com.bidblast.api.requests.auctions.AuctionCreateBody;
 import com.bidblast.databinding.FragmentPostItemForAuction2Binding;
 import com.bidblast.databinding.FragmentPostItemForAuctionBinding;
+import com.bidblast.menus.mainmenu.MainMenuActivity;
+import com.bidblast.menus.moderatormenu.ModeratorMenuActivity;
 import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.usecases.consultauctioncategories.ConsultAuctionCategoriesFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.grpc.Server;
+import com.bidblast.grpc.Server;
 
 public class CreateAuctionFragment2 extends Fragment {
     private static final int MAX_IMAGES = 7;
@@ -77,6 +87,7 @@ public class CreateAuctionFragment2 extends Fragment {
 
     private FragmentPostItemForAuction2Binding binding;
     private File selectedVideoFile;
+    private static final int REQUEST_CODE = 100;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +108,7 @@ public class CreateAuctionFragment2 extends Fragment {
         setupObservers();
         retrieveArguments();
         setupClickListeners();
+        setupListeners();
         return binding.getRoot();
     }
 
@@ -225,17 +237,68 @@ public class CreateAuctionFragment2 extends Fragment {
             showToast("Ya has seleccionado el máximo de 7 imágenes");
         }
     }
-
     private void handleVideoUri(Uri mediaUri, boolean videoSelected) {
         if (!videoSelected) {
             if (isValidFileSize(mediaUri, MAX_VIDEO_SIZE_MB)) {
                 viewModel.setSelectedVideo(mediaUri);
-                selectedVideoFile = new File(getRealPathFromURI(mediaUri));
+                selectedVideoFile = getFileFromUri(mediaUri);
+                if (selectedVideoFile != null) {
+                    System.out.println("Video file selected: " + selectedVideoFile.getAbsolutePath());
+                } else {
+                    System.out.println("Failed to get video file from URI.");
+                }
             } else {
                 showToast("El video debe ser menor a 5MB");
             }
         } else {
             showToast("Ya has seleccionado un video");
+        }
+    }
+    private File getFileFromUri(Uri uri) {
+        File file = null;
+        try {
+            String filePath = getRealPathFromURI(uri);
+            file = new File(filePath);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Video.Media.DATA };
+        Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor != null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            String result = cursor.getString(column_index);
+            cursor.close();
+            return result;
+        }
+        return null;
+    }
+    private File copyUriToFile(Uri uri) throws IOException {
+        File tempFile = File.createTempFile("temp", null, getActivity().getCacheDir());
+        try (InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
+             OutputStream outputStream = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+        }
+        return tempFile;
+    }
+    private void sendVideoByGrpc(File videoFile, int auctionId) {
+        Server videoService = new Server();
+        try {
+            System.out.println("Sending video file: " + videoFile.getName());
+            System.out.println("Auction ID: " + auctionId);
+            videoService.uploadVideo(videoFile, auctionId, MIME_TYPE_VIDEO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            videoService.shutdown();
         }
     }
 
@@ -249,11 +312,9 @@ public class CreateAuctionFragment2 extends Fragment {
             return size <= maxSizeMb * 1024 * 1024;
         }
     }
-
     private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
-
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -331,8 +392,9 @@ public class CreateAuctionFragment2 extends Fragment {
             hideProgressBar();
             showAlert("Subasta creada con éxito");
             if (selectedVideoFile != null) {
-                //sendVideoByGrpc(selectedVideoFile, auction.getId());
+                sendVideoByGrpc(selectedVideoFile, auction.getId());
             }
+            navigateToMainMenu();
         });
     }
 
@@ -372,23 +434,21 @@ public class CreateAuctionFragment2 extends Fragment {
             return null;
         }
     }
-
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Video.Media.DATA};
-        try (Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-                return cursor.getString(column_index);
-            }
-        }
-        return null;
-    }
-
     private void showAlert(String message) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Información")
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+    }
+    private void navigateToMainMenu() {
+        if (getActivity() instanceof MainMenuActivity) {
+            MainMenuActivity activity = (MainMenuActivity) getActivity();
+            activity.showFragment(new ConsultAuctionCategoriesFragment());
+            activity.selectSearchAuctionMenuItem();
+        }
+    }
+    private void setupListeners() {
+        binding.cancelCreateAuctionButton.setOnClickListener(v -> navigateToMainMenu());
     }
 }

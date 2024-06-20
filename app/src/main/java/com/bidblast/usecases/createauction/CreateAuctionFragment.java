@@ -1,11 +1,13 @@
 package com.bidblast.usecases.createauction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,10 +25,12 @@ import android.widget.Toast;
 import com.bidblast.R;
 import com.bidblast.databinding.FragmentConsultCategoriesBinding;
 import com.bidblast.databinding.FragmentPostItemForAuctionBinding;
+import com.bidblast.menus.mainmenu.MainMenuActivity;
 import com.bidblast.model.AuctionState;
 import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.usecases.consultauctioncategories.ConsultAuctionCategoriesFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
 
 import java.util.ArrayList;
@@ -56,22 +60,24 @@ public class CreateAuctionFragment extends Fragment {
         setTextLimiter(binding.openingDaysEditText, 5);
         loadAuctionStates();
     }
-
-    private void setupListeners() {
-        binding.nextFragmentButton.setOnClickListener(v -> navigateToNextFragment());
-    }
-
     private void loadAuctionStates() {
         AuctionsRepository auctionsRepository = new AuctionsRepository();
         auctionsRepository.getAuctionStates(new IProcessStatusListener<List<AuctionState>>() {
             @Override
             public void onSuccess(List<AuctionState> auctionStates) {
-                getActivity().runOnUiThread(() -> populateSpinner(auctionStates));
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(() -> populateSpinner(auctionStates));
+                }
             }
 
             @Override
             public void onError(ProcessErrorCodes errorCode) {
-                getActivity().runOnUiThread(() -> showToast("Error al cargar los estados de las subastas"));
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(() -> showToast("Error al cargar los estados de las subastas"));
+                }
+
             }
         });
     }
@@ -173,6 +179,18 @@ public class CreateAuctionFragment extends Fragment {
         }
 
         return isValid;
+    }
+    private void setupListeners() {
+        binding.nextFragmentButton.setOnClickListener(v -> navigateToNextFragment());
+        binding.cancelCreateAuctionButton.setOnClickListener(v -> navigateToMainMenu());
+    }
+
+    private void navigateToMainMenu() {
+        if (getActivity() instanceof MainMenuActivity) {
+            MainMenuActivity activity = (MainMenuActivity) getActivity();
+            activity.showFragment(new ConsultAuctionCategoriesFragment());
+            activity.selectSearchAuctionMenuItem();
+        }
     }
 
     private void showToast(String message) {

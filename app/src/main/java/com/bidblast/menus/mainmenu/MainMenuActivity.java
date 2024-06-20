@@ -75,7 +75,7 @@ public class MainMenuActivity extends AppCompatActivity {
         });
     }
 
-    private void showFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -86,5 +86,8 @@ public class MainMenuActivity extends AppCompatActivity {
         User userToEdit = Session.getInstance().getUser();
         SignUpFragment signUpFragment = SignUpFragment.newInstance(userToEdit, true);
         showFragment(signUpFragment);
+    }
+    public void selectSearchAuctionMenuItem() {
+        binding.mainMenuBottomNavigationView.setSelectedItemId(R.id.searchMenuItem);
     }
 }
