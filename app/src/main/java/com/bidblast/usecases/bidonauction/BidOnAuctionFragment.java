@@ -326,6 +326,9 @@ public class BidOnAuctionFragment extends Fragment {
         String errorMessage = "";
 
         switch(bidOnAuctionViewModel.getOfferRequestError().getValue()) {
+            case UNAUTHORIZED:
+                finishUserSession();
+                break;
             case OFFER_OVERCOMED:
                 errorMessage = getString(R.string.bidonauction_offer_overcomed);
                 break;
