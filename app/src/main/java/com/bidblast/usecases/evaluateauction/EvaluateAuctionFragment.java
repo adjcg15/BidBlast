@@ -22,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bidblast.R;
@@ -37,7 +38,8 @@ import com.bidblast.model.HypermediaFile;
 import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
-import com.bidblast.usecases.consultaauctioncategories.ConsultAuctionCategoriesFragment;
+import com.bidblast.usecases.consultauctioncategories.ConsultAuctionCategoriesFragment;
+import com.bidblast.usecases.registerandmodifycategory.AuctionCategoryFormFragment;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -77,7 +79,6 @@ public class EvaluateAuctionFragment extends Fragment {
         binding.carouselFilesList.setAdapter(carouselAdapter);
         surfaceView = binding.playerSurfaceView;
 
-        setupGoBackButton();
         setupCarouselItemsListener();
         setupSelectedCarouselItemValueListener();
         setupAuctionSpinnerListener();
@@ -85,6 +86,7 @@ public class EvaluateAuctionFragment extends Fragment {
         setupDenyButtonListener();
         setupSaveCommentsButtonListener();
         setupCancelCommentsButtonListener();
+        setupCreateNewCategoryButton();
 
         loadAuctionCategories();
         loadAllAuctions();
@@ -339,13 +341,6 @@ public class EvaluateAuctionFragment extends Fragment {
         }
     }
 
-    private void setupGoBackButton() {
-        binding.goBackImageView.setOnClickListener(v -> {
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.popBackStack();
-        });
-    }
-
     private void setupCarouselItemsListener() {
         carouselViewModel.getFilesList().observe(getViewLifecycleOwner(), filesList -> carouselAdapter.submitList(filesList));
     }
@@ -509,5 +504,16 @@ public class EvaluateAuctionFragment extends Fragment {
             activity.showFragment(new ConsultAuctionCategoriesFragment());
             activity.selectCategoriesMenuItem();
         }
+    }
+    private void setupCreateNewCategoryButton() {
+        binding.createAuctionButton.setOnClickListener(v -> {
+            AuctionCategoryFormFragment auctionCategoryFormFragment = AuctionCategoryFormFragment.newInstance(null);
+            FragmentManager fragmentManager = getParentFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.mainViewFragmentLayout, auctionCategoryFormFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        });
     }
 }
