@@ -382,7 +382,7 @@ public class EvaluateAuctionFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // No action needed
+                showError("No se pudieron cargar subastas. Intente de nuevo más tarde.");
             }
         });
     }
