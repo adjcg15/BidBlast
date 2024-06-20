@@ -1,5 +1,6 @@
 package com.bidblast.usecases.registerandmodifycategory;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -102,26 +103,34 @@ public class AuctionCategoryFormFragment extends Fragment {
     private void setupSaveAuctionCategoryButton() {
         binding.saveCategoryButton.setOnClickListener(v -> {
             if (validateFields()) {
-                if (auctionCategory != null) {
-                    if(viewModel.getSaveAuctionCategoryRequestStatus().getValue() != RequestStatus.LOADING) {
-                        AuctionCategory auctionCategory = new AuctionCategory();
-                        auctionCategory.setId(this.auctionCategory.getId());
-                        auctionCategory.setTitle(binding.categoryTitleEditText.getText().toString().trim());
-                        auctionCategory.setDescription(binding.categoryDescriptionEditText.getText().toString().trim());
-                        auctionCategory.setKeywords(binding.categoryKeywordsEditText.getText().toString().trim());
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Confirmación de guardado");
+                builder.setMessage("¿Estás seguro de que guardar la información de la categoría?");
+                builder.setPositiveButton("Sí", (dialog, which) -> {
+                    if (auctionCategory != null) {
+                        if(viewModel.getSaveAuctionCategoryRequestStatus().getValue() != RequestStatus.LOADING) {
+                            AuctionCategory auctionCategory = new AuctionCategory();
+                            auctionCategory.setId(this.auctionCategory.getId());
+                            auctionCategory.setTitle(binding.categoryTitleEditText.getText().toString().trim());
+                            auctionCategory.setDescription(binding.categoryDescriptionEditText.getText().toString().trim());
+                            auctionCategory.setKeywords(binding.categoryKeywordsEditText.getText().toString().trim());
 
-                        viewModel.updateAuctionCategory(auctionCategory);
-                    }
-                } else {
-                    if(viewModel.getSaveAuctionCategoryRequestStatus().getValue() != RequestStatus.LOADING) {
-                        AuctionCategory auctionCategory = new AuctionCategory();
-                        auctionCategory.setTitle(binding.categoryTitleEditText.getText().toString().trim());
-                        auctionCategory.setDescription(binding.categoryDescriptionEditText.getText().toString().trim());
-                        auctionCategory.setKeywords(binding.categoryKeywordsEditText.getText().toString().trim());
+                            viewModel.updateAuctionCategory(auctionCategory);
+                        }
+                    } else {
+                        if(viewModel.getSaveAuctionCategoryRequestStatus().getValue() != RequestStatus.LOADING) {
+                            AuctionCategory auctionCategory = new AuctionCategory();
+                            auctionCategory.setTitle(binding.categoryTitleEditText.getText().toString().trim());
+                            auctionCategory.setDescription(binding.categoryDescriptionEditText.getText().toString().trim());
+                            auctionCategory.setKeywords(binding.categoryKeywordsEditText.getText().toString().trim());
 
-                        viewModel.registerAuctionCategory(auctionCategory);
+                            viewModel.registerAuctionCategory(auctionCategory);
+                        }
                     }
-                }
+                });
+                builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }

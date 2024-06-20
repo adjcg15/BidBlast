@@ -37,14 +37,22 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
 
     }
 
-    public static ConsultCreatedAuctionsFragment newInstance() {
-        return new ConsultCreatedAuctionsFragment();
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentConsultCreatedAuctionsBinding.inflate(inflater, container, false);
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         viewModel = new ViewModelProvider(this).get(ConsultCreatedAuctionsViewModel.class);
         createdAuctionDetailsAdapter = new CreatedAuctionDetailsAdapter(getContext());
         createdAuctionDetailsAdapter.setOnAuctionClickListener(this::handleOpenOffersOnAuctionFragment);
@@ -55,17 +63,18 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
         setupRecyclerViewScrollListener();
         setupStillCreatedAuctionsLeftToLoadListener();
         setupSearchCreatedAuctionsImageButton();
+        viewModel.cleanAuctionsList();
         loadCreatedAuctions();
         setupConsultSalesStatisticsButton();
-        return binding.getRoot();
     }
 
     private void setupConsultSalesStatisticsButton() {
         binding.consultSalesStatisticsButton.setOnClickListener(v -> {
-            ConsultSalesStatisticsFragment salesStatisticsFragment = new ConsultSalesStatisticsFragment();
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            ConsultSalesStatisticsFragment consultSalesStatisticsFragment = ConsultSalesStatisticsFragment.newInstance();
+            FragmentManager fragmentManager = getParentFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.mainViewFragmentLayout, salesStatisticsFragment);
+
+            fragmentTransaction.replace(R.id.mainViewFragmentLayout, consultSalesStatisticsFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         });
@@ -140,6 +149,7 @@ public class ConsultCreatedAuctionsFragment extends Fragment {
                     }
                 } else if (requestStatus == RequestStatus.ERROR) {
                     binding.errorLoadingCreatedAuctionsLinearLayout.setVisibility(View.VISIBLE);
+                    binding.consultSalesStatisticsButton.setVisibility(View.GONE);
                     binding.createdAuctionsRecyclerView.setVisibility(View.GONE);
                     binding.allAuctionsLoadedTextView.setVisibility(View.GONE);
                 }

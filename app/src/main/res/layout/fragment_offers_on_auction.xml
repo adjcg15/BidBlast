@@ -151,6 +151,38 @@
                         tools:itemCount="1"
                         tools:listitem="@layout/template_offer_details"
                         android:layout_margin="12dp"/>
+                    <LinearLayout
+                        android:id="@+id/emptyOffersMessageLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:paddingTop="80dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+                        <ImageView
+                            android:layout_width="195dp"
+                            android:layout_height="214dp"
+                            android:src="@drawable/empty_items_generic"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"/>
+                        <TextView
+                            android:id="@+id/emptyOffersTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/consultoffers_empty_offers_title"
+                            style="@style/TvSubtitleStyle"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"/>
+                        <TextView
+                            android:id="@+id/emptyOffersTextTextView"
+                            android:layout_width="280dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/consultoffers_empty_offers_text"
+                            style="@style/TvParagraphStyle"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:textAlignment="center"/>
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
             <LinearLayout
@@ -186,38 +218,6 @@
                 android:textColor="@color/dark_primary"
                 android:visibility="gone"
                 android:paddingVertical="4dp"/>
-            <LinearLayout
-                android:id="@+id/emptyOffersMessageLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingTop="80dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-                <ImageView
-                    android:layout_width="195dp"
-                    android:layout_height="214dp"
-                    android:src="@drawable/empty_items_generic"
-                    android:layout_gravity="center"
-                    android:importantForAccessibility="no"/>
-                <TextView
-                    android:id="@+id/emptyOffersTitleTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consultoffers_empty_offers_title"
-                    style="@style/TvSubtitleStyle"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"/>
-                <TextView
-                    android:id="@+id/emptyOffersTextTextView"
-                    android:layout_width="280dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/consultoffers_empty_offers_text"
-                    style="@style/TvParagraphStyle"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:textAlignment="center"/>
-            </LinearLayout>
             <LinearLayout
                 android:id="@+id/errorLoadingOffersLinearLayout"
                 android:layout_width="match_parent"

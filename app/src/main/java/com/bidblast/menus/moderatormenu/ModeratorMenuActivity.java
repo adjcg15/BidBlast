@@ -24,7 +24,7 @@ public class ModeratorMenuActivity extends AppCompatActivity {
         binding = ActivityModeratorMenuBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //showFragment(new ConsultAuctionCategoriesFragment());
+        showFragment(new ConsultAuctionCategoriesFragment());
         setupMenuNavigation();
     }
 

@@ -62,7 +62,8 @@ public class OffersOnAuctionViewModel extends ViewModel {
     public LiveData<List<Offer>> getOffersList() { return offersList; }
 
     public void clearOffersList() {
-        offersList = null;
+        stillOffersLeftToLoad.setValue(true);
+        offersList.setValue(new ArrayList<>());
     }
 
     public LiveData<RequestStatus> getOffersListRequestStatus() {
@@ -74,10 +75,6 @@ public class OffersOnAuctionViewModel extends ViewModel {
         int totalAuctionsLoaded = offersList != null
                 ? offersList.getValue().size()
                 : 0;
-
-        if (offersList == null) {
-            offersList = new MutableLiveData<>(new ArrayList<>());
-        }
 
         new AuctionsRepository().getUserAuctionOffersByAuctionId(
                 idAuction, limit, totalAuctionsLoaded,

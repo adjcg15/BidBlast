@@ -8,7 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +20,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bidblast.R;
 import com.bidblast.api.RequestStatus;
@@ -35,16 +33,13 @@ import com.bidblast.model.Auction;
 import com.bidblast.model.HypermediaFile;
 import com.bidblast.model.Offer;
 import com.bidblast.repositories.ProcessErrorCodes;
-import com.bidblast.repositories.businesserrors.SaveAuctionCategoryCodes;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class OffersOnAuctionFragment extends Fragment {
     private FragmentOffersOnAuctionBinding binding;
@@ -123,15 +118,12 @@ public class OffersOnAuctionFragment extends Fragment {
 
     private void handleBlockUserFragment(int idProfile) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Confirmación");
+        builder.setTitle("Confirmación de bloqueo");
         builder.setMessage("¿Estás seguro de que deseas bloquear al comprador?");
-        builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (offersOnAuctionViewModel.getBlockUserRequestStatus().getValue() != RequestStatus.LOADING) {
-                    offersOnAuctionViewModel.blockUser(idProfile, idAuction);
-                };
-            }
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            if (offersOnAuctionViewModel.getBlockUserRequestStatus().getValue() != RequestStatus.LOADING) {
+                offersOnAuctionViewModel.blockUser(idProfile, idAuction);
+            };
         });
         builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
@@ -144,17 +136,14 @@ public class OffersOnAuctionFragment extends Fragment {
                 String successMessage = getString(R.string.consultoffers_block_user_success_message);
                 Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
                 offersOnAuctionViewModel.clearOffersList();
-                offerDetailsAdapter = new OfferDetailsAdapter();
                 loadOffers();
             }
 
             if (requestStatus == RequestStatus.ERROR) {
-                Snackbar.make(binding.getRoot(), "No se pudo bloquear al comprador", Snackbar.LENGTH_SHORT).show();
-                /*SaveAuctionCategoryCodes errorCode = offersOnAuctionViewModel.get().getValue();
-
-                if(errorCode != null) {
-                    showSaveAuctionCategoryError(errorCode);
-                }*/
+                offersOnAuctionViewModel.clearOffersList();
+                loadOffers();
+                String errorMessage = getString(R.string.consultoffers_block_user_error_message);
+                Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -199,7 +188,14 @@ public class OffersOnAuctionFragment extends Fragment {
 
     private void loadVideoOnSurfaceView(int videoId) {
         mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-            //TODO Manejo de mensaje cuando hay error en el stream
+            mediaPlayer.reset();
+            try {
+                mediaPlayer.setDataSource(tempFile.getAbsolutePath());
+                mediaPlayer.prepareAsync();
+                mediaPlayer.start();
+            } catch (IOException e) {
+                Log.e(TAG, "Error setting data source or preparing MediaPlayer", e);
+            }
             return true;
         });
 
@@ -377,13 +373,7 @@ public class OffersOnAuctionFragment extends Fragment {
 
     private void setupOffersListListener() {
         offersOnAuctionViewModel.getOffersList().observe(getViewLifecycleOwner(), offersList -> {
-            if (offersList != null) {
-                offerDetailsAdapter.submitList(offersList);
-            } else {
-                String successMessage = "Ya no hay ofertas, será redirigido a la ventana anterior";
-                Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
-                new Handler(Looper.getMainLooper()).postDelayed(this::goToPreviousWindow, 4000);
-            }
+            offerDetailsAdapter.submitList(offersList);
         });
     }
 
