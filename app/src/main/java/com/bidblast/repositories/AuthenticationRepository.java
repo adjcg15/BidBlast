@@ -82,4 +82,30 @@ public class AuthenticationRepository {
             }
         });
     }
+    public void updateUser(
+            UserRegisterBody userBody,
+            IEmptyProcessStatusListener statusListener) {
+        IAuthenticationService usersService = ApiClient.getInstance().getAuthenticationService();
+        String authHeader = String.format("Bearer %s", Session.getInstance().getToken());
+
+        usersService.updateUser(authHeader, userBody).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful()){
+                    statusListener.onSuccess();
+                }else{
+                    if(response.code() == 400) {
+                        statusListener.onError(ProcessErrorCodes.REQUEST_FORMAT_ERROR);
+                    } else {
+                        statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                statusListener.onError(ProcessErrorCodes.FATAL_ERROR);
+            }
+        });
+    }
 }
