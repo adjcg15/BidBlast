@@ -172,7 +172,7 @@ public class AuctionCategoryFormFragment extends Fragment {
             if (requestStatus == RequestStatus.DONE) {
                 String successMessage = getString(R.string.savecategory_success_message);
                 Snackbar.make(binding.getRoot(), successMessage, Snackbar.LENGTH_SHORT).show();
-                new Handler(Looper.getMainLooper()).postDelayed(this::goToPreviousWindow, 4000);
+                new Handler(Looper.getMainLooper()).postDelayed(this::goToPreviousWindow, 2000);
             }
 
             if (requestStatus == RequestStatus.ERROR) {
