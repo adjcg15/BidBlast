@@ -49,7 +49,6 @@ import java.io.InputStream;
 public class SignUpFragment extends Fragment {
     private FragmentSignUpBinding binding;
     private SignUpViewModel viewModel;
-    private static final int PERMISSION_REQUEST_READ_MEDIA_IMAGES = 100;
     private boolean isPasswordVisible = false;
     private boolean isEdition = false;
     private User userToEdit;
@@ -174,6 +173,7 @@ public class SignUpFragment extends Fragment {
         if (isEdition) {
             binding.headerDefault.setVisibility(View.GONE);
             binding.headerEdit.setVisibility(View.VISIBLE);
+            binding.logoImageView.setVisibility(View.GONE);
         } else {
             binding.headerDefault.setVisibility(View.VISIBLE);
             binding.headerEdit.setVisibility(View.GONE);
@@ -182,19 +182,19 @@ public class SignUpFragment extends Fragment {
 
     private void loadUserInformationOnView() {
         if (userToEdit != null) {
-            Log.d("SignUpFragment", "User ID: " + userToEdit.getId());
-            Log.d("SignUpFragment", "Full Name: " + userToEdit.getFullName());
-            Log.d("SignUpFragment", "Email: " + userToEdit.getEmail());
-            Log.d("SignUpFragment", "Phone Number: " + userToEdit.getPhoneNumber());
-            Log.d("SignUpFragment", "Avatar: " + userToEdit.getAvatar());
-
             binding.fullNameEditText.setText(userToEdit.getFullName());
             binding.emailEditText.setText(userToEdit.getEmail());
-            binding.phoneNumberEditText.setText(userToEdit.getPhoneNumber());
-
-            if (userToEdit.getAvatar() != null) {
+            if (userToEdit.getPhoneNumber() != null && !userToEdit.getPhoneNumber().isEmpty()) {
+                binding.phoneNumberEditText.setText(userToEdit.getPhoneNumber());
+            } else {
+                binding.phoneNumberEditText.setText("");
+            }
+            if (userToEdit.getAvatar() != null && !userToEdit.getAvatar().isEmpty()) {
                 binding.imageSelected.setImageBitmap(ImageToolkit.parseBitmapFromBase64(userToEdit.getAvatar()));
                 viewModel.setAvatarBase64(userToEdit.getAvatar());
+            } else {
+                binding.imageSelected.setImageResource(R.drawable.avatar_icon);
+                viewModel.setAvatarBase64(null);
             }
 
             binding.signUpButton.setText("Guardar cambios");
@@ -339,23 +339,24 @@ public class SignUpFragment extends Fragment {
             showPasswordMismatchError();
         }
     }
-
     private void updateUser(String fullName, String email, String phoneNumber, String password, String confirmPassword) {
         User updatedUser;
+        String phoneNumberToSend = (phoneNumber == null || phoneNumber.isEmpty()) ? null : phoneNumber;
+
         if (!password.isEmpty() && password.equals(confirmPassword)) {
-            updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumber, viewModel.getAvatarBase64().getValue());
+            updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumberToSend, viewModel.getAvatarBase64().getValue());
             viewModel.updateUser(requireContext(), updatedUser, password);
         } else if (password.isEmpty() && confirmPassword.isEmpty()) {
-            updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumber, viewModel.getAvatarBase64().getValue());
+            updatedUser = new User(userToEdit.getId(), fullName, email, phoneNumberToSend, viewModel.getAvatarBase64().getValue());
             viewModel.updateUser(requireContext(), updatedUser, null);
         } else {
             showPasswordMismatchError();
         }
     }
-
     private boolean validateFields() {
         String fullName = binding.fullNameEditText.getText().toString().trim();
         String email = binding.emailEditText.getText().toString().trim();
+        String phoneNumber = binding.phoneNumberEditText.getText().toString().trim();
         String password = binding.passwordEditText.getText().toString().trim();
         String confirmPassword = binding.confirmPasswordEditText.getText().toString().trim();
 
@@ -404,7 +405,6 @@ public class SignUpFragment extends Fragment {
                 && Boolean.TRUE.equals(viewModel.isValidEmail().getValue())
                 && (isEdition ? true : isPasswordValid && isConfirmPasswordValid && isPasswordRulesValid);
     }
-
     private void setupFieldsValidations() {
         viewModel.isValidFullName().observe(getViewLifecycleOwner(), isValidFullName -> {
             if (isValidFullName) {
