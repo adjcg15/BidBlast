@@ -86,6 +86,7 @@ public class CreateAuctionFragment2 extends Fragment {
 
     private FragmentPostItemForAuction2Binding binding;
     private File selectedVideoFile;
+    private int auctionId;
     private static final int REQUEST_CODE = 100;
 
     @Override
@@ -249,6 +250,7 @@ public class CreateAuctionFragment2 extends Fragment {
                 } else {
                     System.out.println("Failed to get video file from URI.");
                 }
+                System.out.println("Selected video URI: " + mediaUri.toString());
             } else {
                 showToast("El video debe ser menor a 5MB");
             }
@@ -261,7 +263,11 @@ public class CreateAuctionFragment2 extends Fragment {
         File file = null;
         try {
             String filePath = getRealPathFromURI(uri);
-            file = new File(filePath);
+            if (filePath != null) {
+                file = new File(filePath);
+            } else {
+                file = copyUriToFile(uri);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -269,7 +275,7 @@ public class CreateAuctionFragment2 extends Fragment {
     }
 
     private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Video.Media.DATA};
+        String[] proj = { MediaStore.Video.Media.DATA };
         Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null);
         if (cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
@@ -349,6 +355,19 @@ public class CreateAuctionFragment2 extends Fragment {
         if (!validateInputFields()) return;
         showProgressBar();
         AuctionCreateBody auctionBody = createAuctionBody();
+
+        // Imprimir el cuerpo de la solicitud para depuración
+        System.out.println("Auction body to be sent:");
+        System.out.println("Title: " + auctionBody.getTitle());
+        System.out.println("Description: " + auctionBody.getDescription());
+        System.out.println("BasePrice: " + auctionBody.getBasePrice());
+        System.out.println("MinimumBid: " + auctionBody.getMinimumBid());
+        System.out.println("OpeningDays: " + auctionBody.getDaysAvailable());
+        System.out.println("ItemStatus: " + auctionBody.getIdItemCondition());
+        for (HypermediaFile file : auctionBody.getMediaFiles()) {
+            System.out.println("Media File - Name: " + file.getName() + ", MimeType: " + file.getMimeType());
+        }
+
         AuctionsRepository auctionsRepository = new AuctionsRepository();
         auctionsRepository.createAuction(auctionBody, new IProcessStatusListener<Auction>() {
             @Override
@@ -362,6 +381,7 @@ public class CreateAuctionFragment2 extends Fragment {
             }
         });
     }
+
 
     private boolean validateInputFields() {
         if (viewModel.getSelectedImages().getValue().isEmpty() && viewModel.getSelectedVideo().getValue() == null) {
@@ -399,7 +419,8 @@ public class CreateAuctionFragment2 extends Fragment {
             hideProgressBar();
             showAlert("Subasta creada con éxito");
             if (selectedVideoFile != null) {
-                sendVideoByGrpc(selectedVideoFile, auction.getId());
+                auctionId = auction.getId();
+                sendVideoByGrpc(selectedVideoFile,auctionId);
             }
             navigateToMainMenu();
         });
@@ -477,4 +498,3 @@ public class CreateAuctionFragment2 extends Fragment {
         updateMediaAdapter(); // Esto actualizará la vista para mostrar solo el icono de multimedia.
     }
 }
-
