@@ -457,12 +457,13 @@ public class BidOnAuctionFragment extends Fragment {
     }
 
     private void loadVideoOnSurfaceView(int videoId) {
+        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-            //TODO Manejo de mensaje cuando hay error en el stream
+            binding.progressBarVideo.setVisibility(View.VISIBLE);
+            deleteVideoInCache();
+            loadVideoOnSurfaceView(videoId);
             return true;
         });
-
-        mediaPlayer.setOnPreparedListener(MediaPlayer::start);
         mediaPlayer.setOnCompletionListener(mp -> {
             mediaPlayer.reset();
             try {

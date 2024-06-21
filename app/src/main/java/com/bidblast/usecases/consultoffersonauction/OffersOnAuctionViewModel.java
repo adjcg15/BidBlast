@@ -11,8 +11,10 @@ import com.bidblast.model.Auction;
 import com.bidblast.model.Offer;
 import com.bidblast.repositories.AuctionsRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
+import com.bidblast.repositories.IEmptyProcessWithBusinessErrorListener;
 import com.bidblast.repositories.IProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.repositories.businesserrors.BlockUserCodes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +23,15 @@ import java.util.Objects;
 public class OffersOnAuctionViewModel extends ViewModel {
     private final MutableLiveData<Auction> auction = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> auctionRequestStatus = new MutableLiveData<>();
-    private final MutableLiveData<ProcessErrorCodes> auctionErrorCode = new MutableLiveData<>();
     private MutableLiveData<List<Offer>> offersList = new MutableLiveData<>(new ArrayList<>());
 
     private final MutableLiveData<Boolean> stillOffersLeftToLoad = new MutableLiveData<>(true);
     private final MutableLiveData<RequestStatus> offersListRequestStatus = new MutableLiveData<>();
     private final MutableLiveData<RequestStatus> blockUserRequestStatus = new MutableLiveData<>();
+    private final MutableLiveData<ProcessErrorCodes> offersListErrorCode = new MutableLiveData<>();
+    private final MutableLiveData<BlockUserCodes> blockUserErrorCode = new MutableLiveData<>();
 
     public LiveData<Auction> getAuction() { return auction; }
-    public LiveData<ProcessErrorCodes> getAuctionErrorCode() {
-        return auctionErrorCode;
-    }
 
     public LiveData<RequestStatus> getAuctionRequestStatus() {
         return auctionRequestStatus;
@@ -52,7 +52,6 @@ public class OffersOnAuctionViewModel extends ViewModel {
 
                     @Override
                     public void onError(ProcessErrorCodes errorCode) {
-                        auctionErrorCode.setValue(errorCode);
                         auctionRequestStatus.setValue(RequestStatus.ERROR);
                     }
                 }
@@ -68,6 +67,10 @@ public class OffersOnAuctionViewModel extends ViewModel {
 
     public LiveData<RequestStatus> getOffersListRequestStatus() {
         return offersListRequestStatus;
+    }
+
+    public LiveData<ProcessErrorCodes> getOfferListRequestErrorCode() {
+        return offersListErrorCode;
     }
 
     public void recoverOffers(int idAuction, int limit) {
@@ -95,6 +98,7 @@ public class OffersOnAuctionViewModel extends ViewModel {
 
                     @Override
                     public void onError(ProcessErrorCodes errorCode) {
+                        offersListErrorCode.setValue(errorCode);
                         offersListRequestStatus.setValue(RequestStatus.ERROR);
                     }
                 }
@@ -105,19 +109,24 @@ public class OffersOnAuctionViewModel extends ViewModel {
         return blockUserRequestStatus;
     }
 
+    public LiveData<BlockUserCodes> getBlockUserErrorCode() {
+        return blockUserErrorCode;
+    }
+
     public void blockUser(int idProfile, int idAuction) {
         blockUserRequestStatus.setValue(RequestStatus.LOADING);
 
         new AuctionsRepository().blockUserInAnAuctionAndDeleteHisOffers(
                 idAuction, idProfile,
-                new IEmptyProcessStatusListener() {
+                new IEmptyProcessWithBusinessErrorListener<BlockUserCodes>() {
                     @Override
                     public void onSuccess() {
                         blockUserRequestStatus.setValue(RequestStatus.DONE);
                     }
 
                     @Override
-                    public void onError(ProcessErrorCodes errorCode) {
+                    public void onError(BlockUserCodes errorCode) {
+                        blockUserErrorCode.setValue(errorCode);
                         blockUserRequestStatus.setValue(RequestStatus.ERROR);
                     }
                 }
