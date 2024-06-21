@@ -382,9 +382,21 @@ public class CreateAuctionFragment2 extends Fragment {
         });
     }
 
-
     private boolean validateInputFields() {
-        if (viewModel.getSelectedImages().getValue().isEmpty() && viewModel.getSelectedVideo().getValue() == null) {
+        List<Uri> selectedImages = viewModel.getSelectedImages().getValue();
+        Uri selectedVideo = viewModel.getSelectedVideo().getValue();
+
+        // Validar que al menos una imagen esté seleccionada
+        if (selectedImages.isEmpty()) {
+            selectMultimediaErrorTextView.setText("Debe seleccionar al menos una imagen.");
+            selectMultimediaErrorTextView.setVisibility(View.VISIBLE);
+            return false;
+        }
+        selectMultimediaErrorTextView.setVisibility(View.GONE);
+
+        // Validar que no haya más de un video seleccionado
+        if (selectedVideo != null && selectedImages.contains(selectedVideo)) {
+            selectMultimediaErrorTextView.setText("No puede seleccionar un video y una imagen a la vez.");
             selectMultimediaErrorTextView.setVisibility(View.VISIBLE);
             return false;
         }
@@ -417,26 +429,39 @@ public class CreateAuctionFragment2 extends Fragment {
     private void handleAuctionCreationSuccess(Auction auction) {
         getActivity().runOnUiThread(() -> {
             hideProgressBar();
-            showAlert("Subasta creada con éxito");
+            auctionId = auction.getId();
             if (selectedVideoFile != null) {
-                auctionId = auction.getId();
-                sendVideoByGrpc(selectedVideoFile,auctionId);
+                sendVideoByGrpc(selectedVideoFile, auctionId);
             }
-            navigateToMainMenu();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Subasta creada con éxito")
+                    .setMessage("La subasta se ha creado exitosamente.")
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        navigateToMainMenu();
+                    })
+                    .setOnDismissListener(dialog -> {
+                        navigateToMainMenu();
+                    })
+                    .show();
         });
     }
 
     private void handleAuctionCreationError() {
         getActivity().runOnUiThread(() -> {
             hideProgressBar();
-            showAlert("Error al crear la subasta. Intenta de nuevo.");
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Error")
+                    .setMessage("Error al crear la subasta. Intenta de nuevo.")
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
         });
     }
 
     private String getFileName(Uri uri) {
         try (Cursor cursor = getContext().getContentResolver().query(uri, null, null, null, null)) {
             if (cursor != null && cursor.moveToFirst()) {
-                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int nameIndex = cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME);
                 if (nameIndex != -1) {
                     return cursor.getString(nameIndex);
                 }
@@ -481,7 +506,7 @@ public class CreateAuctionFragment2 extends Fragment {
     }
 
     private void setupListeners() {
-        binding.cancelCreateAuctionButton.setOnClickListener(v -> navigateToMainMenu());
+        binding.cancelCreateAuctionButton.setOnClickListener(v -> showCancelConfirmationDialog());
     }
 
     private void clearFields() {
@@ -495,6 +520,14 @@ public class CreateAuctionFragment2 extends Fragment {
         twoHundredOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
         twoHundredfiftyOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
         threeHundredOfferTextView.setBackgroundResource(R.drawable.black_rounded_border);
-        updateMediaAdapter(); // Esto actualizará la vista para mostrar solo el icono de multimedia.
+        updateMediaAdapter();
+    }
+    private void showCancelConfirmationDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Confirmación")
+                .setMessage("¿Estás seguro de que deseas cancelar la creación de la subasta?")
+                .setPositiveButton("Sí", (dialog, which) -> navigateToMainMenu())
+                .setNegativeButton("No", null)
+                .show();
     }
 }

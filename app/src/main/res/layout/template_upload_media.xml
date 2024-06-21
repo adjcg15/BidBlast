@@ -15,8 +15,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:visibility="gone"
-        android:layout_gravity="center"
-        android:src="@drawable/video" />
+        android:layout_gravity="center"/>
 
     <VideoView
         android:id="@+id/mediaVideoView"

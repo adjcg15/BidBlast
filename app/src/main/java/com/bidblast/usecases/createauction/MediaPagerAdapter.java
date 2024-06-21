@@ -88,7 +88,6 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Me
             videoOverlay.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
 
-            // Listener para iniciar reproducción automáticamente
             videoView.setOnPreparedListener(mp -> {
                 videoOverlay.setVisibility(View.GONE);
                 videoView.start();
@@ -111,4 +110,5 @@ class VideoItem {
         return uri;
     }
 }
+
 

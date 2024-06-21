@@ -1,5 +1,6 @@
 package com.bidblast.usecases.createauction;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -177,7 +178,7 @@ public class CreateAuctionFragment extends Fragment {
     }
     private void setupListeners() {
         binding.nextFragmentButton.setOnClickListener(v -> navigateToNextFragment());
-        binding.cancelCreateAuctionButton.setOnClickListener(v -> navigateToMainMenu());
+        binding.cancelCreateAuctionButton.setOnClickListener(v -> showCancelConfirmationDialog());
     }
 
     private void navigateToMainMenu() {
@@ -190,5 +191,13 @@ public class CreateAuctionFragment extends Fragment {
 
     private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+    private void showCancelConfirmationDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Confirmación")
+                .setMessage("¿Estás seguro de que deseas cancelar la creación de la subasta?")
+                .setPositiveButton("Sí", (dialog, which) -> navigateToMainMenu())
+                .setNegativeButton("No", null)
+                .show();
     }
 }
