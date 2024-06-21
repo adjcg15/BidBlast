@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,26 +61,32 @@ public class MediaPagerAdapter extends RecyclerView.Adapter<MediaPagerAdapter.Me
     static class MediaViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
         private final ImageView videoOverlay;
+        private final VideoView videoView;
 
         public MediaViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.mediaImageView);
             videoOverlay = itemView.findViewById(R.id.videoOverlay);
+            videoView = itemView.findViewById(R.id.mediaVideoView);
         }
 
         public void bind(Integer resourceId, Context context) {
             imageView.setImageResource(resourceId);
             videoOverlay.setVisibility(View.GONE);
+            videoView.setVisibility(View.GONE);
         }
 
         public void bind(Uri uri) {
             imageView.setImageURI(uri);
             videoOverlay.setVisibility(View.GONE);
+            videoView.setVisibility(View.GONE);
         }
 
         public void bind(VideoItem videoItem) {
-            imageView.setImageResource(R.drawable.default_video_thumbnail);
+            videoView.setVideoURI(videoItem.getUri());
+            videoView.setVisibility(View.VISIBLE);
             videoOverlay.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.GONE);
         }
     }
 }
