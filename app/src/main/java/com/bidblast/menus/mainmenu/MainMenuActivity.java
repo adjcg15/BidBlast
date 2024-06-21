@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -84,7 +85,8 @@ public class MainMenuActivity extends AppCompatActivity {
     }
     private void openSignUpFragment() {
         User userToEdit = Session.getInstance().getUser();
-        SignUpFragment signUpFragment = SignUpFragment.newInstance(userToEdit, true);
+        boolean isEdition = true;
+        SignUpFragment signUpFragment = SignUpFragment.newInstance(userToEdit, isEdition);
         showFragment(signUpFragment);
     }
     public void selectSearchAuctionMenuItem() {

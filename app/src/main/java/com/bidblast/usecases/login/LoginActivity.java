@@ -1,6 +1,8 @@
 package com.bidblast.usecases.login;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -14,6 +16,7 @@ import com.bidblast.lib.Session;
 import com.bidblast.menus.mainmenu.MainMenuActivity;
 import com.bidblast.menus.moderatormenu.ModeratorMenuActivity;
 import com.bidblast.repositories.ProcessErrorCodes;
+import com.bidblast.usecases.signup.SignUpFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -135,8 +138,13 @@ public class LoginActivity extends AppCompatActivity {
 
         Snackbar.make(binding.getRoot(), errorMessage, Snackbar.LENGTH_SHORT).show();
     }
-
-    public void openSignUpActivity(View view) {
-        //TODO
+    public void openSignUpFragment(View view) {
+        binding.loginView.setVisibility(View.GONE);
+        SignUpFragment signUpFragment = SignUpFragment.newInstance(null, false);        
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer, signUpFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
