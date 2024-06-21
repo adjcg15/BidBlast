@@ -583,6 +583,7 @@ public class AuctionsRepository {
                             auction.setBasePrice(auctionRes.getBasePrice());
                             auction.setMinimumBid(auctionRes.getMinimumBid());
                             auction.setItemCondition(auctionRes.getItemCondition());
+                            auction.setDaysAvailable(auctionRes.getDaysAvailable());
 
                             List<AuctionMediaFileJSONResponse> mediaFilesRes = auctionRes.getMediaFiles();
                             if (mediaFilesRes != null) {
@@ -594,7 +595,7 @@ public class AuctionsRepository {
                                     file.setId(fileRes.getId());
                                     file.setName(fileRes.getName());
                                     file.setContent(fileRes.getContent());
-
+                                    file.setMimeType(fileRes.getMimeType());
                                     mediaFiles.add(file);
                                 }
 
@@ -629,7 +630,6 @@ public class AuctionsRepository {
             }
         });
     }
-
     public void approveAuction(int idAuction, int idAuctionCategory, IEmptyProcessStatusListener statusListener) {
         IAuctionsService reviewService = ApiClient.getInstance().getAuctionsService();
         String authHeader = String.format("Bearer %s", Session.getInstance().getToken());

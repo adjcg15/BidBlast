@@ -1,4 +1,4 @@
-package com.bidblast.usecases.consultaauctioncategories;
+package com.bidblast.usecases.consultauctioncategories;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -16,9 +16,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bidblast.R;
-import com.bidblast.databinding.TemplateCategoryDetailsBinding;
 import com.bidblast.model.AuctionCategory;
-import com.bidblast.usecases.consultcreatedauctions.CreatedAuctionDetailsAdapter;
 
 public class AuctionCategoryAdapter extends ListAdapter<AuctionCategory, AuctionCategoryAdapter.AuctionCategoryViewHolder> {
     private Context context;

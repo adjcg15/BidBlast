@@ -2,7 +2,10 @@ package com.bidblast.model;
 
 import java.util.List;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
     private int id;
     private String fullName;
     private String phoneNumber;
@@ -20,6 +23,35 @@ public class User {
         this.email = email;
         this.roles = roles;
     }
+
+    public User(int id, String fullName, String email, String phoneNumber, String avatar) {
+        this.id = id;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.avatar = avatar;
+        this.email = email;
+    }
+
+    protected User(Parcel in) {
+        id = in.readInt();
+        fullName = in.readString();
+        phoneNumber = in.readString();
+        avatar = in.readString();
+        email = in.readString();
+        roles = in.createStringArrayList();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -67,5 +99,20 @@ public class User {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(fullName);
+        dest.writeString(phoneNumber);
+        dest.writeString(avatar);
+        dest.writeString(email);
+        dest.writeStringList(roles);
     }
 }

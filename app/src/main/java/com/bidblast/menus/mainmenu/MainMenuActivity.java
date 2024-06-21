@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 
 import com.bidblast.R;
 import com.bidblast.lib.Session;
+import com.bidblast.model.User;
 import com.bidblast.usecases.consultcompletedauctions.ConsultCompletedAuctionsFragment;
 import com.bidblast.databinding.ActivityMainMenuBinding;
 import com.bidblast.usecases.consultcreatedauctions.ConsultCreatedAuctionsFragment;
+import com.bidblast.usecases.createauction.CreateAuctionFragment;
 import com.bidblast.usecases.searchauction.SearchAuctionFragment;
+import com.bidblast.usecases.signup.SignUpFragment;
 
 import java.util.List;
 
@@ -50,6 +53,7 @@ public class MainMenuActivity extends AppCompatActivity {
         int purchasesMenuItemId = R.id.purchasesMenuItem;
         int salesMenuItemId = R.id.salesMenuItem;
         int newAuctionMenuItemId = R.id.newAuctionMenuItem;
+        int profileMenuItemId = R.id.profileMenuItem;
 
         binding.mainMenuBottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -61,18 +65,29 @@ public class MainMenuActivity extends AppCompatActivity {
             } else if (itemId == salesMenuItemId) {
                 showFragment(new ConsultCreatedAuctionsFragment());
             } else if (itemId == newAuctionMenuItemId) {
-                //TODO: show create auction fragment
+                showFragment(new CreateAuctionFragment());
+            }else if (itemId == profileMenuItemId) {
+                openSignUpFragment();
             }
+
 
             return true;
         });
     }
 
-    private void showFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(binding.mainViewFragmentLayout.getId(), fragment);
         fragmentTransaction.commit();
+    }
+    private void openSignUpFragment() {
+        User userToEdit = Session.getInstance().getUser();
+        SignUpFragment signUpFragment = SignUpFragment.newInstance(userToEdit, true);
+        showFragment(signUpFragment);
+    }
+    public void selectSearchAuctionMenuItem() {
+        binding.mainMenuBottomNavigationView.setSelectedItemId(R.id.searchMenuItem);
     }
 }

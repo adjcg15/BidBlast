@@ -11,6 +11,7 @@ import com.bidblast.api.RequestStatus;
 import com.bidblast.api.requests.authentication.UserRegisterBody;
 import com.bidblast.lib.ImageToolkit;
 import com.bidblast.lib.ValidationToolkit;
+import com.bidblast.model.User;
 import com.bidblast.repositories.AuthenticationRepository;
 import com.bidblast.repositories.IEmptyProcessStatusListener;
 import com.bidblast.repositories.ProcessErrorCodes;
@@ -92,6 +93,7 @@ public class SignUpViewModel extends ViewModel {
         isValidConfirmPassword.setValue(validationResult);
         Log.d("SignUpViewModel", "Confirm Password Valid: " + validationResult);
     }
+
     public void register(Context context, String fullName, String email, String phoneNumber, String password, String confirmPassword) {
         validateFullName(fullName);
         validateEmail(email);
@@ -122,6 +124,42 @@ public class SignUpViewModel extends ViewModel {
                 @Override
                 public void onError(ProcessErrorCodes errorStatus) {
                     Log.e("SignUpViewModel", "Error creating account: " + errorStatus);
+                    signUpErrorCode.setValue(errorStatus);
+                    signUpRequestStatus.setValue(RequestStatus.ERROR);
+                }
+            });
+        } else {
+            signUpRequestStatus.setValue(RequestStatus.ERROR);
+        }
+    }
+
+    public void updateUser(Context context, User user, String password) {
+        validateFullName(user.getFullName());
+        validateEmail(user.getEmail());
+
+        boolean isPasswordValid = true;
+        if (password != null && !password.isEmpty()) {
+            validatePassword(password);
+            isPasswordValid = Boolean.TRUE.equals(isValidPassword().getValue());
+        }
+
+        if (Boolean.TRUE.equals(isValidFullName().getValue()) &&
+                Boolean.TRUE.equals(isValidEmail().getValue()) &&
+                isPasswordValid) {
+
+            signUpRequestStatus.setValue(RequestStatus.LOADING);
+
+            UserRegisterBody registerBody = new UserRegisterBody(user.getFullName(), user.getEmail(), user.getPhoneNumber(), user.getAvatar(), password);
+            new AuthenticationRepository().updateUser(registerBody, new IEmptyProcessStatusListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d("SignUpViewModel", "Account updated successfully");
+                    signUpRequestStatus.setValue(RequestStatus.DONE);
+                }
+
+                @Override
+                public void onError(ProcessErrorCodes errorStatus) {
+                    Log.e("SignUpViewModel", "Error updating account: " + errorStatus);
                     signUpErrorCode.setValue(errorStatus);
                     signUpRequestStatus.setValue(RequestStatus.ERROR);
                 }

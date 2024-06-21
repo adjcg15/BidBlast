@@ -7,7 +7,9 @@ import com.bidblast.api.responses.authentication.UserRegisterJSONResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 public interface IAuthenticationService {
 
@@ -16,4 +18,9 @@ public interface IAuthenticationService {
      Call<UserLoginJSONResponse> login(@Body UserCredentialsBody credentials);
      @POST("users/")
      Call<Void> createAccount(@Body UserRegisterBody body);
+     @PUT("users/")
+     Call<Void> updateUser(
+             @Header("Authorization") String authHeader,
+             @Body UserRegisterBody body
+     );
 }

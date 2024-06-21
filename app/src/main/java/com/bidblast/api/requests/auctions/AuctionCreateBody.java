@@ -79,8 +79,6 @@ public class AuctionCreateBody {
         this.mediaFiles = mediaFiles;
     }
 
-
-
     @Override
     public String toString() {
         return "AuctionCreateBody{" +

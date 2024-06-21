@@ -16,6 +16,11 @@ public class HypermediaFile {
         this.name = name;
         this.mimeType = mimeType;
     }
+    public HypermediaFile(String content, String name, String mimeType) {
+        this.content = content;
+        this.name = name;
+        this.mimeType = mimeType;
+    }
 
     public int getId() {
         return id;

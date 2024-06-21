@@ -14,7 +14,6 @@ import com.bidblast.lib.Session;
 import com.bidblast.menus.mainmenu.MainMenuActivity;
 import com.bidblast.menus.moderatormenu.ModeratorMenuActivity;
 import com.bidblast.repositories.ProcessErrorCodes;
-import com.bidblast.usecases.signup.SignUpActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -138,7 +137,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void openSignUpActivity(View view) {
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+        //TODO
     }
 }

@@ -151,6 +151,10 @@
     <string name="postitem_next">Siguiente</string>
     <string name="postitem_base_price">Precio base <font color="#FF5C00">*</font></string>
     <string name="postitem_media">Fotos y videos <font color="#FF5C00">*</font></string>
+    <string name="postitem_title_error">Ingrese un título para la subasta</string>
+    <string name="postitem_item_status_error">Seleccione el estado de su artículo</string>
+    <string name="postitem_description_error">Ingrese una descripción para su artículo</string>
+    <string name="postitem_opening_days_error">Ingrese los días de apertura de la subasta</string>
 
     <string name="bidonauction_title">Artículo en subasta</string>
     <string name="bidonauction_empty_bid_error">Debe seleccionar un valor de puja</string>
@@ -193,4 +197,23 @@
     <string name="signup_password_rules">• Al menos una letra mayúscula\n• Al menos un número\n• Al menos un carácter especial\n• Extensión mínima de 8 caracteres\n</string>
     <string name="signup_password_mismatch_title">Contraseña con formato inválido</string>
     <string name="signup_password_rules_error_message">La contraseña no cumple con las reglas establecidas</string>
+    <string name="postitem_base_price_error">Ingrese el precio base de la subasta</string>
+    <string name="postitem_minium_bid">Puja mínima</string>
+    <string name="auction_evaluate_no_auctions">No hay subastas para aprobar</string>
+    <string name="auction_evaluate_no_auctions_description">No se encontraron subastas para aprobar. Intente de nuevo más tarde.</string>
+    <string name="auction_evaluate_last_offer">Última oferta</string>
+    <string name="auction_evaluate_available_days">Días de apertura de subasta:</string>
+    <string name="auction_evaluate_auction_state">Estado del artículo:</string>
+    <string name="auction_evaluate_observations">Observaciones<font color="#FF5C00">*</font></string>
+    <string name="auction_evaluate_observations_error_text">Ingrese sus observaciones por las que la publicación será denegada en no más de 250 palabras</string>
+    <string name="auction_evaluate_new_category">Nueva categoría</string>
+    <string name="auction_evaluate_description">Acerca del artículo</string>
+    <string name="auction_evaluate_deny">Denegar</string>
+    <string name="auction_evaluate_aprove">Aprobar</string>
+    <string name="auction_evaluate_category">Categoría:</string>
+    <string name="auction_evaluate_cancel">Cancelar</string>
+    <string name="auction_evaluate_acept">Aceptar</string>
+    <string name="mainmenu_profile">Perfil</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
