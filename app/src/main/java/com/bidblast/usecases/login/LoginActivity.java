@@ -140,7 +140,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void openSignUpFragment(View view) {
         binding.loginView.setVisibility(View.GONE);
-        SignUpFragment signUpFragment = SignUpFragment.newInstance(null, false);        FragmentManager fragmentManager = getSupportFragmentManager();
+        SignUpFragment signUpFragment = SignUpFragment.newInstance(null, false);        
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragmentContainer, signUpFragment);
         fragmentTransaction.addToBackStack(null);

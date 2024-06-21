@@ -182,11 +182,12 @@ public class SignUpFragment extends Fragment {
 
     private void loadUserInformationOnView() {
         if (userToEdit != null) {
+
             binding.fullNameEditText.setText(userToEdit.getFullName());
             binding.emailEditText.setText(userToEdit.getEmail());
-            if (userToEdit.getPhoneNumber() != null && !userToEdit.getPhoneNumber().isEmpty()) {
                 binding.phoneNumberEditText.setText(userToEdit.getPhoneNumber());
-            } else {
+            } 
+            else {
                 binding.phoneNumberEditText.setText("");
             }
             if (userToEdit.getAvatar() != null && !userToEdit.getAvatar().isEmpty()) {
@@ -195,9 +196,8 @@ public class SignUpFragment extends Fragment {
             } else {
                 binding.imageSelected.setImageResource(R.drawable.avatar_icon);
                 viewModel.setAvatarBase64(null);
-            }
-
-            binding.signUpButton.setText("Guardar cambios");
+            Log.d("SignUpFragment", "User ID: " + userToEdit.getId());
+            Log.d("SignUpFragment", "Full Name: " + userToEdit.getFullName());
         }
     }
 
@@ -405,6 +405,7 @@ public class SignUpFragment extends Fragment {
                 && Boolean.TRUE.equals(viewModel.isValidEmail().getValue())
                 && (isEdition ? true : isPasswordValid && isConfirmPasswordValid && isPasswordRulesValid);
     }
+
     private void setupFieldsValidations() {
         viewModel.isValidFullName().observe(getViewLifecycleOwner(), isValidFullName -> {
             if (isValidFullName) {
